@@ -86,6 +86,3 @@ Kimi, DeepSeek, GLM, Qwen, etc. The endpoint defaults to
 `lfg <update|restart|logs|status|env>` — see `lfg help`.
 Operational details in [DEVOPS.md](./DEVOPS.md).
 
-## License
-
-MIT.

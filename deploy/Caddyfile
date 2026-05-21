@@ -1,0 +1,7 @@
+# LFG Caddyfile.
+# bootstrap.sh substitutes `lfg.example.com` with the operator-chosen hostname.
+
+lfg.example.com {
+	encode gzip
+	reverse_proxy 127.0.0.1:8080
+}

@@ -1,0 +1,50 @@
+# golangci-lint v2 config.
+# Run with: golangci-lint run ./...
+version: "2"
+
+run:
+  timeout: 5m
+
+linters:
+  enable:
+    - errcheck
+    - govet
+    - ineffassign
+    - staticcheck
+    - unused
+    - misspell
+    - unconvert
+    - copyloopvar
+  settings:
+    errcheck:
+      # Fan-out goroutines + best-effort cleanups + log writers don't
+      # need to surface every error — that's what wrappers like
+      # fmt.Fprintln return errors for. Keep the lint focused on the
+      # ones the agent author can plausibly act on.
+      exclude-functions:
+        - (io.Closer).Close
+        - (*os.File).Close
+        - fmt.Fprintln
+        - fmt.Fprintf
+        - fmt.Fprint
+        - fmt.Println
+        - fmt.Printf
+        - fmt.Print
+        - (net/http.ResponseWriter).Write
+        - encoding/json.NewEncoder.Encode
+    staticcheck:
+      checks:
+        - all
+        # ST1000-1003 are stylistic doc-comment checks that mostly
+        # produce noise on small internal packages.
+        - "-ST1000"
+        - "-ST1003"
+
+formatters:
+  enable:
+    - gofmt
+    - goimports
+
+issues:
+  max-issues-per-linter: 0
+  max-same-issues: 0

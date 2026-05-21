@@ -1,0 +1,29 @@
+[Unit]
+Description=LFG agent server
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=lfg
+Group=lfg
+EnvironmentFile=/opt/lfg/.env.local
+WorkingDirectory=/opt/lfg
+ExecStart=/opt/lfg/bin/lfg serve
+Restart=on-failure
+RestartSec=2s
+
+# Hardening: rootless podman needs network + namespaces, so we leave
+# ProtectSystem off the strict tier and only deny what's clearly unsafe.
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+LockPersonality=true
+RestrictNamespaces=user mnt pid net ipc uts cgroup
+ReadWritePaths=/opt/lfg/data /opt/lfg/.local /opt/lfg/.config
+
+[Install]
+WantedBy=multi-user.target

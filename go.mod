@@ -4,7 +4,7 @@ go 1.26.3
 
 require (
 	charm.land/fantasy v0.25.1
-	github.com/go-chi/chi/v5 v5.2.3
+	github.com/go-chi/chi/v5 v5.2.5
 	github.com/google/uuid v1.6.0
 	gopkg.in/yaml.v3 v3.0.1
 )

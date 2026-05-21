@@ -1,0 +1,84 @@
+#!/usr/bin/env bash
+# /usr/local/bin/lfg — operator entry point for the LFG box.
+#
+# Thin dispatcher: when args target the agent CLI (run, serve, version),
+# we exec the binary directly. Everything else (update, start/stop, env,
+# logs) is shell glue around systemd + scripts/update.sh.
+
+set -euo pipefail
+
+APP_DIR="${APP_DIR:-/opt/lfg}"
+SRC_DIR="${SRC_DIR:-/opt/lfg-src}"
+ENV_LOCAL="$APP_DIR/.env.local"
+BIN="$APP_DIR/bin/lfg"
+
+if [[ -f "$APP_DIR/scripts/lib/envfile.sh" ]]; then
+  . "$APP_DIR/scripts/lib/envfile.sh"
+elif [[ -f "$SRC_DIR/scripts/lib/envfile.sh" ]]; then
+  . "$SRC_DIR/scripts/lib/envfile.sh"
+fi
+
+cmd="${1:-}"; shift || true
+
+case "$cmd" in
+  run|serve|version|--version|-v)
+    # Forward agent commands directly to the binary, loading .env.local first.
+    [[ -f "$ENV_LOCAL" ]] && { set -a; . "$ENV_LOCAL"; set +a; }
+    exec "$BIN" "$cmd" "$@"
+    ;;
+  update)
+    exec sudo bash "$APP_DIR/scripts/update.sh" "$@"
+    ;;
+  rebuild)
+    exec sudo env LFG_UPDATE_NO_PULL=1 LFG_UPDATE_YES=1 bash "$APP_DIR/scripts/update.sh"
+    ;;
+  start|stop|restart|status)
+    exec sudo systemctl "$cmd" lfg.service
+    ;;
+  logs)
+    if [[ "$#" -eq 0 ]]; then exec sudo journalctl -fu lfg
+    else exec sudo journalctl "$@" -u lfg; fi
+    ;;
+  env)
+    sub="${1:-show}"; shift || true
+    case "$sub" in
+      show|"")
+        if [[ -f "$ENV_LOCAL" ]]; then
+          printf '# %s\n' "$ENV_LOCAL"
+          if type env_show_redacted >/dev/null 2>&1; then env_show_redacted "$ENV_LOCAL"
+          else cat "$ENV_LOCAL"; fi
+        else echo "# $ENV_LOCAL not present"; fi
+        ;;
+      edit)
+        [[ $EUID -eq 0 ]] || { echo "run as root: sudo lfg env edit" >&2; exit 1; }
+        editor="${EDITOR:-nano}"
+        "$editor" "$ENV_LOCAL"
+        chown lfg:lfg "$ENV_LOCAL"
+        chmod 0640 "$ENV_LOCAL"
+        echo "✓ saved (sudo lfg restart to pick up changes)"
+        ;;
+      *) echo "unknown env subcommand: $sub" >&2; exit 1 ;;
+    esac
+    ;;
+  help|-h|--help|"")
+    cat <<EOF
+lfg — minimal AI agent operator CLI
+
+AGENT
+  lfg run "<task>"               Run a task locally (spawns a container, exits when done)
+  lfg serve                      Start the HTTP server (normally via systemd)
+  lfg version
+
+OPS
+  lfg update                     git pull + rebuild + restart
+  lfg rebuild                    rebuild + restart current checkout (no fetch)
+  lfg start|stop|restart|status  systemctl …
+  lfg logs [journalctl-args…]    tail server logs (no args = -f)
+  lfg env [show|edit]            show .env.local (secrets redacted) / open in \$EDITOR
+EOF
+    ;;
+  *)
+    echo "unknown command: $cmd" >&2
+    exec "$0" --help
+    ;;
+esac

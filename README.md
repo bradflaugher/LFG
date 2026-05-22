@@ -13,17 +13,26 @@ fire-and-forget HTTP API so other tools (e.g.
 
 ## Install
 
-On a Fedora / RHEL 9+ box:
+On a fresh Fedora / RHEL 9+ box, one line:
+
+```sh
+curl -fsSL https://raw.githubusercontent.com/bradflaugher/LFG/main/scripts/install.sh | sudo bash
+```
+
+That installs `git`, clones the repo into `/opt/lfg-src`, and runs the
+bootstrap. The bootstrap asks three things: a provider key (OpenRouter
+by default; pick `hyper` / `anthropic` / `openai` / ... at the prompt),
+the hostname people will reach the server at, and whether to set up
+Caddy + TLS. Everything else (secrets, systemd, podman, the LFG API
+key) is generated.
+
+Prefer to inspect first? Clone and run by hand:
 
 ```sh
 git clone https://github.com/bradflaugher/LFG.git
 cd LFG
 sudo bash scripts/bootstrap.sh
 ```
-
-The installer asks three things: your OpenRouter API key, the hostname
-people will reach the server at, and whether to set up Caddy + TLS.
-Everything else (secrets, systemd, podman, the LFG API key) is generated.
 
 ## Run
 

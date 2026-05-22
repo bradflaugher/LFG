@@ -9,6 +9,7 @@ import (
 	"errors"
 	"flag"
 	"fmt"
+	"io"
 	"os"
 	"os/signal"
 	"syscall"
@@ -146,7 +147,9 @@ func cmdRun(args []string) int {
 
 	r := runner.New(cfg, st)
 
-	var sink *os.File
+	// io.Writer (not *os.File) so a non-verbose run passes a true-nil
+	// interface to r.Run, not a typed-nil that masquerades as non-nil.
+	var sink io.Writer
 	if *verbose {
 		sink = os.Stderr
 	}
@@ -167,7 +170,7 @@ func runInside(ctx context.Context, cfg *config.Config, prompt string, verbose b
 		fmt.Fprintf(os.Stderr, "lfg: %v\n", err)
 		return 1
 	}
-	var w *os.File
+	var w io.Writer
 	if verbose {
 		w = os.Stderr
 	}

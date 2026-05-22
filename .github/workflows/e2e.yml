@@ -1,0 +1,95 @@
+name: e2e
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: e2e-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # Gate: only run if HYPER_API_KEY is set as an Actions secret. On forks
+  # (or before the secret is added), the job is skipped — pull requests
+  # from forks won't silently fail because their reviewer hasn't shared
+  # the secret.
+  gate:
+    runs-on: ubuntu-latest
+    outputs:
+      run: ${{ steps.check.outputs.run }}
+    steps:
+      - id: check
+        env:
+          HYPER_API_KEY: ${{ secrets.HYPER_API_KEY }}
+        run: |
+          if [ -n "$HYPER_API_KEY" ]; then
+            echo "run=true" >> "$GITHUB_OUTPUT"
+            echo "HYPER_API_KEY present — e2e will run."
+          else
+            echo "run=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::HYPER_API_KEY secret not set — skipping e2e (this is expected on forks)."
+          fi
+
+  shellcheck:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - run: sudo apt-get update && sudo apt-get install -y shellcheck
+      - name: Lint shell scripts
+        # See LFA's install-test workflow for the rationale on each suppressed code.
+        run: |
+          shellcheck \
+            -e SC1090,SC1091,SC2015,SC2024,SC2119,SC2148 \
+            scripts/bootstrap.sh \
+            scripts/install.sh \
+            scripts/update.sh \
+            scripts/lib/envfile.sh \
+            deploy/lfg-cli \
+            e2e/run-e2e.sh
+
+  e2e:
+    needs: [gate, shellcheck]
+    if: needs.gate.outputs.run == 'true'
+    runs-on: ubuntu-latest
+    # 30min ceiling: hyper API latency dominates the test wall clock and
+    # has been observed as high as 100s per call when a model is cold.
+    timeout-minutes: 30
+    env:
+      HYPER_API_KEY: ${{ secrets.HYPER_API_KEY }}
+      HYPER_URL: ${{ vars.HYPER_URL }}
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-go@v6
+        with:
+          go-version-file: go.mod
+          cache: true
+
+      - name: Install jq (used by the test for parsing JSON)
+        run: sudo apt-get update && sudo apt-get install -y jq
+
+      - name: Verify podman
+        run: podman --version
+
+      - name: Run e2e script
+        run: bash e2e/run-e2e.sh
+
+      - name: Collect logs on failure
+        if: failure()
+        run: |
+          echo "=== lfg.log ==="
+          tail -n 200 e2e/.state/logs/lfg.log || true
+          echo "=== task logs ==="
+          find e2e/.state/lfg-data -name '*.log' -exec sh -c 'echo "--- {} ---"; cat {}' \; 2>/dev/null || true
+
+      - name: Upload state on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lfg-e2e-state
+          path: e2e/.state
+          retention-days: 3

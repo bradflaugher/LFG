@@ -18,9 +18,13 @@ SRC_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 . "$SRC_DIR/scripts/lib/envfile.sh"
 
 # Re-open /dev/tty when stdin is piped (so `curl | sudo bash` still prompts).
-if [[ ! -t 0 ]]; then
-  if [[ -t 1 ]]; then exec </dev/tty
-  else die "bootstrap.sh needs a TTY. Re-run locally: sudo bash scripts/bootstrap.sh"
+# Non-interactive mode skips the TTY requirement; the caller must supply
+# every answer via LFG_BOOTSTRAP_* env vars.
+if [[ "${LFG_BOOTSTRAP_NON_INTERACTIVE:-0}" != "1" ]]; then
+  if [[ ! -t 0 ]]; then
+    if [[ -t 1 ]]; then exec </dev/tty
+    else die "bootstrap.sh needs a TTY (or set LFG_BOOTSTRAP_NON_INTERACTIVE=1). Re-run locally: sudo bash scripts/bootstrap.sh"
+    fi
   fi
 fi
 
@@ -192,9 +196,11 @@ fi
 
 # 5. Build
 step "5/7  Building bin/lfg"
+# -buildvcs=false: the .git dir is owned by root from step 3's copy, but
+# we run go build as $APP_USER. Same fix as LFA's bootstrap.
 sudo -u "$APP_USER" -H bash -c "
   cd '$SRC_TARGET'
-  GOTOOLCHAIN=auto go build -ldflags '-X main.Version=\$(git -C $SRC_TARGET describe --tags --always --dirty 2>/dev/null || echo dev)' \
+  GOTOOLCHAIN=auto go build -buildvcs=false -ldflags '-X main.Version=\$(git -C $SRC_TARGET describe --tags --always --dirty 2>/dev/null || echo dev)' \
     -o '$APP_DIR/bin/lfg' ./cmd/lfg
 "
 ok "built $APP_DIR/bin/lfg"

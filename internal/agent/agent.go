@@ -57,28 +57,33 @@ func Run(ctx context.Context, opts Options, prompt string) (string, error) {
 
 	// Stream so we can spool tool calls/results into verbose output as they happen.
 	call := fantasy.AgentStreamCall{Prompt: prompt}
-	if opts.Verbose != nil {
-		w := opts.Verbose
-		call.OnTextDelta = func(_, text string) error {
-			_, err := io.WriteString(w, text)
-			return err
+	// Fantasy's Stream call returns "invalid argument" if every event
+	// callback is nil — we always need at least one. Default to no-op
+	// drains; switch to writing into opts.Verbose when the caller asked
+	// for verbose mode.
+	w := opts.Verbose
+	if w == nil {
+		w = io.Discard
+	}
+	call.OnTextDelta = func(_, text string) error {
+		_, err := io.WriteString(w, text)
+		return err
+	}
+	call.OnToolCall = func(t fantasy.ToolCallContent) error {
+		_, err := fmt.Fprintf(w, "\n→ %s %s\n", t.ToolName, compactInput(t.Input))
+		return err
+	}
+	call.OnToolResult = func(r fantasy.ToolResultContent) error {
+		text, ok := fantasy.AsToolResultOutputType[fantasy.ToolResultOutputContentText](r.Result)
+		if !ok {
+			return nil
 		}
-		call.OnToolCall = func(t fantasy.ToolCallContent) error {
-			_, err := fmt.Fprintf(w, "\n→ %s %s\n", t.ToolName, compactInput(t.Input))
-			return err
-		}
-		call.OnToolResult = func(r fantasy.ToolResultContent) error {
-			text, ok := fantasy.AsToolResultOutputType[fantasy.ToolResultOutputContentText](r.Result)
-			if !ok {
-				return nil
-			}
-			_, err := fmt.Fprintf(w, "← %s\n", firstLine(text.Text, 200))
-			return err
-		}
-		call.OnStepFinish = func(_ fantasy.StepResult) error {
-			_, err := io.WriteString(w, "\n")
-			return err
-		}
+		_, err := fmt.Fprintf(w, "← %s\n", firstLine(text.Text, 200))
+		return err
+	}
+	call.OnStepFinish = func(_ fantasy.StepResult) error {
+		_, err := io.WriteString(w, "\n")
+		return err
 	}
 
 	res, err := a.Stream(ctx, call)

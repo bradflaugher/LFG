@@ -64,15 +64,18 @@ To install on a connected device:
 
 ## Releases
 
-Tag a commit with `v*.*.*` and the `release.yml` workflow builds + uploads a debug-signed APK
-to the matching GitHub Release.
+Every push to `main` triggers `release.yml`, which builds a debug-signed APK and publishes it as
+a new GitHub Release named `build-YYYY-MM-DD-HHMM-<sha7>`. All builds stay forever — the
+[Releases page](https://github.com/bradflaugher/LFE/releases) is the chronological archive, and
+[`releases/latest`](https://github.com/bradflaugher/LFE/releases/latest) always points at the
+newest build.
 
-```sh
-git tag v0.1.0 && git push origin v0.1.0
+```
+adb install -r lfe-build-2026-05-23-2230-7460dd0.apk
 ```
 
-The release APK is debug-signed — perfect for sideloading, not eligible for Play Store. Wiring a
-keystore later is a one-secrets-block change.
+Sideload-ready, not Play-eligible (debug signing). Wiring a real keystore is a one-secrets-block
+change in `release.yml` when you want that.
 
 ## Customizing skills
 

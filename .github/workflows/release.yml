@@ -1,21 +1,24 @@
 name: Release
 
+# Every push to main builds a fresh APK and publishes it as a new GitHub Release
+# named `build-YYYY-MM-DD-HHMM-<sha7>`. All builds stay forever — the Releases
+# page is your historical archive, and /releases/latest always points at the
+# newest one.
+
 on:
   push:
-    tags:
-      - 'v*'
+    branches: [main]
+    paths:
+      - android/**
+      - .github/workflows/release.yml
   workflow_dispatch:
-    inputs:
-      tag:
-        description: Tag to release (e.g. v0.1.0)
-        required: true
 
 permissions:
   contents: write
 
 jobs:
   release:
-    name: Build + publish release APK
+    name: Build + publish APK
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -42,7 +45,17 @@ jobs:
       - name: Assemble release APK (debug-signed)
         run: ./gradlew assembleRelease
 
-      - name: Rename APK with version
+      - name: Compute build identifier
+        id: ident
+        run: |
+          set -e
+          stamp="$(date -u +%Y-%m-%d-%H%M)"
+          sha7="${GITHUB_SHA:0:7}"
+          tag="build-${stamp}-${sha7}"
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+          echo "stamp=$stamp" >> "$GITHUB_OUTPUT"
+
+      - name: Rename APK with build identifier
         id: rename
         run: |
           set -e
@@ -52,22 +65,28 @@ jobs:
             echo "no APK produced" >&2
             exit 1
           fi
-          ver="${GITHUB_REF_NAME:-${{ github.event.inputs.tag }}}"
-          out="lfe-${ver}.apk"
+          out="lfe-${{ steps.ident.outputs.tag }}.apk"
           cp "${apk[0]}" "${out}"
           echo "apk=${PWD}/${out}" >> "$GITHUB_OUTPUT"
-          echo "tag=${ver}" >> "$GITHUB_OUTPUT"
 
       - name: Publish GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ steps.rename.outputs.tag }}
-          name: LFE ${{ steps.rename.outputs.tag }}
+          tag_name: ${{ steps.ident.outputs.tag }}
+          name: ${{ steps.ident.outputs.tag }}
+          target_commitish: ${{ github.sha }}
           generate_release_notes: true
           fail_on_unmatched_files: true
           files: ${{ steps.rename.outputs.apk }}
           body: |
-            Debug-signed sideload APK. Install with:
+            Debug-signed sideload APK from commit `${{ github.sha }}`
+            (built ${{ steps.ident.outputs.stamp }} UTC).
+
+            Install:
             ```
-            adb install -r lfe-${{ steps.rename.outputs.tag }}.apk
+            adb install -r lfe-${{ steps.ident.outputs.tag }}.apk
             ```
+
+            **First-time sideloaders on Android 12+:** enable
+            *Settings → Apps → Special access → Install unknown apps* for
+            your file manager, then tap the APK.

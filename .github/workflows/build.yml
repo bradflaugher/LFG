@@ -1,11 +1,8 @@
 name: Build
 
+# PR-only sanity check. Pushes to `main` are handled by `release.yml`
+# (which builds the same APK and publishes it to /releases/latest).
 on:
-  push:
-    branches: [main]
-    paths:
-      - android/**
-      - .github/workflows/build.yml
   pull_request:
     branches: [main]
     paths:

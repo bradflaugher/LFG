@@ -54,11 +54,20 @@ class RequestPermissionAgentAction(
   val result: CompletableDeferred<Boolean> = CompletableDeferred(),
 ) : AgentAction(name = AgentActionName.REQUEST_PERMISSION)
 
+// Fetch an article URL via a hidden WebView (so any cookies persisted from a
+// prior in-app sign-in are attached), then run Readability.js to extract title
+// + main text. Result is JSON: {"title": "...", "text": "..."} or {"error": "..."}.
+class FetchArticleAgentAction(
+  val url: String,
+  val result: CompletableDeferred<String> = CompletableDeferred(),
+) : AgentAction(name = AgentActionName.FETCH_ARTICLE)
+
 enum class AgentActionName() {
   CALL_JS_SKILL,
   SKILL_PROGRESS,
   ASK_INFO,
   REQUEST_PERMISSION,
+  FETCH_ARTICLE,
 }
 
 data class SkillTryOutChip(

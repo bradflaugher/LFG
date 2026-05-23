@@ -16,12 +16,16 @@ package com.bradflaugher.lfe.ui.modelmanager
 // import com.bradflaugher.lfe.ui.theme.LfeTheme
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Language
 import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.SmallFloatingActionButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -30,6 +34,7 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import com.bradflaugher.lfe.GalleryTopAppBar
 import com.bradflaugher.lfe.data.AppBarAction
 import com.bradflaugher.lfe.data.AppBarActionType
@@ -48,6 +53,7 @@ fun ModelManager(
   modifier: Modifier = Modifier,
   onBenchmarkClicked: (Model) -> Unit = {},
   onBrowseHuggingFace: (() -> Unit)? = null,
+  onBrowserSession: (() -> Unit)? = null,
 ) {
   // Set title based on the task.
   val title = task.label
@@ -82,12 +88,19 @@ fun ModelManager(
       )
     },
     floatingActionButton = {
-      if (onBrowseHuggingFace != null) {
-        ExtendedFloatingActionButton(
-          onClick = onBrowseHuggingFace,
-          icon = { Icon(Icons.Rounded.Search, contentDescription = null) },
-          text = { Text("Browse HF") },
-        )
+      Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+        if (onBrowserSession != null) {
+          SmallFloatingActionButton(onClick = onBrowserSession) {
+            Icon(Icons.Rounded.Language, contentDescription = "Open browser session")
+          }
+        }
+        if (onBrowseHuggingFace != null) {
+          ExtendedFloatingActionButton(
+            onClick = onBrowseHuggingFace,
+            icon = { Icon(Icons.Rounded.Search, contentDescription = null) },
+            text = { Text("Browse HF") },
+          )
+        }
       }
     },
   ) { innerPadding ->

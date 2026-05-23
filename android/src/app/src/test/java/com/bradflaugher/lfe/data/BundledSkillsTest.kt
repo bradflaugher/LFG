@@ -26,6 +26,7 @@ class BundledSkillsTest {
       "qr-code",
       "query-wikipedia",
       "send-email",
+      "summarize-article",
       "translator",
     )
 

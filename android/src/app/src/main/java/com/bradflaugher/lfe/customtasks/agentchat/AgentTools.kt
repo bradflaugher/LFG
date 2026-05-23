@@ -18,6 +18,7 @@ import com.bradflaugher.lfe.common.CallJsAgentAction
 import com.bradflaugher.lfe.common.CallJsSkillResult
 import com.bradflaugher.lfe.common.CallJsSkillResultImage
 import com.bradflaugher.lfe.common.CallJsSkillResultWebview
+import com.bradflaugher.lfe.common.FetchArticleAgentAction
 import com.bradflaugher.lfe.common.LOCAL_URL_BASE
 import com.bradflaugher.lfe.common.RequestPermissionAgentAction
 import com.bradflaugher.lfe.common.SkillProgressAgentAction
@@ -247,6 +248,45 @@ open class AgentTools() : ToolSet {
           permissionAction.result.await()
         }
       return@runBlocking mapOf("action" to intent, "parameters" to parameters, "result" to res)
+    }
+  }
+
+  @Tool(
+    description =
+      "Fetch the title and main text of an article from a URL. Uses the app's persistent " +
+        "cookies, so if the user signed in to a publisher (WSJ, NYT, etc.) via " +
+        "Settings → Browser Session beforehand, paywalled articles are accessible.",
+  )
+  fun fetchArticle(
+    @ToolParam(description = "The full https:// URL of the article to fetch.") url: String,
+  ): Map<String, String> {
+    return runBlocking(Dispatchers.Default) {
+      val trimmed = url.trim()
+      if (!trimmed.startsWith("http://") && !trimmed.startsWith("https://")) {
+        return@runBlocking mapOf(
+          "error" to "URL must start with http:// or https://",
+          "status" to "failed",
+        )
+      }
+      _actionChannel.send(
+        SkillProgressAgentAction(
+          label = "Fetching article",
+          inProgress = true,
+          addItemTitle = "Fetch article",
+          addItemDescription = trimmed,
+        ),
+      )
+      val action = FetchArticleAgentAction(url = trimmed)
+      _actionChannel.send(action)
+      val resultJson =
+        try {
+          action.result.await()
+        } catch (e: Exception) {
+          Log.e(TAG, "fetchArticle failed", e)
+          return@runBlocking mapOf("error" to (e.message ?: "fetch failed"), "status" to "failed")
+        }
+      // The result-side composable returns either {"title":..., "text":...} or {"error":...}.
+      mapOf("article" to resultJson)
     }
   }
 

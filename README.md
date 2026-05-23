@@ -25,6 +25,9 @@ layer — LFE puts the agent in your pocket: no servers, no telemetry, no Play S
   - `qr-code` — generate QR codes (offline, no CDN)
   - `query-wikipedia` — summarize a topic
   - `send-email` — compose an email intent
+  - `summarize-article` — fetch + summarize a news article via a hidden WebView
+    (works on paywalled sites if you've signed in via Settings → Browser
+    Session first). Uses Mozilla Readability.js for content extraction.
   - `translator` — translate between languages
 - **Models**: every model from the Edge AI Gallery allowlist (Gemma 4 E2B/E4B, Gemma 3n E2B/E4B,
   Gemma 3 1B, Qwen 2.5 1.5B, DeepSeek-R1-Distill-Qwen 1.5B), all targeted at the single agent

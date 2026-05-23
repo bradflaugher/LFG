@@ -71,6 +71,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.bradflaugher.lfe.R
 import com.bradflaugher.lfe.common.AskInfoAgentAction
 import com.bradflaugher.lfe.common.CallJsAgentAction
+import com.bradflaugher.lfe.common.FetchArticleAgentAction
 import com.bradflaugher.lfe.common.LOCAL_URL_BASE
 import com.bradflaugher.lfe.common.RequestPermissionAgentAction
 import com.bradflaugher.lfe.common.SkillProgressAgentAction
@@ -348,6 +349,14 @@ fun AgentChatScreen(
             is RequestPermissionAgentAction -> {
               currentPermissionAction = action
               permissionLauncher.launch(action.permission)
+            }
+            is FetchArticleAgentAction -> {
+              try {
+                val result = ArticleFetcher.fetch(context, action.url)
+                action.result.complete(result)
+              } catch (e: Exception) {
+                action.result.complete(ArticleFetcher.errorJson(e.message ?: "fetch failed"))
+              }
             }
           }
         }

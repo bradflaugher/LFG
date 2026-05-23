@@ -1,0 +1,17 @@
+# LFE — Copyright (C) 2026 Brad Flaugher. GPL-3.0-or-later.
+*.iml
+
+.gradle
+/local.properties
+/.idea/caches
+/.idea/libraries
+/.idea/modules.xml
+/.idea/workspace.xml
+/.idea/navEditor.xml
+/.idea/assetWizardSettings.xml
+.DS_Store
+/build
+/captures
+.externalNativeBuild
+.cxx
+local.properties

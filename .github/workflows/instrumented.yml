@@ -1,0 +1,83 @@
+name: Instrumented
+
+# Boots an Android 16 (API 36) emulator and runs the instrumented test suite.
+# This is the gate for release: only when this passes does release.yml fire.
+#
+# Runs on push to main (so /releases/latest is always backed by an actual
+# device run). Slow (~10-20 min including AVD cache warm), so we keep it out
+# of the PR feedback loop.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - android/**
+      - .github/workflows/instrumented.yml
+      - .github/actions/setup-android/**
+  workflow_dispatch:
+
+concurrency:
+  group: instrumented-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  instrumented:
+    name: Android 16 emulator
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    defaults:
+      run:
+        working-directory: android/src
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup-android
+
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' \
+            | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+
+      - name: AVD cache
+        uses: actions/cache@v4
+        id: avd-cache
+        with:
+          path: |
+            ~/.android/avd/*
+            ~/.android/adb*
+          key: avd-api36-x86_64-v1
+
+      - name: Create AVD + warm cache (first run only)
+        if: steps.avd-cache.outputs.cache-hit != 'true'
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 36
+          target: google_apis
+          arch: x86_64
+          force-avd-creation: false
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim
+          disable-animations: true
+          working-directory: android/src
+          script: echo "AVD cache warmed."
+
+      - name: Instrumented tests on Android 16 (API 36)
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 36
+          target: google_apis
+          arch: x86_64
+          force-avd-creation: false
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim
+          disable-animations: true
+          working-directory: android/src
+          script: ./gradlew connectedDebugAndroidTest --info
+
+      - name: Upload instrumented test report on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: instrumented-test-report
+          path: android/src/app/build/reports/androidTests/
+          retention-days: 14

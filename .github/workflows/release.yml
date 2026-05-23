@@ -1,0 +1,92 @@
+name: Release
+
+# Publishes a dated APK to GitHub Releases. Fires only after `Instrumented`
+# passes on the corresponding commit — so /releases/latest is always backed
+# by a green emulator run.
+#
+# Release tag format: build-YYYY-MM-DD-HHMM-<sha7>. All historical builds
+# stay on the Releases page.
+
+on:
+  workflow_run:
+    workflows: ["Instrumented"]
+    branches: [main]
+    types: [completed]
+  workflow_dispatch:
+    inputs:
+      sha:
+        description: Commit SHA to release (default = current main HEAD)
+        required: false
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Publish APK
+    # Only run if Instrumented succeeded; dispatch always runs.
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: android/src
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.workflow_run.head_sha || github.event.inputs.sha || github.sha }}
+
+      - uses: ./.github/actions/setup-android
+
+      - name: Assemble release APK (debug-signed)
+        run: ./gradlew assembleRelease
+
+      - name: Compute build identifier
+        id: ident
+        run: |
+          set -e
+          sha="${{ github.event.workflow_run.head_sha || github.event.inputs.sha || github.sha }}"
+          stamp="$(date -u +%Y-%m-%d-%H%M)"
+          sha7="${sha:0:7}"
+          tag="build-${stamp}-${sha7}"
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+          echo "stamp=$stamp" >> "$GITHUB_OUTPUT"
+          echo "sha=$sha" >> "$GITHUB_OUTPUT"
+
+      - name: Rename APK with build identifier
+        id: rename
+        run: |
+          set -e
+          shopt -s nullglob
+          apk=(app/build/outputs/apk/release/*.apk)
+          if [ ${#apk[@]} -eq 0 ]; then
+            echo "no APK produced" >&2
+            exit 1
+          fi
+          out="lfe-${{ steps.ident.outputs.tag }}.apk"
+          cp "${apk[0]}" "${out}"
+          echo "apk=${PWD}/${out}" >> "$GITHUB_OUTPUT"
+
+      - name: Publish GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.ident.outputs.tag }}
+          name: ${{ steps.ident.outputs.tag }}
+          target_commitish: ${{ steps.ident.outputs.sha }}
+          generate_release_notes: true
+          fail_on_unmatched_files: true
+          files: ${{ steps.rename.outputs.apk }}
+          body: |
+            Debug-signed sideload APK from commit `${{ steps.ident.outputs.sha }}`
+            (built ${{ steps.ident.outputs.stamp }} UTC, gated by
+            [Instrumented](../../actions/workflows/instrumented.yml) success).
+
+            Install:
+            ```
+            adb install -r lfe-${{ steps.ident.outputs.tag }}.apk
+            ```
+
+            **First-time sideloaders on Android 12+:** enable
+            *Settings → Apps → Special access → Install unknown apps* for
+            your file manager, then tap the APK.

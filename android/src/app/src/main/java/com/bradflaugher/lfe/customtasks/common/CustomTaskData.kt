@@ -1,0 +1,43 @@
+/*
+ * LFE — A low-feature, on-device AI agent for Android.
+ * Copyright (C) 2026 Brad Flaugher
+ *
+ * Licensed under the GNU General Public License v3.0 or later.
+ * See LICENSE in the project root for terms.
+ *
+ * Includes code adapted from Google AI Edge Gallery (Apache 2.0,
+ * Copyright 2025 Google LLC) — https://github.com/google-ai-edge/gallery.
+ */
+package com.bradflaugher.lfe.customtasks.common
+
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
+import com.bradflaugher.lfe.ui.modelmanager.ModelManagerViewModel
+
+/**
+ * Data class to hold information passed to the `MainScreen` composable of a custom task.
+ *
+ * @param modelManagerViewModel The ViewModel providing access to the state of models and their
+ *   management.
+ * @param bottomPadding The bottom padding of the Scaffold's `innerPadding`. By default, your
+ *   `MainScreen` will extend to the bottom edge. Use this value if you need to apply padding to the
+ *   bottom of your screen's content to account for elements like a bottom navigation bar.
+ * @param setAppBarControlsDisabled A callback function that the custom task screen can call to
+ *   enable and disable controls (e.g. back button, configs, etc) in the app bar.
+ * @param setTopBarVisible A callback function that the custom task screen can call to show and hide
+ *   the top bar.
+ */
+data class CustomTaskData(
+  val modelManagerViewModel: ModelManagerViewModel,
+  val bottomPadding: Dp = 0.dp,
+  val setAppBarControlsDisabled: (Boolean) -> Unit = {},
+  val setTopBarVisible: (Boolean) -> Unit = {},
+  val setCustomNavigateUpCallback: ((() -> Unit)?) -> Unit = {},
+)
+
+data class CustomTaskDataForBuiltinTask(
+  val modelManagerViewModel: ModelManagerViewModel,
+  val onNavUp: () -> Unit,
+  // The initial query to be sent to the model when the screen is first loaded.
+  val initialQuery: String? = null,
+)

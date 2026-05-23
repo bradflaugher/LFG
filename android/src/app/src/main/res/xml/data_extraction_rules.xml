@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+ LFE — A low-feature, on-device AI agent for Android.
+ Copyright (C) 2026 Brad Flaugher
+
+ Licensed under the GNU General Public License v3.0 or later.
+ See LICENSE in the project root for terms.
+
+ Includes code adapted from Google AI Edge Gallery (Apache 2.0,
+ Copyright 2025 Google LLC) — https://github.com/google-ai-edge/gallery.
+-->
+<data-extraction-rules>
+    <cloud-backup>
+        <!-- TODO: Use <include> and <exclude> to control what is backed up.
+        <include .../>
+        <exclude .../>
+        -->
+    </cloud-backup>
+    <!--
+    <device-transfer>
+        <include .../>
+        <exclude .../>
+    </device-transfer>
+    -->
+</data-extraction-rules>

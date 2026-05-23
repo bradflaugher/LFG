@@ -36,13 +36,14 @@ private const val LOAD_TIMEOUT_MS = 30_000L
 private const val EXTRACT_TIMEOUT_MS = 10_000L
 
 /**
- * Fetches an article URL in a hidden [WebView] (so Android's [CookieManager] attaches any
- * cookies from prior in-app sign-ins) and runs Mozilla Readability.js to extract main content.
+ * Hidden [WebView] helpers that share one piece of plumbing: load a URL with the app's
+ * [CookieManager] attached, wait for `onPageFinished`, then run a JS snippet to extract data.
  *
- * Returns a JSON string. On success: `{"title": "...", "text": "...", "url": "..."}`.
- * On failure: `{"error": "..."}`.
+ * - [fetch] runs Mozilla Readability.js to extract a full article body.
+ * - [fetchLinks] extracts a deduped list of in-page anchor links (used to surface article
+ *   candidates from a homepage like nytimes.com).
  *
- * Must be invoked from the main thread because [WebView] is Activity-bound.
+ * Both must be invoked from the main thread because [WebView] is Activity-bound.
  */
 object ArticleFetcher {
   @SuppressLint("SetJavaScriptEnabled")
@@ -56,22 +57,92 @@ object ArticleFetcher {
           return@withContext errorJson("Readability bundle missing: ${e.message}")
         }
 
-      try {
-        withTimeout(LOAD_TIMEOUT_MS + EXTRACT_TIMEOUT_MS + 2_000L) {
-          fetchInternal(context, url, readabilityJs)
-        }
-      } catch (e: TimeoutCancellationException) {
-        errorJson("Timed out fetching $url")
-      } catch (e: Exception) {
-        Log.e(TAG, "fetch failed", e)
-        errorJson(e.message ?: "fetch failed")
-      }
+      val script = """
+        (function() {
+          try {
+            $readabilityJs
+            var doc = document.cloneNode(true);
+            var article = new Readability(doc).parse();
+            if (!article) {
+              return JSON.stringify({error: 'Readability returned no article'});
+            }
+            return JSON.stringify({
+              title: article.title || '',
+              text: (article.textContent || '').trim(),
+              url: window.location.href,
+            });
+          } catch (e) {
+            return JSON.stringify({error: 'Readability threw: ' + (e && e.message)});
+          }
+        })();
+      """.trimIndent()
+
+      runWithWebView(context, url, script)
     }
 
-  private suspend fun fetchInternal(
+  /**
+   * Returns a JSON string with a deduplicated list of in-page links. Filters out boilerplate
+   * (nav items, login buttons) using a text-length window suitable for article headlines.
+   *
+   * On success: `{"url": "...", "links": [{"text": "...", "href": "..."}]}`.
+   * On failure: `{"error": "..."}`.
+   */
+  @SuppressLint("SetJavaScriptEnabled")
+  suspend fun fetchLinks(context: Context, url: String): String =
+    withContext(Dispatchers.Main) {
+      val script = """
+        (function() {
+          try {
+            var rows = Array.prototype.map.call(
+              document.querySelectorAll('a[href]'),
+              function(a) {
+                var text = (a.textContent || '').replace(/\s+/g, ' ').trim();
+                var href = a.href || '';
+                return {text: text, href: href};
+              }
+            );
+            var seen = {};
+            var out = [];
+            for (var i = 0; i < rows.length; i++) {
+              var r = rows[i];
+              if (!r.href || r.href.indexOf('http') !== 0) continue;
+              if (r.href.indexOf('#') === r.href.length - 1) continue;
+              if (r.text.length < 20 || r.text.length > 220) continue;
+              if (seen[r.href]) continue;
+              seen[r.href] = true;
+              out.push(r);
+              if (out.length >= 80) break;
+            }
+            return JSON.stringify({url: window.location.href, links: out});
+          } catch (e) {
+            return JSON.stringify({error: 'link extractor threw: ' + (e && e.message)});
+          }
+        })();
+      """.trimIndent()
+
+      runWithWebView(context, url, script)
+    }
+
+  private suspend fun runWithWebView(
     context: Context,
     url: String,
-    readabilityJs: String,
+    script: String,
+  ): String =
+    try {
+      withTimeout(LOAD_TIMEOUT_MS + EXTRACT_TIMEOUT_MS + 2_000L) {
+        runWithWebViewInternal(context, url, script)
+      }
+    } catch (e: TimeoutCancellationException) {
+      errorJson("Timed out fetching $url")
+    } catch (e: Exception) {
+      Log.e(TAG, "WebView fetch failed", e)
+      errorJson(e.message ?: "fetch failed")
+    }
+
+  private suspend fun runWithWebViewInternal(
+    context: Context,
+    url: String,
+    script: String,
   ): String = suspendCancellableCoroutine { cont ->
     val webView = WebView(context).apply {
       settings.javaScriptEnabled = true
@@ -114,30 +185,9 @@ object ArticleFetcher {
 
     webView.webViewClient = object : WebViewClient() {
       override fun onPageFinished(view: WebView, finishedUrl: String) {
-        val extract = """
-          (function() {
-            try {
-              $readabilityJs
-              var doc = document.cloneNode(true);
-              var article = new Readability(doc).parse();
-              if (!article) {
-                return JSON.stringify({error: 'Readability returned no article'});
-              }
-              return JSON.stringify({
-                title: article.title || '',
-                text: (article.textContent || '').trim(),
-                url: window.location.href,
-              });
-            } catch (e) {
-              return JSON.stringify({error: 'Readability threw: ' + (e && e.message)});
-            }
-          })();
-        """.trimIndent()
         try {
-          view.evaluateJavascript(extract) { rawJsResult ->
-            // evaluateJavascript wraps strings in another set of quotes — unquote them.
-            val unwrapped = unwrapJsString(rawJsResult)
-            safeResume(unwrapped ?: errorJson("Empty extractor result"))
+          view.evaluateJavascript(script) { raw ->
+            safeResume(unwrapJsString(raw) ?: errorJson("Empty extractor result"))
           }
         } catch (e: Exception) {
           safeFail(e)

@@ -25,6 +25,7 @@ class BundledSkillsTest {
       "password-generator",
       "qr-code",
       "query-wikipedia",
+      "recommend-articles",
       "send-email",
       "summarize-article",
       "translator",

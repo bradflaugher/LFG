@@ -21,6 +21,7 @@ Two screens, that's it: the agent chat, and a model manager behind a gear icon.
 | `password-generator` | Secure random passwords. |
 | `qr-code` | Make a QR code from any URL (works offline). |
 | `query-wikipedia` | Pull a summary on any topic. |
+| `recommend-articles` | Scan a news homepage and pick stories that match your stored interests. Defaults to NYT; configurable. |
 | `send-email` | Hand off a draft to your mail app. |
 | `summarize-article` | Fetch and summarize a news article. Works on paywalled sites once you've signed in via *Browser Session*. |
 | `translator` | Translate between languages. |

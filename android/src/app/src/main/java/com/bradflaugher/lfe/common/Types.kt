@@ -62,12 +62,21 @@ class FetchArticleAgentAction(
   val result: CompletableDeferred<String> = CompletableDeferred(),
 ) : AgentAction(name = AgentActionName.FETCH_ARTICLE)
 
+// Extract a deduped list of anchor links from a page (used for surfacing
+// article candidates off a homepage). Result is JSON:
+// {"url": "...", "links": [{"text": "...", "href": "..."}]} or {"error": "..."}.
+class FetchLinksAgentAction(
+  val url: String,
+  val result: CompletableDeferred<String> = CompletableDeferred(),
+) : AgentAction(name = AgentActionName.FETCH_LINKS)
+
 enum class AgentActionName() {
   CALL_JS_SKILL,
   SKILL_PROGRESS,
   ASK_INFO,
   REQUEST_PERMISSION,
   FETCH_ARTICLE,
+  FETCH_LINKS,
 }
 
 data class SkillTryOutChip(

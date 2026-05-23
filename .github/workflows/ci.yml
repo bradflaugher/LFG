@@ -1,19 +1,27 @@
 name: CI
 
-# Fast PR feedback: lint + unit-test + debug assemble, in parallel.
-# Runs on PRs to main, branch pushes (except main; main has its own pipeline),
-# and manual dispatch. Wall time target: under 3 minutes.
+# All the checks, in parallel:
+#   • lint           — Android Lint, ~30 s
+#   • unit-test      — JVM tests,  ~30 s
+#   • assemble       — debug APK,  ~2 min, uploaded as artifact
+#   • instrumented   — Android 16 emulator + connectedDebugAndroidTest,
+#                      ~7 min with warm AVD cache, ~20 min cold.
+#                      The most valuable check we have — catches runtime
+#                      Hilt/Compose/launch failures the others miss.
+#
+# Runs on PRs (so merge is gated on a real device run) and on push to main
+# (so release.yml downstream can trust the gate).
 
 on:
   pull_request:
     branches: [main]
   push:
-    branches-ignore: [main]
+    branches: [main]
   workflow_dispatch:
 
 concurrency:
   group: ci-${{ github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   lint:
@@ -62,3 +70,63 @@ jobs:
           path: android/src/app/build/outputs/apk/debug/*.apk
           if-no-files-found: error
           retention-days: 7
+
+  instrumented:
+    name: Emulator (Android 16)
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    defaults:
+      run:
+        working-directory: android/src
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup-android
+
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' \
+            | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+
+      - name: AVD cache
+        uses: actions/cache@v4
+        id: avd-cache
+        with:
+          path: |
+            ~/.android/avd/*
+            ~/.android/adb*
+          key: avd-api36-x86_64-v1
+
+      - name: Create AVD + warm cache (first run only)
+        if: steps.avd-cache.outputs.cache-hit != 'true'
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 36
+          target: google_apis
+          arch: x86_64
+          force-avd-creation: false
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim
+          disable-animations: true
+          working-directory: android/src
+          script: echo "AVD cache warmed."
+
+      - name: Run instrumented tests
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 36
+          target: google_apis
+          arch: x86_64
+          force-avd-creation: false
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim
+          disable-animations: true
+          working-directory: android/src
+          script: ./gradlew connectedDebugAndroidTest --info
+
+      - name: Upload instrumented report on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: instrumented-test-report
+          path: android/src/app/build/reports/androidTests/
+          retention-days: 14

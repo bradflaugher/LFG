@@ -1,13 +1,13 @@
 /*
- * LFE — Apache 2.0.
+ * LFE — A low-feature, on-device AI agent for Android.
+ * Copyright (C) 2026 Brad Flaugher
  *
- * Verifies the bundled model_allowlist.json:
- *   1. parses with Gson into ModelAllowlist
- *   2. every model targets the single LLM_AGENT_CHAT task
- *   3. no model references a removed task type
- *   4. each model declares a runtime that LFE supports (LiteRT-LM)
+ * Licensed under the GNU General Public License v3.0 or later.
+ * See LICENSE in the project root for terms.
+ *
+ * Includes code adapted from Google AI Edge Gallery (Apache 2.0,
+ * Copyright 2025 Google LLC) — https://github.com/google-ai-edge/gallery.
  */
-
 package com.bradflaugher.lfe.data
 
 import com.google.gson.Gson

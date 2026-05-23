@@ -1,19 +1,13 @@
 /*
- * Copyright 2025 Google LLC
+ * LFE — A low-feature, on-device AI agent for Android.
+ * Copyright (C) 2026 Brad Flaugher
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed under the GNU General Public License v3.0 or later.
+ * See LICENSE in the project root for terms.
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Includes code adapted from Google AI Edge Gallery (Apache 2.0,
+ * Copyright 2025 Google LLC) — https://github.com/google-ai-edge/gallery.
  */
-
 package com.bradflaugher.lfe.ui.modelmanager
 
 import android.content.Context
@@ -133,8 +127,6 @@ private val IMPORT_CONFIGS_LLM: List<Config> =
     ),
     BooleanSwitchConfig(key = ConfigKeys.SUPPORT_IMAGE, defaultValue = false),
     BooleanSwitchConfig(key = ConfigKeys.SUPPORT_AUDIO, defaultValue = false),
-    BooleanSwitchConfig(key = ConfigKeys.SUPPORT_TINY_GARDEN, defaultValue = false),
-    BooleanSwitchConfig(key = ConfigKeys.SUPPORT_MOBILE_ACTIONS, defaultValue = false),
     BooleanSwitchConfig(key = ConfigKeys.SUPPORT_THINKING, defaultValue = false),
     BooleanSwitchConfig(key = ConfigKeys.SUPPORT_SPECULATIVE_DECODING, defaultValue = false),
     SegmentedButtonConfig(
@@ -261,18 +253,6 @@ fun ModelImportDialog(
                   valueType = ValueType.BOOLEAN,
                 )
                   as Boolean
-              val supportTinyGarden =
-                convertValueToTargetType(
-                  value = values.get(ConfigKeys.SUPPORT_TINY_GARDEN.label)!!,
-                  valueType = ValueType.BOOLEAN,
-                )
-                  as Boolean
-              val supportMobileActions =
-                convertValueToTargetType(
-                  value = values.get(ConfigKeys.SUPPORT_MOBILE_ACTIONS.label)!!,
-                  valueType = ValueType.BOOLEAN,
-                )
-                  as Boolean
               val supportThinking =
                 convertValueToTargetType(
                   value = values.get(ConfigKeys.SUPPORT_THINKING.label)!!,
@@ -298,9 +278,7 @@ fun ModelImportDialog(
                       .setDefaultTemperature(defaultTemperature)
                       .setSupportImage(supportImage)
                       .setSupportAudio(supportAudio)
-                      .setSupportMobileActions(supportMobileActions)
                       .setSupportThinking(supportThinking)
-                      .setSupportTinyGarden(supportTinyGarden)
                       .setSupportSpeculativeDecoding(supportSpeculativeDecoding)
                       .build()
                   )

@@ -1,14 +1,13 @@
 /*
- * LFE — Apache 2.0.
+ * LFE — A low-feature, on-device AI agent for Android.
+ * Copyright (C) 2026 Brad Flaugher
  *
- * Verifies the AgentChat task module:
- *   1. defaults to the skills-only system prompt (no MCP placeholders)
- *   2. injectSkills builds a system prompt that:
- *      - is empty when no skills are selected
- *      - substitutes selected skills into the ___SKILLS___ placeholder
- *      - omits unselected skills
+ * Licensed under the GNU General Public License v3.0 or later.
+ * See LICENSE in the project root for terms.
+ *
+ * Includes code adapted from Google AI Edge Gallery (Apache 2.0,
+ * Copyright 2025 Google LLC) — https://github.com/google-ai-edge/gallery.
  */
-
 package com.bradflaugher.lfe.customtasks.agentchat
 
 import com.bradflaugher.lfe.proto.Skill

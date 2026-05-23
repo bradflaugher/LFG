@@ -2,11 +2,14 @@
 
 A low-feature, edge-only AI agent for Android. Skills-first, on-device-only, minimalistic.
 
-LFE is a fork of [Google AI Edge Gallery](https://github.com/google-ai-edge/gallery) (Apache 2.0)
-distilled to a single feature: **Agent Skills mode** running on **LiteRT-LM**.
+LFE is a standalone GPL-3.0 app that borrows the agent-skills runtime and chat scaffold from
+[Google AI Edge Gallery](https://github.com/google-ai-edge/gallery) (Apache 2.0) — much credit to
+that project — and distills it to a single feature: **Agent Skills mode** running on **LiteRT-LM**.
+The rest (Chat, Prompt Lab, Mobile Actions, AICore, MLKit, Firebase, MCP, etc.) is intentionally
+removed.
 
-Inspired by [LFG](https://github.com/bradflaugher/LFG) (a terminal-side agent with the same skills
-layer), LFE puts the agent in your pocket — no servers, no telemetry, no Play Services AICore.
+Inspired by [LFG](https://github.com/bradflaugher/LFG) — a terminal agent with the same skills
+layer — LFE puts the agent in your pocket: no servers, no telemetry, no Play Services AICore.
 
 ## What's in
 
@@ -90,5 +93,9 @@ Most models in the bundled allowlist are not gated and work without this.
 
 ## License
 
-Apache 2.0. See [LICENSE](LICENSE). Forked from Google AI Edge Gallery (Apache 2.0, Copyright 2025
-Google LLC).
+GPL-3.0-or-later. See [LICENSE](LICENSE).
+
+This project includes code adapted from
+[Google AI Edge Gallery](https://github.com/google-ai-edge/gallery) (Apache License 2.0,
+Copyright 2025 Google LLC). Apache 2.0 § 4 permits redistribution under GPL-3.0-or-later when
+the original copyright notice is preserved — every adapted file keeps it in its header.

@@ -1,11 +1,13 @@
 /*
- * LFE — Low-Feature Edge agent
- * Forked from Google AI Edge Gallery (Apache 2.0, Copyright 2025 Google LLC).
+ * LFE — A low-feature, on-device AI agent for Android.
+ * Copyright (C) 2026 Brad Flaugher
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
+ * Licensed under the GNU General Public License v3.0 or later.
+ * See LICENSE in the project root for terms.
+ *
+ * Includes code adapted from Google AI Edge Gallery (Apache 2.0,
+ * Copyright 2025 Google LLC) — https://github.com/google-ai-edge/gallery.
  */
-
 plugins {
   alias(libs.plugins.android.application)
   alias(libs.plugins.kotlin.android)
@@ -59,6 +61,11 @@ android {
     compose = true
     buildConfig = true
   }
+
+  testOptions {
+    unitTests.isReturnDefaultValues = true
+    unitTests.isIncludeAndroidResources = true
+  }
 }
 
 dependencies {
@@ -80,6 +87,7 @@ dependencies {
   implementation(libs.androidx.lifecycle.process)
   implementation(libs.androidx.security.crypto)
   implementation(libs.androidx.webkit)
+  implementation(libs.androidx.documentfile)
   implementation(libs.litertlm)
   implementation(libs.commonmark)
   implementation(libs.richtext)

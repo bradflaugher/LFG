@@ -17,8 +17,13 @@ package com.bradflaugher.lfe.ui.modelmanager
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Search
+import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
@@ -42,6 +47,7 @@ fun ModelManager(
   onModelClicked: (Model) -> Unit,
   modifier: Modifier = Modifier,
   onBenchmarkClicked: (Model) -> Unit = {},
+  onBrowseHuggingFace: (() -> Unit)? = null,
 ) {
   // Set title based on the task.
   val title = task.label
@@ -74,6 +80,15 @@ fun ModelManager(
         title = title,
         leftAction = AppBarAction(actionType = AppBarActionType.NAVIGATE_UP, actionFn = navigateUp),
       )
+    },
+    floatingActionButton = {
+      if (onBrowseHuggingFace != null) {
+        ExtendedFloatingActionButton(
+          onClick = onBrowseHuggingFace,
+          icon = { Icon(Icons.Rounded.Search, contentDescription = null) },
+          text = { Text("Browse HF") },
+        )
+      }
     },
   ) { innerPadding ->
     ModelList(

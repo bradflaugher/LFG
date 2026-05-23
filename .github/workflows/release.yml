@@ -4,6 +4,10 @@ name: Release
 # named `build-YYYY-MM-DD-HHMM-<sha7>`. All builds stay forever — the Releases
 # page is your historical archive, and /releases/latest always points at the
 # newest one.
+#
+# Before publishing we boot an Android 16 (API 36) emulator and run
+# `connectedDebugAndroidTest` so DI / Compose / launch crashes fail the build
+# instead of shipping a broken APK.
 
 on:
   push:
@@ -18,7 +22,7 @@ permissions:
 
 jobs:
   release:
-    name: Build + publish APK
+    name: Test + publish APK
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -41,6 +45,49 @@ jobs:
 
       - name: Unit tests
         run: ./gradlew test
+
+      # KVM is available on GitHub-hosted ubuntu-latest runners as of 2024+;
+      # the emulator-runner action expects /dev/kvm to be world-readable.
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' \
+            | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+
+      - name: AVD cache
+        uses: actions/cache@v4
+        id: avd-cache
+        with:
+          path: |
+            ~/.android/avd/*
+            ~/.android/adb*
+          key: avd-api36-x86_64-v1
+
+      - name: Create AVD + warm cache (first run only)
+        if: steps.avd-cache.outputs.cache-hit != 'true'
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 36
+          target: google_apis
+          arch: x86_64
+          force-avd-creation: false
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim
+          disable-animations: true
+          working-directory: android/src
+          script: echo "AVD cache warmed."
+
+      - name: Instrumented tests on Android 16 (API 36)
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 36
+          target: google_apis
+          arch: x86_64
+          force-avd-creation: false
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim
+          disable-animations: true
+          working-directory: android/src
+          script: ./gradlew connectedDebugAndroidTest --info
 
       - name: Assemble release APK (debug-signed)
         run: ./gradlew assembleRelease

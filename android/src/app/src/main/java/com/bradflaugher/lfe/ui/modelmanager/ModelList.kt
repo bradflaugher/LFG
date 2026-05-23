@@ -199,13 +199,13 @@ fun ModelList(
             modifier =
               Modifier.offset(x = (20f * (1f - taskIconProgress)).dp).semantics {
                 contentDescription = task.label
-              }
+              },
           ) {
             RevealingText(
               text = task.label,
               style =
                 headlineLargeMedium.copy(
-                  brush = Brush.linearGradient(getTaskBgGradientColors(task = task))
+                  brush = Brush.linearGradient(getTaskBgGradientColors(task = task)),
                 ),
               textAlign = TextAlign.Center,
               animationProgress = taskIconProgress,
@@ -258,7 +258,7 @@ fun ModelList(
                 Modifier.padding(vertical = 8.dp).graphicsLayer {
                   alpha = descriptionProgress
                   translationY = (CONTENT_ANIMATION_OFFSET * (1 - descriptionProgress)).toPx()
-                }
+                },
             ) {
               Column(
                 horizontalAlignment = Alignment.Start,
@@ -385,10 +385,10 @@ fun ModelList(
           .height(contentPadding.calculateBottomPadding())
           .background(
             Brush.verticalGradient(
-              colors = listOf(Color.Transparent, MaterialTheme.colorScheme.surfaceContainer)
-            )
+              colors = listOf(Color.Transparent, MaterialTheme.colorScheme.surfaceContainer),
+            ),
           )
-          .align(Alignment.BottomCenter)
+          .align(Alignment.BottomCenter),
     )
   }
 }

@@ -53,7 +53,7 @@ fun MessageBodyText(
         inProgress = inProgress,
         modifier =
           Modifier.padding(vertical = 12.dp).padding(horizontal = horizontalPadding).semantics(
-            mergeDescendants = true
+            mergeDescendants = true,
           ) {
             contentDescription = cdResponse
             // Only announce when message is complete.

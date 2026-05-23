@@ -100,15 +100,16 @@ fun GalleryWebView(
 ) {
   val context = LocalContext.current
 
-  val curWebViewClient = remember {
-    customWebViewClient ?: BaseGalleryWebViewClient(context = context)
-  }
+  val curWebViewClient =
+    remember {
+      customWebViewClient ?: BaseGalleryWebViewClient(context = context)
+    }
   var pendingCameraPermissionRequest by remember { mutableStateOf<PermissionRequest?>(null) }
   var pendingAudioPermissionRequest by remember { mutableStateOf<PermissionRequest?>(null) }
 
   val cameraPermissionLauncher =
     rememberLauncherForActivityResult(contract = ActivityResultContracts.RequestPermission()) {
-      isGranted: Boolean ->
+        isGranted: Boolean ->
       pendingCameraPermissionRequest?.let { request ->
         if (isGranted) {
           request.grant(arrayOf(PermissionRequest.RESOURCE_VIDEO_CAPTURE))
@@ -123,7 +124,7 @@ fun GalleryWebView(
 
   val audioPermissionLauncher =
     rememberLauncherForActivityResult(contract = ActivityResultContracts.RequestPermission()) {
-      isGranted: Boolean ->
+        isGranted: Boolean ->
       pendingAudioPermissionRequest?.let { request ->
         if (isGranted) {
           request.grant(arrayOf(PermissionRequest.RESOURCE_AUDIO_CAPTURE))
@@ -179,12 +180,14 @@ fun GalleryWebView(
               onPermissionRequest?.invoke(request)
                 ?: run {
                   val resources = request.resources
-                  val isCameraRequest = resources.any {
-                    it == PermissionRequest.RESOURCE_VIDEO_CAPTURE
-                  }
-                  val isAudioRequest = resources.any {
-                    it == PermissionRequest.RESOURCE_AUDIO_CAPTURE
-                  }
+                  val isCameraRequest =
+                    resources.any {
+                      it == PermissionRequest.RESOURCE_VIDEO_CAPTURE
+                    }
+                  val isAudioRequest =
+                    resources.any {
+                      it == PermissionRequest.RESOURCE_AUDIO_CAPTURE
+                    }
 
                   if (isCameraRequest) {
                     pendingCameraPermissionRequest = request

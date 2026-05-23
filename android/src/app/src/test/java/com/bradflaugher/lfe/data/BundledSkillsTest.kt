@@ -16,17 +16,18 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class BundledSkillsTest {
-  private val expected = setOf(
-    "budget-tracker",
-    "calculate-hash",
-    "interactive-map",
-    "mood-tracker",
-    "password-generator",
-    "qr-code",
-    "query-wikipedia",
-    "send-email",
-    "translator",
-  )
+  private val expected =
+    setOf(
+      "budget-tracker",
+      "calculate-hash",
+      "interactive-map",
+      "mood-tracker",
+      "password-generator",
+      "qr-code",
+      "query-wikipedia",
+      "send-email",
+      "translator",
+    )
 
   private val skillsRoot = File("src/main/assets/skills")
 

@@ -31,13 +31,20 @@ interface DataStoreRepository {
 
   fun readTheme(): Theme
 
-  fun saveSecret(key: String, value: String)
+  fun saveSecret(
+    key: String,
+    value: String,
+  )
 
   fun readSecret(key: String): String?
 
   fun deleteSecret(key: String)
 
-  fun saveAccessTokenData(accessToken: String, refreshToken: String, expiresAt: Long)
+  fun saveAccessTokenData(
+    accessToken: String,
+    refreshToken: String,
+    expiresAt: Long,
+  )
 
   fun clearAccessTokenData()
 
@@ -59,7 +66,10 @@ interface DataStoreRepository {
 
   fun setSkills(skills: List<Skill>)
 
-  fun setSkillSelected(skill: Skill, selected: Boolean)
+  fun setSkillSelected(
+    skill: Skill,
+    selected: Boolean,
+  )
 
   fun setAllSkillsSelected(selected: Boolean)
 
@@ -106,7 +116,10 @@ class DefaultDataStoreRepository(
     }
   }
 
-  override fun saveSecret(key: String, value: String) {
+  override fun saveSecret(
+    key: String,
+    value: String,
+  ) {
     runBlocking {
       userDataDataStore.updateData { userData ->
         userData.toBuilder().putSecrets(key, value).build()
@@ -124,7 +137,11 @@ class DefaultDataStoreRepository(
     }
   }
 
-  override fun saveAccessTokenData(accessToken: String, refreshToken: String, expiresAt: Long) {
+  override fun saveAccessTokenData(
+    accessToken: String,
+    refreshToken: String,
+    expiresAt: Long,
+  ) {
     runBlocking {
       // Clear the entry in old data store.
       dataStore.updateData { settings ->
@@ -139,7 +156,7 @@ class DefaultDataStoreRepository(
               .setAccessToken(accessToken)
               .setRefreshToken(refreshToken)
               .setExpiresAtMs(expiresAt)
-              .build()
+              .build(),
           )
           .build()
       }
@@ -208,10 +225,11 @@ class DefaultDataStoreRepository(
   override fun addSkill(skill: Skill) {
     runBlocking {
       skillsDataStore.updateData { skills ->
-        val newSkills = buildList {
-          add(skill)
-          addAll(skills.skillList)
-        }
+        val newSkills =
+          buildList {
+            add(skill)
+            addAll(skills.skillList)
+          }
         skills.toBuilder().clearSkill().addAllSkill(newSkills).build()
       }
     }
@@ -225,7 +243,10 @@ class DefaultDataStoreRepository(
     }
   }
 
-  override fun setSkillSelected(skill: Skill, selected: Boolean) {
+  override fun setSkillSelected(
+    skill: Skill,
+    selected: Boolean,
+  ) {
     runBlocking {
       skillsDataStore.updateData { skills ->
         val newSkills =

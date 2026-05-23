@@ -83,7 +83,10 @@ interface LlmModelHelper {
    * @param model the model whose resources should be cleaned up.
    * @param onDone callback invoked when clean up completes.
    */
-  fun cleanUp(model: Model, onDone: () -> Unit)
+  fun cleanUp(
+    model: Model,
+    onDone: () -> Unit,
+  )
 
   /**
    * Runs an inference pass on the specified model.

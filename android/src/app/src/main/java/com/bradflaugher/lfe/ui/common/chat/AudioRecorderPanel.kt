@@ -127,7 +127,7 @@ fun AudioRecorderPanel(
       },
       colors =
         IconButtonDefaults.iconButtonColors(
-          containerColor = MaterialTheme.colorScheme.surfaceContainer.copy(alpha = PANEL_ALPHA)
+          containerColor = MaterialTheme.colorScheme.surfaceContainer.copy(alpha = PANEL_ALPHA),
         ),
     ) {
       Icon(
@@ -164,7 +164,7 @@ fun AudioRecorderPanel(
           Box(
             modifier =
               Modifier.size(8.dp)
-                .background(MaterialTheme.customColors.recordButtonBgColor, CircleShape)
+                .background(MaterialTheme.customColors.recordButtonBgColor, CircleShape),
           )
           Text("$elapsedSeconds s")
         }
@@ -204,7 +204,7 @@ fun AudioRecorderPanel(
           if (isRecording) Icons.Rounded.ArrowUpward else Icons.Rounded.Mic,
           contentDescription =
             stringResource(
-              if (isRecording) R.string.cd_send_audio_clip_icon else R.string.cd_start_recording
+              if (isRecording) R.string.cd_send_audio_clip_icon else R.string.cd_start_recording,
             ),
           tint = Color.White,
         )

@@ -53,7 +53,7 @@ fun TaskIcon(
         arrayOf(
           (1f + 0.2f) * (1 - animationProgress) - 0.2f to Color.Red,
           (1f + 0.2f) * (1 - animationProgress) to Color.Transparent,
-        )
+        ),
     )
   Box(modifier = modifier.width(width).aspectRatio(1f), contentAlignment = Alignment.Center) {
     val brush = linearGradient(colors = getTaskBgGradientColors(task = task))

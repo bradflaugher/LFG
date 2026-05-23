@@ -19,7 +19,10 @@ import androidx.compose.ui.res.stringResource
 import com.bradflaugher.lfe.R
 
 @Composable
-fun AddSkillDisclaimerDialog(onDismiss: () -> Unit, onConfirm: () -> Unit) {
+fun AddSkillDisclaimerDialog(
+  onDismiss: () -> Unit,
+  onConfirm: () -> Unit,
+) {
   AlertDialog(
     onDismissRequest = onDismiss,
     title = { Text(stringResource(R.string.disclaimer_dialog_title)) },

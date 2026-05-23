@@ -34,7 +34,10 @@ import androidx.compose.ui.unit.dp
 import com.bradflaugher.lfe.ui.theme.customColors
 
 @Composable
-fun buildTrackableUrlAnnotatedString(url: String, linkText: String): AnnotatedString {
+fun buildTrackableUrlAnnotatedString(
+  url: String,
+  linkText: String,
+): AnnotatedString {
   val uriHandler = LocalUriHandler.current
   return buildAnnotatedString {
     withLink(
@@ -47,10 +50,10 @@ fun buildTrackableUrlAnnotatedString(url: String, linkText: String): AnnotatedSt
                 SpanStyle(
                   color = MaterialTheme.customColors.linkColor,
                   textDecoration = TextDecoration.Underline,
-                )
+                ),
             ),
           linkInteractionListener = { uriHandler.openUri(url) },
-        )
+        ),
     ) {
       append(linkText)
     }

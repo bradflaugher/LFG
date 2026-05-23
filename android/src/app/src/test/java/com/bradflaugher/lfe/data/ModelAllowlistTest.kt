@@ -18,15 +18,16 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class ModelAllowlistTest {
-  private val removedTaskTypes = setOf(
-    "llm_chat",
-    "llm_prompt_lab",
-    "llm_ask_image",
-    "llm_ask_audio",
-    "llm_mobile_actions",
-    "llm_tiny_garden",
-    "mp_scrapbook",
-  )
+  private val removedTaskTypes =
+    setOf(
+      "llm_chat",
+      "llm_prompt_lab",
+      "llm_ask_image",
+      "llm_ask_audio",
+      "llm_mobile_actions",
+      "llm_tiny_garden",
+      "mp_scrapbook",
+    )
 
   private fun loadBundled(): ModelAllowlist {
     val json =
@@ -73,10 +74,11 @@ class ModelAllowlistTest {
   }
 
   @Test fun builtInTaskIdHasOnlyAgentChat() {
-    val knownIds = BuiltInTaskId::class.java.declaredFields
-      .filter { it.type == String::class.java }
-      .map { it.get(null) as String }
-      .toSet()
+    val knownIds =
+      BuiltInTaskId::class.java.declaredFields
+        .filter { it.type == String::class.java }
+        .map { it.get(null) as String }
+        .toSet()
     assertEquals(
       "BuiltInTaskId should expose only LLM_AGENT_CHAT",
       setOf(BuiltInTaskId.LLM_AGENT_CHAT),

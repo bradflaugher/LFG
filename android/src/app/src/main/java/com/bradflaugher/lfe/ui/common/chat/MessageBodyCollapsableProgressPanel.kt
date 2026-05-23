@@ -71,7 +71,7 @@ fun MessageBodyCollapsableProgressPanel(message: ChatMessageCollapsableProgressP
     modifier =
       Modifier.background(MaterialTheme.colorScheme.surfaceContainerHigh)
         .clickable { isExpanded = !isExpanded }
-        .fillMaxWidth()
+        .fillMaxWidth(),
   ) {
     // Header Row: Contains the title and the expand/collapse button
     Row(
@@ -134,7 +134,7 @@ fun MessageBodyCollapsableProgressPanel(message: ChatMessageCollapsableProgressP
                   12.dp
                 } else {
                   8.dp
-                }
+                },
             ),
         verticalArrangement = Arrangement.spacedBy(12.dp),
       ) {
@@ -153,9 +153,9 @@ fun MessageBodyCollapsableProgressPanel(message: ChatMessageCollapsableProgressP
               modifier =
                 Modifier.size(12.dp)
                   .clip(shape = CircleShape)
-                  .background(MaterialTheme.colorScheme.secondaryContainer)
+                  .background(MaterialTheme.colorScheme.secondaryContainer),
             )
-            Column() {
+            Column {
               // Title.
               Text(
                 item.title,

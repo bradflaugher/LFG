@@ -59,7 +59,7 @@ fun LongPressCopyContainer(
             onLongPress = {
               haptic.performHapticFeedback(HapticFeedbackType.LongPress)
               showMenu = true
-            }
+            },
           )
         }
         .semantics {
@@ -67,7 +67,7 @@ fun LongPressCopyContainer(
             showMenu = true
             true
           }
-        }
+        },
   ) {
     content()
     DropdownMenu(

@@ -99,7 +99,6 @@ fun ModelItem(
   val isBestOverall = model.bestForTaskIds.contains(task?.id ?: "")
   var isExpanded by remember { mutableStateOf(expanded ?: isBestOverall) }
 
-
   var boxModifier =
     modifier
       .fillMaxWidth()
@@ -157,7 +156,7 @@ fun ModelItem(
               if (isExpanded) Icons.Rounded.UnfoldLess else Icons.Rounded.UnfoldMore,
               contentDescription =
                 stringResource(
-                  if (isExpanded) R.string.cd_collapse_icon else R.string.cd_expand_icon
+                  if (isExpanded) R.string.cd_collapse_icon else R.string.cd_expand_icon,
                 ),
               tint = MaterialTheme.colorScheme.onSurfaceVariant,
               modifier = Modifier.alpha(0.6f),
@@ -226,7 +225,7 @@ fun ModelItem(
                 }
 
               AnimatedContent(targetState = layoutState) {
-                (targetShowColumnLayout, targetIsExpanded, targetVariantDownloadStatus) ->
+                  (targetShowColumnLayout, targetIsExpanded, targetVariantDownloadStatus) ->
                 @Composable
                 fun VariantHeader(modifier: Modifier = Modifier) {
                   ModelVariantHeader(
@@ -303,7 +302,7 @@ fun ModelItem(
                             sharedContentState =
                               rememberSharedContentState(key = "panel_${variantModel.name}"),
                             animatedVisibilityScope = this@AnimatedContent,
-                          )
+                          ),
                     )
                   }
                 } else {
@@ -320,7 +319,7 @@ fun ModelItem(
                             sharedContentState =
                               rememberSharedContentState(key = "panel_${variantModel.name}"),
                             animatedVisibilityScope = this@AnimatedContent,
-                          )
+                          ),
                     )
                   }
                 }

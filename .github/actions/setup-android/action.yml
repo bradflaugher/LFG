@@ -1,0 +1,17 @@
+name: Setup Android build
+description: Provision Temurin JDK 21, cache Gradle, mark gradlew executable.
+
+runs:
+  using: composite
+  steps:
+    - name: Set up JDK 21
+      uses: actions/setup-java@v4
+      with:
+        distribution: temurin
+        java-version: '21'
+        cache: gradle
+
+    - name: Make gradlew executable
+      shell: bash
+      working-directory: android/src
+      run: chmod +x gradlew

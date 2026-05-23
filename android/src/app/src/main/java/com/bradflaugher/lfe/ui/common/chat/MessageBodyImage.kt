@@ -45,11 +45,17 @@ fun MessageBodyImage(
     var imageHeight = bitmapHeight
     if (imageWidth >= maxSize || imageHeight >= maxSize) {
       imageWidth =
-        if (bitmapWidth >= bitmapHeight) maxSize
-        else (maxSize.toFloat() / bitmapHeight * bitmapWidth).toInt()
+        if (bitmapWidth >= bitmapHeight) {
+          maxSize
+        } else {
+          (maxSize.toFloat() / bitmapHeight * bitmapWidth).toInt()
+        }
       imageHeight =
-        if (bitmapHeight >= bitmapWidth) maxSize
-        else (maxSize.toFloat() / bitmapWidth * bitmapHeight).toInt()
+        if (bitmapHeight >= bitmapWidth) {
+          maxSize
+        } else {
+          (maxSize.toFloat() / bitmapWidth * bitmapHeight).toInt()
+        }
     }
 
     Image(

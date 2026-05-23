@@ -104,14 +104,16 @@ fun CursorTrackingTextField(
     onTextLayout = { textLayoutResult = it },
     modifier = modifier.fillMaxWidth().bringIntoViewRequester(bringIntoViewRequester),
     textStyle =
-      (if (monoFont) {
+      (
+        if (monoFont) {
           MaterialTheme.typography.bodySmall.copy(fontFamily = FontFamily.Monospace)
         } else {
           MaterialTheme.typography.bodyMedium
-        })
+        }
+      )
         .copy(
           // BasicTextField needs explicit color
-          color = MaterialTheme.colorScheme.onSurface.copy(alpha = if (enabled) 1f else 0.7f)
+          color = MaterialTheme.colorScheme.onSurface.copy(alpha = if (enabled) 1f else 0.7f),
         ),
     cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
     minLines = minLines,
@@ -129,11 +131,11 @@ fun CursorTrackingTextField(
                 text =
                   buildAnnotatedString {
                     withStyle(
-                      style = SpanStyle(fontSize = MaterialTheme.typography.bodyMedium.fontSize)
+                      style = SpanStyle(fontSize = MaterialTheme.typography.bodyMedium.fontSize),
                     ) {
                       append(stringResource(placeholderResId))
                     }
-                  }
+                  },
               )
             }
           } else {
@@ -149,7 +151,7 @@ fun CursorTrackingTextField(
           },
         supportingText = {
           if (supportingTextResId != null) {
-            Column() {
+            Column {
               Text(stringResource(supportingTextResId))
               extraBottomComposable()
             }

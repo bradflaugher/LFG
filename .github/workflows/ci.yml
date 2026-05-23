@@ -1,0 +1,64 @@
+name: CI
+
+# Fast PR feedback: lint + unit-test + debug assemble, in parallel.
+# Runs on PRs to main, branch pushes (except main; main has its own pipeline),
+# and manual dispatch. Wall time target: under 3 minutes.
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches-ignore: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    name: Android Lint
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: android/src
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup-android
+      - run: ./gradlew :app:lint
+
+  unit-test:
+    name: Unit tests
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: android/src
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup-android
+      - run: ./gradlew :app:testDebugUnitTest
+      - name: Upload test report on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: unit-test-report
+          path: android/src/app/build/reports/tests/testDebugUnitTest/
+          retention-days: 7
+
+  assemble:
+    name: Assemble debug APK
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: android/src
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup-android
+      - run: ./gradlew :app:assembleDebug
+      - name: Upload debug APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: lfe-debug-apk-${{ github.sha }}
+          path: android/src/app/build/outputs/apk/debug/*.apk
+          if-no-files-found: error
+          retention-days: 7

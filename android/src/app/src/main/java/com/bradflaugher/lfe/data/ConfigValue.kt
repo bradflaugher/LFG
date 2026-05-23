@@ -60,7 +60,10 @@ sealed class ConfigValue {
 //   }
 // }
 
-fun getIntConfigValue(configValue: ConfigValue?, default: Int): Int {
+fun getIntConfigValue(
+  configValue: ConfigValue?,
+  default: Int,
+): Int {
   if (configValue == null) {
     return default
   }
@@ -71,7 +74,10 @@ fun getIntConfigValue(configValue: ConfigValue?, default: Int): Int {
   }
 }
 
-fun getFloatConfigValue(configValue: ConfigValue?, default: Float): Float {
+fun getFloatConfigValue(
+  configValue: ConfigValue?,
+  default: Float,
+): Float {
   if (configValue == null) {
     return default
   }
@@ -82,7 +88,10 @@ fun getFloatConfigValue(configValue: ConfigValue?, default: Float): Float {
   }
 }
 
-fun getStringConfigValue(configValue: ConfigValue?, default: String): String {
+fun getStringConfigValue(
+  configValue: ConfigValue?,
+  default: String,
+): String {
   if (configValue == null) {
     return default
   }

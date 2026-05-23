@@ -94,8 +94,11 @@ fun ModelPageAppBar(
           horizontalArrangement = Arrangement.spacedBy(10.dp),
         ) {
           val tintColor =
-            if (useThemeColor) MaterialTheme.colorScheme.onSurface
-            else getTaskIconColor(task = task)
+            if (useThemeColor) {
+              MaterialTheme.colorScheme.onSurface
+            } else {
+              getTaskIconColor(task = task)
+            }
           Icon(
             task.icon ?: ImageVector.vectorResource(task.iconVectorResourceId!!),
             tint = tintColor,
@@ -192,7 +195,7 @@ fun ModelPageAppBar(
     }
     if (
       !supportsSpeculativeDecoding ||
-        !task.allowCapability(ModelCapability.SPECULATIVE_DECODING, model)
+      !task.allowCapability(ModelCapability.SPECULATIVE_DECODING, model)
     ) {
       modelConfigs.removeIf { it.key == ConfigKeys.ENABLE_SPECULATIVE_DECODING }
     }

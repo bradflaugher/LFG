@@ -34,7 +34,7 @@ android {
     // Configure your own client at https://huggingface.co/settings/applications and
     // override APP_AUTH_REDIRECT_SCHEME via -P or ~/.gradle/gradle.properties if you fork.
     manifestPlaceholders["appAuthRedirectScheme"] =
-        (project.findProperty("APP_AUTH_REDIRECT_SCHEME") as String?) ?: "com.bradflaugher.lfe"
+      (project.findProperty("APP_AUTH_REDIRECT_SCHEME") as String?) ?: "com.bradflaugher.lfe"
     manifestPlaceholders["applicationName"] = "com.bradflaugher.lfe.LfeApplication"
     manifestPlaceholders["appIcon"] = "@mipmap/ic_launcher"
 
@@ -65,6 +65,18 @@ android {
   testOptions {
     unitTests.isReturnDefaultValues = true
     unitTests.isIncludeAndroidResources = true
+  }
+
+  lint {
+    // Surface lint failures in CI. Pre-existing gallery-inherited issues live
+    // in app/lint-baseline.xml — new issues fail the build.
+    abortOnError = true
+    warningsAsErrors = false
+    checkReleaseBuilds = true
+    baseline = file("lint-baseline.xml")
+    htmlReport = true
+    xmlReport = true
+    textReport = false
   }
 }
 

@@ -95,14 +95,15 @@ object HuggingFaceApi {
 
     var connection: HttpURLConnection? = null
     try {
-      connection = (URL(url).openConnection() as HttpURLConnection).apply {
-        requestMethod = "GET"
-        connectTimeout = 8000
-        readTimeout = 15000
-        if (!authToken.isNullOrEmpty()) {
-          setRequestProperty("Authorization", "Bearer $authToken")
+      connection =
+        (URL(url).openConnection() as HttpURLConnection).apply {
+          requestMethod = "GET"
+          connectTimeout = 8000
+          readTimeout = 15000
+          if (!authToken.isNullOrEmpty()) {
+            setRequestProperty("Authorization", "Bearer $authToken")
+          }
         }
-      }
       val code = connection.responseCode
       if (code != HttpURLConnection.HTTP_OK) {
         Log.w(TAG, "HF API returned HTTP $code")
@@ -144,9 +145,10 @@ object HuggingFaceApi {
     params += "direction" to direction
     params += "limit" to limit.toString()
     if (full) params += "full" to "true"
-    val query = params.joinToString("&") { (k, v) ->
-      "$k=${URLEncoder.encode(v, "UTF-8")}"
-    }
+    val query =
+      params.joinToString("&") { (k, v) ->
+        "$k=${URLEncoder.encode(v, "UTF-8")}"
+      }
     return "$BASE?$query"
   }
 

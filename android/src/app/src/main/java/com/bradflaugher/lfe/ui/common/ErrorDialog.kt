@@ -26,7 +26,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 
 @Composable
-fun ErrorDialog(error: String, onDismiss: () -> Unit) {
+fun ErrorDialog(
+  error: String,
+  onDismiss: () -> Unit,
+) {
   Dialog(onDismissRequest = onDismiss) {
     Card(modifier = Modifier.fillMaxWidth(), shape = RoundedCornerShape(16.dp)) {
       Column(

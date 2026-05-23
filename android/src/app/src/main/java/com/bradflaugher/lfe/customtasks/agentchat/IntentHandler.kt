@@ -44,7 +44,8 @@ data class CreateCalendarEventParams(
   val end_time: String,
 )
 
-@JsonClass(generateAdapter = true) data class ReadCalendarEventsParams(val date: String)
+@JsonClass(generateAdapter = true)
+data class ReadCalendarEventsParams(val date: String)
 
 @JsonClass(generateAdapter = true)
 data class CalendarEventDto(
@@ -62,7 +63,8 @@ enum class IntentAction(val action: String) {
   SEND_SMS("send_sms"),
   CREATE_CALENDAR_EVENT("create_calendar_event"),
   READ_CALENDAR_EVENTS("read_calendar_events"),
-  GET_CURRENT_DATE_AND_TIME("get_current_date_and_time");
+  GET_CURRENT_DATE_AND_TIME("get_current_date_and_time"),
+  ;
 
   companion object {
     fun from(action: String): IntentAction? = entries.find { it.action == action }
@@ -177,7 +179,7 @@ object IntentHandler {
   ): String {
     if (
       checkSelfPermission(context, android.Manifest.permission.READ_CALENDAR) !=
-        android.content.pm.PackageManager.PERMISSION_GRANTED
+      android.content.pm.PackageManager.PERMISSION_GRANTED
     ) {
       val granted = requestPermission(android.Manifest.permission.READ_CALENDAR)
       if (!granted) {
@@ -244,7 +246,7 @@ object IntentHandler {
                   description = desc,
                   begin_time = if (start > 0) timeFormat.format(Date(start)) else "",
                   end_time = if (end > 0) timeFormat.format(Date(end)) else "",
-                )
+                ),
               )
             }
           }

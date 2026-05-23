@@ -108,7 +108,7 @@ fun ModelNameAndStatus(
                 Modifier.clickable { showUpdateDialog = true }
               } else {
                 Modifier
-              }
+              },
             ),
       ) {
         Icon(
@@ -249,7 +249,7 @@ fun ModelStatusDetails(
       }
 
       Column(
-        horizontalAlignment = if (isExpanded) Alignment.CenterHorizontally else Alignment.Start
+        horizontalAlignment = if (isExpanded) Alignment.CenterHorizontally else Alignment.Start,
       ) {
         for ((index, line) in sizeLabel.split("\n").withIndex()) {
           Text(
@@ -259,7 +259,7 @@ fun ModelStatusDetails(
             style =
               MaterialTheme.typography.bodyMedium.copy(
                 // This stops numbers from "jumping around" when being updated.
-                fontFeatureSettings = "tnum"
+                fontFeatureSettings = "tnum",
               ),
             overflow = TextOverflow.Visible,
             modifier = Modifier.offset(y = if (index == 0) 0.dp else (-1).dp),

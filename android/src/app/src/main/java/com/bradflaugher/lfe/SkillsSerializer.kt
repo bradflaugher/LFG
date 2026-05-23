@@ -29,5 +29,8 @@ object SkillsSerializer : Serializer<Skills> {
     }
   }
 
-  override suspend fun writeTo(t: Skills, output: OutputStream) = t.writeTo(output)
+  override suspend fun writeTo(
+    t: Skills,
+    output: OutputStream,
+  ) = t.writeTo(output)
 }

@@ -47,8 +47,11 @@ fun MessageActionButton(
         .padding(top = 4.dp)
         .clip(CircleShape)
         .background(
-          if (enabled) MaterialTheme.colorScheme.secondaryContainer
-          else MaterialTheme.colorScheme.surfaceContainerHigh
+          if (enabled) {
+            MaterialTheme.colorScheme.secondaryContainer
+          } else {
+            MaterialTheme.colorScheme.surfaceContainerHigh
+          },
         )
         .clickable(enabled = enabled) { onClick() },
     verticalAlignment = Alignment.CenterVertically,

@@ -110,7 +110,7 @@ fun AddSkillFromLocalImportDialog(
                 Modifier.weight(1f)
                   .clip(RoundedCornerShape(4.dp))
                   .background(MaterialTheme.colorScheme.surfaceContainerHigh)
-                  .padding(horizontal = 12.dp, vertical = 8.dp)
+                  .padding(horizontal = 12.dp, vertical = 8.dp),
             ) {
               Text(
                 text =
@@ -202,7 +202,7 @@ fun AddSkillFromLocalImportDialog(
               },
               onValidationError = {},
             )
-          }
+          },
         ) {
           Text(stringResource(R.string.replace))
         }

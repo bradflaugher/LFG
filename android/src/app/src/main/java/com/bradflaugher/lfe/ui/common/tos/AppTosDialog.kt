@@ -38,7 +38,10 @@ import com.bradflaugher.lfe.ui.common.MarkdownText
 /** A composable for Terms of Service dialog, shown once when app is launched. */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AppTosDialog(onTosAccepted: () -> Unit, viewingMode: Boolean = false) {
+fun AppTosDialog(
+  onTosAccepted: () -> Unit,
+  viewingMode: Boolean = false,
+) {
   Dialog(
     properties = DialogProperties(dismissOnBackPress = false, dismissOnClickOutside = false),
     onDismissRequest = { if (viewingMode) onTosAccepted() },
@@ -79,9 +82,12 @@ fun AppTosDialog(onTosAccepted: () -> Unit, viewingMode: Boolean = false) {
         ) {
           Text(
             stringResource(
-              if (viewingMode) R.string.close
-              else R.string.tos_dialog_accept_and_continue_button_label
-            )
+              if (viewingMode) {
+                R.string.close
+              } else {
+                R.string.tos_dialog_accept_and_continue_button_label
+              },
+            ),
           )
         }
       }

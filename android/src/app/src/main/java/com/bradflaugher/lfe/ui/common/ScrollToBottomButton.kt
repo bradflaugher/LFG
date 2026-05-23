@@ -32,7 +32,10 @@ import com.bradflaugher.lfe.R
  * it triggers the [onClick] action, typically used to scroll to the bottom of a view.
  */
 @Composable
-fun ScrollToBottomButton(isAtBottom: Boolean, onClick: () -> Unit) {
+fun ScrollToBottomButton(
+  isAtBottom: Boolean,
+  onClick: () -> Unit,
+) {
   AnimatedVisibility(
     visible = !isAtBottom,
     enter =
@@ -42,7 +45,7 @@ fun ScrollToBottomButton(isAtBottom: Boolean, onClick: () -> Unit) {
             spring(
               dampingRatio = Spring.DampingRatioMediumBouncy,
               stiffness = Spring.StiffnessMedium,
-            )
+            ),
         ),
     exit = fadeOut(animationSpec = tween(durationMillis = 200)),
   ) {
@@ -50,7 +53,7 @@ fun ScrollToBottomButton(isAtBottom: Boolean, onClick: () -> Unit) {
       onClick = onClick,
       colors =
         IconButtonDefaults.filledIconButtonColors(
-          containerColor = MaterialTheme.colorScheme.secondaryContainer
+          containerColor = MaterialTheme.colorScheme.secondaryContainer,
         ),
     ) {
       Icon(

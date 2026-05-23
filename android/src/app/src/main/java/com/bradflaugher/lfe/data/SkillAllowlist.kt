@@ -22,4 +22,6 @@ data class AllowedSkill(
 )
 
 /** The skill allowlist. */
-data class SkillAllowlist(@SerializedName("featuredSkills") val featuredSkills: List<AllowedSkill>)
+data class SkillAllowlist(
+  @SerializedName("featuredSkills") val featuredSkills: List<AllowedSkill>,
+)

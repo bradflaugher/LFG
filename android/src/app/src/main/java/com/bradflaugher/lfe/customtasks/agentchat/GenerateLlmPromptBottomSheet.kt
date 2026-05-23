@@ -162,7 +162,7 @@ fun GenerateLlmPromptBottomSheet(
                 sheetState.hide()
                 onDismiss()
               }
-            }
+            },
           ) {
             Text(stringResource(R.string.generate_and_copy))
           }

@@ -14,7 +14,6 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.graphics.Bitmap
-import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.Spring
@@ -45,17 +44,12 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ThumbDown
-import androidx.compose.material.icons.filled.ThumbUp
-import androidx.compose.material.icons.outlined.ThumbDown
-import androidx.compose.material.icons.outlined.ThumbUp
 import androidx.compose.material.icons.rounded.ContentCopy
 import androidx.compose.material.icons.rounded.Refresh
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -206,9 +200,9 @@ fun ChatPanel(
   var isAtBottom by remember { mutableStateOf(true) }
   LaunchedEffect(listState) {
     snapshotFlow {
-        // Read the raw scroll state here
-        !listState.canScrollForward
-      }
+      // Read the raw scroll state here
+      !listState.canScrollForward
+    }
       .collectLatest { rawAtBottom ->
         if (!rawAtBottom) {
           delay(500)
@@ -242,7 +236,7 @@ fun ChatPanel(
         val prevMessage = currentMessages.getOrNull(startIndex - 1)
         if (
           prevMessage != null &&
-            (prevMessage is ChatMessageImage || prevMessage is ChatMessageAudioClip)
+          (prevMessage is ChatMessageImage || prevMessage is ChatMessageAudioClip)
         ) {
           startIndex -= 1
         }
@@ -258,20 +252,24 @@ fun ChatPanel(
   }
 
   // Nested scroll connection to handle scrolling behavior.
-  val nestedScrollConnection = remember {
-    object : NestedScrollConnection {
-      override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
-        // If downward scroll, clear the focus from any currently focused composable.
-        // This is useful for dismissing software keyboards or hiding text input fields
-        // when the user starts scrolling down a list.
-        if (available.y > 0) {
-          focusManager.clearFocus()
+  val nestedScrollConnection =
+    remember {
+      object : NestedScrollConnection {
+        override fun onPreScroll(
+          available: Offset,
+          source: NestedScrollSource,
+        ): Offset {
+          // If downward scroll, clear the focus from any currently focused composable.
+          // This is useful for dismissing software keyboards or hiding text input fields
+          // when the user starts scrolling down a list.
+          if (available.y > 0) {
+            focusManager.clearFocus()
+          }
+          // Let LazyColumn handle the scroll
+          return Offset.Zero
         }
-        // Let LazyColumn handle the scroll
-        return Offset.Zero
       }
     }
-  }
 
   // Show the image limit banner for 3 seconds.
   LaunchedEffect(showImageLimitBanner) {
@@ -312,7 +310,7 @@ fun ChatPanel(
             spring(
               stiffness = Spring.StiffnessLow,
               visibilityThreshold = IntOffset.VisibilityThreshold,
-            )
+            ),
         ) {
           it
         } + fadeIn(animationSpec = spring(stiffness = Spring.StiffnessLow)),
@@ -323,7 +321,7 @@ fun ChatPanel(
     }
 
     Column(
-      modifier = modifier.padding(innerPadding).consumeWindowInsets(innerPadding).imePadding()
+      modifier = modifier.padding(innerPadding).consumeWindowInsets(innerPadding).imePadding(),
     ) {
       Box(
         contentAlignment = Alignment.BottomCenter,
@@ -356,8 +354,8 @@ fun ChatPanel(
               extraPaddingStart = 0.dp
               if (
                 message.type !== ChatMessageType.LOADING &&
-                  message.type !== ChatMessageType.WEBVIEW &&
-                  message.type !== ChatMessageType.COLLAPSABLE_PROGRESS_PANEL
+                message.type !== ChatMessageType.WEBVIEW &&
+                message.type !== ChatMessageType.COLLAPSABLE_PROGRESS_PANEL
               ) {
                 extraPaddingEnd = 48.dp
               }
@@ -444,7 +442,7 @@ fun ChatPanel(
                           MessageBubbleShape(
                             radius = bubbleBorderRadius,
                             hardCornerAtLeftOrRight = hardCornerAtLeftOrRight,
-                          )
+                          ),
                         )
                     }
                     messageBubbleModifier = messageBubbleModifier.background(backgroundColor)
@@ -656,7 +654,6 @@ fun ChatPanel(
       onDismiss = { showErrorDialog = false },
     )
   }
-
 }
 
 private suspend fun scrollToBottom(

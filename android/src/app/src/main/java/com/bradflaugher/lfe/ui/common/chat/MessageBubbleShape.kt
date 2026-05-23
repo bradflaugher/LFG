@@ -46,14 +46,20 @@ class MessageBubbleShape(
             right = size.width,
             bottom = size.height,
             topLeftCornerRadius =
-              if (hardCornerAtLeftOrRight) CornerRadius(0f, 0f)
-              else CornerRadius(radiusPx, radiusPx),
+              if (hardCornerAtLeftOrRight) {
+                CornerRadius(0f, 0f)
+              } else {
+                CornerRadius(radiusPx, radiusPx)
+              },
             topRightCornerRadius =
-              if (hardCornerAtLeftOrRight) CornerRadius(radiusPx, radiusPx)
-              else CornerRadius(0f, 0f), // No rounding here
+              if (hardCornerAtLeftOrRight) {
+                CornerRadius(radiusPx, radiusPx)
+              } else {
+                CornerRadius(0f, 0f)
+              }, // No rounding here
             bottomLeftCornerRadius = CornerRadius(radiusPx, radiusPx),
             bottomRightCornerRadius = CornerRadius(radiusPx, radiusPx),
-          )
+          ),
         )
       }
     return Outline.Generic(path)

@@ -67,7 +67,6 @@ import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.rounded.AudioFile
 import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.FlipCameraAndroid
-import androidx.compose.material.icons.rounded.History
 import androidx.compose.material.icons.rounded.Mic
 import androidx.compose.material.icons.rounded.Photo
 import androidx.compose.material.icons.rounded.PhotoCamera
@@ -222,7 +221,7 @@ fun MessageInputText(
   // Permission request when taking picture.
   val takePicturePermissionLauncher =
     rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) {
-      permissionGranted ->
+        permissionGranted ->
       if (permissionGranted) {
         showAddContentMenu = false
         showCameraCaptureBottomSheet = true
@@ -238,7 +237,7 @@ fun MessageInputText(
   // Permission request when recording audio clips.
   val recordAudioClipsPermissionLauncher =
     rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) {
-      permissionGranted ->
+        permissionGranted ->
       if (permissionGranted) {
         handleClickRecordAudioClip()
       }
@@ -262,7 +261,7 @@ fun MessageInputText(
 
   val pickWav =
     rememberLauncherForActivityResult(
-      contract = ActivityResultContracts.StartActivityForResult()
+      contract = ActivityResultContracts.StartActivityForResult(),
     ) { result ->
       if (result.resultCode == android.app.Activity.RESULT_OK) {
         result.data?.data?.let { uri ->
@@ -274,8 +273,8 @@ fun MessageInputText(
               onAudioSelected = { audioClip ->
                 updatePickedAudioClips(
                   listOf(
-                    AudioClip(audioData = audioClip.audioData, sampleRate = audioClip.sampleRate)
-                  )
+                    AudioClip(audioData = audioClip.audioData, sampleRate = audioClip.sampleRate),
+                  ),
                 )
               },
             )
@@ -322,7 +321,7 @@ fun MessageInputText(
                 Modifier.shadow(2.dp, shape = RoundedCornerShape(8.dp))
                   .clip(RoundedCornerShape(8.dp))
                   .background(MaterialTheme.colorScheme.surface)
-                  .border(1.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(8.dp))
+                  .border(1.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(8.dp)),
             ) {
               AudioPlaybackPanel(
                 audioData = audioClip.audioData,
@@ -332,9 +331,10 @@ fun MessageInputText(
               )
             }
             MediaPanelCloseButton {
-              pickedAudioClips = pickedAudioClips.filterIndexed { curIndex, curAudioData ->
-                curIndex != index
-              }
+              pickedAudioClips =
+                pickedAudioClips.filterIndexed { curIndex, curAudioData ->
+                  curIndex != index
+                }
             }
           }
         }
@@ -352,7 +352,7 @@ fun MessageInputText(
               modifier =
                 Modifier.padding(horizontal = 12.dp)
                   .padding(vertical = 8.dp)
-                  .border(1.dp, MaterialTheme.colorScheme.outlineVariant, RoundedCornerShape(16.dp))
+                  .border(1.dp, MaterialTheme.colorScheme.outlineVariant, RoundedCornerShape(16.dp)),
             ) {
               // First row: text field for input.
               Row(
@@ -393,7 +393,7 @@ fun MessageInputText(
                   horizontalArrangement = Arrangement.spacedBy(4.dp),
                 ) {
                   // A plus button to show a popup menu to add stuff to the chat.
-                  Box() {
+                  Box {
                     val enableAddButton = !inProgress && !isResettingSession && !modelInitializing
                     OutlinedIconButton(
                       enabled = enableAddButton,
@@ -401,7 +401,7 @@ fun MessageInputText(
                       colors =
                         IconButtonDefaults.iconButtonColors(
                           disabledContentColor =
-                            MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f)
+                            MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f),
                         ),
                       border =
                         IconButtonDefaults.outlinedIconButtonBorder(true)
@@ -409,9 +409,9 @@ fun MessageInputText(
                             brush =
                               SolidColor(
                                 MaterialTheme.colorScheme.outlineVariant.copy(
-                                  alpha = if (enableAddButton) 1f else 0.1f
-                                )
-                              )
+                                  alpha = if (enableAddButton) 1f else 0.1f,
+                                ),
+                              ),
                           ),
                     ) {
                       Icon(
@@ -453,7 +453,8 @@ fun MessageInputText(
                               ContextCompat.checkSelfPermission(
                                 context,
                                 Manifest.permission.CAMERA,
-                              ) -> {
+                              ),
+                              -> {
                                 showAddContentMenu = false
                                 showCameraCaptureBottomSheet = true
                               }
@@ -487,8 +488,8 @@ fun MessageInputText(
                             // Launch the photo picker and let the user choose only images.
                             pickMedia.launch(
                               PickVisualMediaRequest(
-                                ActivityResultContracts.PickVisualMedia.ImageOnly
-                              )
+                                ActivityResultContracts.PickVisualMedia.ImageOnly,
+                              ),
                             )
                             showAddContentMenu = false
                           },
@@ -517,14 +518,15 @@ fun MessageInputText(
                               ContextCompat.checkSelfPermission(
                                 context,
                                 Manifest.permission.RECORD_AUDIO,
-                              ) -> {
+                              ),
+                              -> {
                                 handleClickRecordAudioClip()
                               }
 
                               // Otherwise, ask for permission
                               else -> {
                                 recordAudioClipsPermissionLauncher.launch(
-                                  Manifest.permission.RECORD_AUDIO
+                                  Manifest.permission.RECORD_AUDIO,
                                 )
                               }
                             }
@@ -564,7 +566,6 @@ fun MessageInputText(
                           },
                         )
                       }
-
                     }
                   }
 
@@ -583,9 +584,9 @@ fun MessageInputText(
                           contentAlignment = Alignment.Center,
                           modifier =
                             Modifier.background(
-                                MaterialTheme.colorScheme.surfaceContainer,
-                                shape = CircleShape,
-                              )
+                              MaterialTheme.colorScheme.surfaceContainer,
+                              shape = CircleShape,
+                            )
                               .height(18.dp)
                               .widthIn(min = 18.dp),
                         ) {
@@ -597,7 +598,6 @@ fun MessageInputText(
                       }
                     }
                   }
-
                 }
 
                 // Stop button.
@@ -607,7 +607,7 @@ fun MessageInputText(
                       onClick = onStopButtonClicked,
                       colors =
                         IconButtonDefaults.iconButtonColors(
-                          containerColor = MaterialTheme.colorScheme.secondaryContainer
+                          containerColor = MaterialTheme.colorScheme.secondaryContainer,
                         ),
                     ) {
                       Icon(
@@ -632,7 +632,7 @@ fun MessageInputText(
                           pickedImages = pickedImages,
                           audioClips = pickedAudioClips,
                           text = message,
-                        )
+                        ),
                       )
                       pickedImages = listOf()
                       pickedAudioClips = listOf()
@@ -661,7 +661,7 @@ fun MessageInputText(
               onSendAudioClip = { audioData ->
                 scope.launch {
                   updatePickedAudioClips(
-                    listOf(AudioClip(audioData = audioData, sampleRate = SAMPLE_RATE))
+                    listOf(AudioClip(audioData = audioData, sampleRate = SAMPLE_RATE)),
                   )
                   audioRecorderSheetState.hide()
                   showAudioRecorder = false
@@ -686,22 +686,23 @@ fun MessageInputText(
     ) {
       val lifecycleOwner = LocalLifecycleOwner.current
       val previewUseCase = remember { androidx.camera.core.Preview.Builder().build() }
-      val imageCaptureUseCase = remember {
-        // Try to limit the image size.
-        val preferredSize = Size(512, 512)
-        val resolutionStrategy =
-          ResolutionStrategy(
-            preferredSize,
-            ResolutionStrategy.FALLBACK_RULE_CLOSEST_HIGHER_THEN_LOWER,
-          )
-        val resolutionSelector =
-          ResolutionSelector.Builder()
-            .setResolutionStrategy(resolutionStrategy)
-            .setAspectRatioStrategy(AspectRatioStrategy.RATIO_4_3_FALLBACK_AUTO_STRATEGY)
-            .build()
+      val imageCaptureUseCase =
+        remember {
+          // Try to limit the image size.
+          val preferredSize = Size(512, 512)
+          val resolutionStrategy =
+            ResolutionStrategy(
+              preferredSize,
+              ResolutionStrategy.FALLBACK_RULE_CLOSEST_HIGHER_THEN_LOWER,
+            )
+          val resolutionSelector =
+            ResolutionSelector.Builder()
+              .setResolutionStrategy(resolutionStrategy)
+              .setAspectRatioStrategy(AspectRatioStrategy.RATIO_4_3_FALLBACK_AUTO_STRATEGY)
+              .build()
 
-        ImageCapture.Builder().setResolutionSelector(resolutionSelector).build()
-      }
+          ImageCapture.Builder().setResolutionSelector(resolutionSelector).build()
+        }
       var cameraProvider by remember { mutableStateOf<ProcessCameraProvider?>(null) }
       var cameraControl by remember { mutableStateOf<CameraControl?>(null) }
       val localContext = LocalContext.current
@@ -765,7 +766,7 @@ fun MessageInputText(
           },
           colors =
             IconButtonDefaults.iconButtonColors(
-              containerColor = MaterialTheme.colorScheme.surfaceVariant
+              containerColor = MaterialTheme.colorScheme.surfaceVariant,
             ),
           modifier = Modifier.offset(x = (-8).dp, y = 8.dp).align(Alignment.TopEnd),
         ) {
@@ -796,7 +797,9 @@ fun MessageInputText(
                       if (rotation != 0) {
                         val matrix = Matrix().apply { postRotate(rotation.toFloat()) }
                         Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true)
-                      } else bitmap
+                      } else {
+                        bitmap
+                      }
                     bitmap = resizeBitmap(originalBitmap = bitmap)
                     updatePickedImages(listOf(bitmap))
                   } catch (e: Exception) {
@@ -826,7 +829,7 @@ fun MessageInputText(
           IconButton(
             colors =
               IconButtonDefaults.iconButtonColors(
-                containerColor = MaterialTheme.colorScheme.secondaryContainer
+                containerColor = MaterialTheme.colorScheme.secondaryContainer,
               ),
             modifier =
               Modifier.align(Alignment.BottomEnd).padding(bottom = 40.dp, end = 32.dp).size(48.dp),
@@ -859,7 +862,7 @@ private fun MediaPanelCloseButton(onClicked: () -> Unit) {
         .clip(CircleShape)
         .background(MaterialTheme.colorScheme.surface)
         .border((1.5).dp, MaterialTheme.colorScheme.outline, CircleShape)
-        .clickable { onClicked() }
+        .clickable { onClicked() },
   ) {
     Icon(
       Icons.Rounded.Close,
@@ -926,7 +929,10 @@ private fun handleAudioWavSelected(
  * Resizes a given Bitmap to fit within a square of a specified size, while maintaining its original
  * aspect ratio.
  */
-private fun resizeBitmap(originalBitmap: Bitmap, size: Int = 1024): Bitmap {
+private fun resizeBitmap(
+  originalBitmap: Bitmap,
+  size: Int = 1024,
+): Bitmap {
   val originalWidth = originalBitmap.width
   val originalHeight = originalBitmap.height
 
@@ -955,7 +961,10 @@ private fun resizeBitmap(originalBitmap: Bitmap, size: Int = 1024): Bitmap {
   return originalBitmap.scale(newWidth, newHeight)
 }
 
-private fun checkFrontCamera(context: Context, callback: (Boolean) -> Unit) {
+private fun checkFrontCamera(
+  context: Context,
+  callback: (Boolean) -> Unit,
+) {
   val cameraProviderFuture = ProcessCameraProvider.getInstance(context)
   cameraProviderFuture.addListener(
     {
@@ -992,7 +1001,7 @@ private fun createMessagesToSend(
         bitmaps = curPickedImages,
         imageBitMaps = curPickedImages.map { it.asImageBitmap() },
         side = ChatSide.USER,
-      )
+      ),
     )
   }
 
@@ -1005,7 +1014,7 @@ private fun createMessagesToSend(
           audioData = audioClip.audioData,
           sampleRate = audioClip.sampleRate,
           side = ChatSide.USER,
-        )
+        ),
       )
     }
   }
@@ -1073,5 +1082,8 @@ private class SensorObserver(context: Context) : DefaultLifecycleObserver, Senso
     }
   }
 
-  override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {}
+  override fun onAccuracyChanged(
+    sensor: Sensor?,
+    accuracy: Int,
+  ) {}
 }

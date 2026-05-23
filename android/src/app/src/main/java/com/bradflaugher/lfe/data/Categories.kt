@@ -22,10 +22,8 @@ import com.bradflaugher.lfe.R
 data class CategoryInfo(
   // The id of the category.
   val id: String,
-
   // The string resource id of the label of the resource, for display purpose.
   @StringRes val labelStringRes: Int? = null,
-
   // The string label. It takes precedence over labelStringRes above.
   val label: String? = null,
 )

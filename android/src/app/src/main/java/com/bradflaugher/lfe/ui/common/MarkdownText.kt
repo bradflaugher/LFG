@@ -38,8 +38,11 @@ fun MarkdownText(
   linkColor: Color = MaterialTheme.customColors.linkColor,
 ) {
   val fontSize =
-    if (smallFontSize) MaterialTheme.typography.bodyMedium.fontSize
-    else MaterialTheme.typography.bodyLarge.fontSize
+    if (smallFontSize) {
+      MaterialTheme.typography.bodyMedium.fontSize
+    } else {
+      MaterialTheme.typography.bodyLarge.fontSize
+    }
   CompositionLocalProvider {
     ProvideTextStyle(
       value =
@@ -48,7 +51,7 @@ fun MarkdownText(
           lineHeight = fontSize * if (smallFontSize) 1.4f else 1.5f,
           color = textColor,
           letterSpacing = 0.2.sp,
-        )
+        ),
     ) {
       RichText(
         modifier = modifier,
@@ -61,7 +64,7 @@ fun MarkdownText(
                     fontSize = MaterialTheme.typography.bodySmall.fontSize,
                     fontFamily = FontFamily.Monospace,
                     lineHeight = MaterialTheme.typography.bodySmall.fontSize * 1.4f,
-                  )
+                  ),
               ),
             stringStyle =
               RichTextStringStyle(linkStyle = TextLinkStyles(style = SpanStyle(color = linkColor))),

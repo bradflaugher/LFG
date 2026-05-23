@@ -137,13 +137,13 @@ fun AudioPlaybackPanel(
             isPlaying = false
           }
         }
-      }
+      },
     ) {
       Icon(
         if (isPlaying) Icons.Rounded.Stop else Icons.Rounded.PlayArrow,
         contentDescription =
           stringResource(
-            if (isPlaying) R.string.cd_stop_playback_icon else R.string.cd_play_audio_icon
+            if (isPlaying) R.string.cd_stop_playback_icon else R.string.cd_play_audio_icon,
           ),
         tint = if (onDarkBg) Color.White else MaterialTheme.colorScheme.primary,
       )
@@ -236,14 +236,14 @@ private suspend fun playAudio(
             AudioAttributes.Builder()
               .setContentType(AudioAttributes.CONTENT_TYPE_SPEECH)
               .setUsage(AudioAttributes.USAGE_MEDIA)
-              .build()
+              .build(),
           )
           .setAudioFormat(
             AudioFormat.Builder()
               .setEncoding(AudioFormat.ENCODING_PCM_16BIT)
               .setSampleRate(sampleRate)
               .setChannelMask(AudioFormat.CHANNEL_OUT_MONO)
-              .build()
+              .build(),
           )
           .setTransferMode(AudioTrack.MODE_STATIC)
           .setBufferSizeInBytes(audioData.size)
@@ -295,7 +295,10 @@ private fun stopPlayAudio(audioTrackState: MutableState<AudioTrack?>) {
  * Processes a raw PCM 16-bit audio byte array to generate a list of normalized amplitude levels for
  * visualization.
  */
-private fun generateAmplitudeLevels(audioData: ByteArray, barCount: Int): List<Float> {
+private fun generateAmplitudeLevels(
+  audioData: ByteArray,
+  barCount: Int,
+): List<Float> {
   if (audioData.isEmpty()) {
     return List(barCount) { 0f }
   }

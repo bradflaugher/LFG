@@ -59,80 +59,82 @@ internal const val DEFAULT_SYSTEM_PROMPT_SKILLS_ONLY =
 internal val DEFAULT_SYSTEM_PROMPT_SKILLS_ONLY_TRIMMED =
   DEFAULT_SYSTEM_PROMPT_SKILLS_ONLY.trimIndent()
 
-class AgentChatTask @Inject constructor() : CustomTask {
-  private val agentTools = AgentTools()
+class AgentChatTask
+  @Inject
+  constructor() : CustomTask {
+    private val agentTools = AgentTools()
 
-  override val task: Task =
-    Task(
-      id = BuiltInTaskId.LLM_AGENT_CHAT,
-      label = "Agent Skills",
-      category = Category.LLM,
-      iconVectorResourceId = R.drawable.agent,
-      newFeature = true,
-      models = mutableListOf(),
-      description = "Chat with on-device large language models with skills",
-      shortDescription = "Complete agentic tasks with chat",
-      docUrl = "https://github.com/google-ai-edge/LiteRT-LM/blob/main/kotlin/README.md",
-      sourceCodeUrl =
-        "https://github.com/google-ai-edge/gallery/blob/main/Android/src/app/src/main/java/com/google/ai/edge/gallery/customtasks/agentchat/",
-      textInputPlaceHolderRes = R.string.text_input_placeholder_llm_chat,
-      defaultSystemPrompt = DEFAULT_SYSTEM_PROMPT_SKILLS_ONLY_TRIMMED,
-    )
+    override val task: Task =
+      Task(
+        id = BuiltInTaskId.LLM_AGENT_CHAT,
+        label = "Agent Skills",
+        category = Category.LLM,
+        iconVectorResourceId = R.drawable.agent,
+        newFeature = true,
+        models = mutableListOf(),
+        description = "Chat with on-device large language models with skills",
+        shortDescription = "Complete agentic tasks with chat",
+        docUrl = "https://github.com/google-ai-edge/LiteRT-LM/blob/main/kotlin/README.md",
+        sourceCodeUrl =
+          "https://github.com/google-ai-edge/gallery/blob/main/Android/src/app/src/main/java/com/google/ai/edge/gallery/customtasks/agentchat/",
+        textInputPlaceHolderRes = R.string.text_input_placeholder_llm_chat,
+        defaultSystemPrompt = DEFAULT_SYSTEM_PROMPT_SKILLS_ONLY_TRIMMED,
+      )
 
-  override fun initializeModelFn(
-    context: Context,
-    coroutineScope: CoroutineScope,
-    model: Model,
-    systemInstruction: Contents?,
-    onDone: (String) -> Unit,
-  ) {
-    val initialSystemPrompt = systemInstruction?.toString() ?: task.defaultSystemPrompt
-    coroutineScope.launch(Dispatchers.Default) {
-      agentTools.skillManagerViewModel.loadSkills()
+    override fun initializeModelFn(
+      context: Context,
+      coroutineScope: CoroutineScope,
+      model: Model,
+      systemInstruction: Contents?,
+      onDone: (String) -> Unit,
+    ) {
+      val initialSystemPrompt = systemInstruction?.toString() ?: task.defaultSystemPrompt
+      coroutineScope.launch(Dispatchers.Default) {
+        agentTools.skillManagerViewModel.loadSkills()
 
-      val baseSystemPrompt = getEffectiveBaseSystemPrompt(initialSystemPrompt)
+        val baseSystemPrompt = getEffectiveBaseSystemPrompt(initialSystemPrompt)
 
-      val finalSystemInstruction =
-        injectSkills(
-          baseSystemPrompt = baseSystemPrompt,
-          skills = agentTools.skillManagerViewModel.getSelectedSkills(),
+        val finalSystemInstruction =
+          injectSkills(
+            baseSystemPrompt = baseSystemPrompt,
+            skills = agentTools.skillManagerViewModel.getSelectedSkills(),
+          )
+
+        LlmChatModelHelper.initialize(
+          context = context,
+          model = model,
+          taskId = task.id,
+          supportImage = true,
+          supportAudio = true,
+          onDone = onDone,
+          systemInstruction = finalSystemInstruction,
+          tools = listOf(tool(agentTools)),
+          enableConversationConstrainedDecoding = true,
         )
+      }
+    }
 
-      LlmChatModelHelper.initialize(
-        context = context,
-        model = model,
-        taskId = task.id,
-        supportImage = true,
-        supportAudio = true,
-        onDone = onDone,
-        systemInstruction = finalSystemInstruction,
-        tools = listOf(tool(agentTools)),
-        enableConversationConstrainedDecoding = true,
+    override fun cleanUpModelFn(
+      context: Context,
+      coroutineScope: CoroutineScope,
+      model: Model,
+      onDone: () -> Unit,
+    ) {
+      LlmChatModelHelper.cleanUp(model = model, onDone = onDone)
+    }
+
+    @Composable
+    override fun MainScreen(data: Any) {
+      val myData = data as CustomTaskDataForBuiltinTask
+      AgentChatScreen(
+        task = task,
+        modelManagerViewModel = myData.modelManagerViewModel,
+        navigateUp = myData.onNavUp,
+        agentTools = agentTools,
+        initialQuery = myData.initialQuery,
       )
     }
   }
-
-  override fun cleanUpModelFn(
-    context: Context,
-    coroutineScope: CoroutineScope,
-    model: Model,
-    onDone: () -> Unit,
-  ) {
-    LlmChatModelHelper.cleanUp(model = model, onDone = onDone)
-  }
-
-  @Composable
-  override fun MainScreen(data: Any) {
-    val myData = data as CustomTaskDataForBuiltinTask
-    AgentChatScreen(
-      task = task,
-      modelManagerViewModel = myData.modelManagerViewModel,
-      navigateUp = myData.onNavUp,
-      agentTools = agentTools,
-      initialQuery = myData.initialQuery,
-    )
-  }
-}
 
 @Module
 @InstallIn(SingletonComponent::class)

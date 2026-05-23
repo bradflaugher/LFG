@@ -109,11 +109,13 @@ fun convertWavToMonoWithMaxSeconds(
 
   try {
     val inputStream =
-      (if (stereoUri.scheme == null || stereoUri.scheme == "file") {
-        FileInputStream(stereoUri.path ?: "")
-      } else {
-        context.contentResolver.openInputStream(stereoUri)
-      }) ?: return null
+      (
+        if (stereoUri.scheme == null || stereoUri.scheme == "file") {
+          FileInputStream(stereoUri.path ?: "")
+        } else {
+          context.contentResolver.openInputStream(stereoUri)
+        }
+      ) ?: return null
     val originalBytes = inputStream.readBytes()
     inputStream.close()
 
@@ -237,7 +239,10 @@ private fun resample(
   return resampledData
 }
 
-fun calculatePeakAmplitude(buffer: ByteArray, bytesRead: Int): Int {
+fun calculatePeakAmplitude(
+  buffer: ByteArray,
+  bytesRead: Int,
+): Int {
   // Wrap the byte array in a ByteBuffer and set the order to little-endian
   val shortBuffer =
     ByteBuffer.wrap(buffer, 0, bytesRead).order(ByteOrder.LITTLE_ENDIAN).asShortBuffer()
@@ -253,16 +258,23 @@ fun calculatePeakAmplitude(buffer: ByteArray, bytesRead: Int): Int {
   return maxAmplitude
 }
 
-fun decodeSampledBitmapFromUri(context: Context, uri: Uri, reqWidth: Int, reqHeight: Int): Bitmap? {
+fun decodeSampledBitmapFromUri(
+  context: Context,
+  uri: Uri,
+  reqWidth: Int,
+  reqHeight: Int,
+): Bitmap? {
   // First, decode with inJustDecodeBounds=true to check dimensions
   val options =
     BitmapFactory.Options().apply {
       inJustDecodeBounds = true
-      (if (uri.scheme == null || uri.scheme == "file") {
+      (
+        if (uri.scheme == null || uri.scheme == "file") {
           FileInputStream(uri.path ?: "")
         } else {
           context.contentResolver.openInputStream(uri)
-        })
+        }
+      )
         ?.use { BitmapFactory.decodeStream(it, null, this) }
 
       // Calculate inSampleSize
@@ -272,15 +284,20 @@ fun decodeSampledBitmapFromUri(context: Context, uri: Uri, reqWidth: Int, reqHei
       inJustDecodeBounds = false
     }
 
-  return (if (uri.scheme == null || uri.scheme == "file") {
+  return (
+    if (uri.scheme == null || uri.scheme == "file") {
       FileInputStream(uri.path ?: "")
     } else {
       context.contentResolver.openInputStream(uri)
-    })
+    }
+  )
     ?.use { BitmapFactory.decodeStream(it, null, options) }
 }
 
-fun rotateBitmap(bitmap: Bitmap, orientation: Int): Bitmap {
+fun rotateBitmap(
+  bitmap: Bitmap,
+  orientation: Int,
+): Bitmap {
   val matrix = Matrix()
   when (orientation) {
     ExifInterface.ORIENTATION_ROTATE_90 -> matrix.postRotate(90f)
@@ -348,30 +365,31 @@ fun isPixelDevice(): Boolean {
   return Build.MODEL != null && Build.MODEL.lowercase().contains("pixel")
 }
 
-fun Modifier.clearFocusOnKeyboardDismiss(): Modifier = composed {
-  var isFocused by remember { mutableStateOf(false) }
-  var keyboardAppearedSinceLastFocused by remember { mutableStateOf(false) }
+fun Modifier.clearFocusOnKeyboardDismiss(): Modifier =
+  composed {
+    var isFocused by remember { mutableStateOf(false) }
+    var keyboardAppearedSinceLastFocused by remember { mutableStateOf(false) }
 
-  if (isFocused) {
-    val imeIsVisible = WindowInsets.ime.getBottom(LocalDensity.current) > 0
-    val focusManager = LocalFocusManager.current
+    if (isFocused) {
+      val imeIsVisible = WindowInsets.ime.getBottom(LocalDensity.current) > 0
+      val focusManager = LocalFocusManager.current
 
-    LaunchedEffect(imeIsVisible) {
-      if (imeIsVisible) {
-        keyboardAppearedSinceLastFocused = true
-      } else if (keyboardAppearedSinceLastFocused) {
-        focusManager.clearFocus()
+      LaunchedEffect(imeIsVisible) {
+        if (imeIsVisible) {
+          keyboardAppearedSinceLastFocused = true
+        } else if (keyboardAppearedSinceLastFocused) {
+          focusManager.clearFocus()
+        }
+      }
+    }
+
+    onFocusEvent {
+      if (isFocused != it.isFocused) {
+        isFocused = it.isFocused
+        if (isFocused) keyboardAppearedSinceLastFocused = false
       }
     }
   }
-
-  onFocusEvent {
-    if (isFocused != it.isFocused) {
-      isFocused = it.isFocused
-      if (isFocused) keyboardAppearedSinceLastFocused = false
-    }
-  }
-}
 
 fun convertStringToJsonObject(jsonString: String): JsonObject {
   return try {

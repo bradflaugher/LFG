@@ -37,7 +37,6 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 internal object AppModule {
-
   // Provides the SettingsSerializer
   @Provides
   @Singleton

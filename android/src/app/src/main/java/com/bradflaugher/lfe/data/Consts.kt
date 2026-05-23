@@ -62,11 +62,13 @@ const val TMP_FILE_EXT = "gallerytmp"
 
 // Current device's SOC in lowercase.
 val SOC =
-  (if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+  (
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
       Build.SOC_MODEL ?: ""
     } else {
       ""
-    })
+    }
+  )
     .lowercase()
 
 // URLs for Agent Skills.

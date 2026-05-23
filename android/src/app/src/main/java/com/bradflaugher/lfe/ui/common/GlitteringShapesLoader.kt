@@ -113,7 +113,10 @@ fun GlitteringShapesLoader() {
 }
 
 @Composable
-private fun Particle(shape: Shape, boxSize: IntSize) {
+private fun Particle(
+  shape: Shape,
+  boxSize: IntSize,
+) {
   var enterAnimation by remember { mutableStateOf(false) }
   val enterProgress: Float by
     animateFloatAsState(

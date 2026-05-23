@@ -290,7 +290,8 @@ val darkCustomColors =
   )
 
 val MaterialTheme.customColors: CustomColors
-  @Composable @ReadOnlyComposable get() = LocalCustomColors.current
+  @Composable @ReadOnlyComposable
+  get() = LocalCustomColors.current
 
 /**
  * Controls the color of the phone's status bar icons based on whether the app is using a dark

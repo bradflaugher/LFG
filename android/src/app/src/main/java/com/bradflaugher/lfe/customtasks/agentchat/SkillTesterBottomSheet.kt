@@ -57,7 +57,11 @@ import kotlinx.coroutines.launch
 /** A Composable function for a bottom sheet used to test a skill. */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SkillTesterBottomSheet(agentTools: AgentTools, skill: Skill, onDismiss: () -> Unit) {
+fun SkillTesterBottomSheet(
+  agentTools: AgentTools,
+  skill: Skill,
+  onDismiss: () -> Unit,
+) {
   val scope = rememberCoroutineScope()
   val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
   // State variables for inputs, result, logs, and selected tab
@@ -115,7 +119,7 @@ fun SkillTesterBottomSheet(agentTools: AgentTools, skill: Skill, onDismiss: () -
             .weight(1f, fill = true)
             .padding(vertical = 8.dp)
             .border(1.dp, MaterialTheme.colorScheme.outlineVariant, RoundedCornerShape(4.dp))
-            .padding(8.dp)
+            .padding(8.dp),
       ) {
         Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
           when (selectedTabIndex) {
@@ -159,7 +163,7 @@ fun SkillTesterBottomSheet(agentTools: AgentTools, skill: Skill, onDismiss: () -
                         url = finalUrl,
                         iframe = webview.iframe == true,
                         aspectRatio = 1.333f,
-                      )
+                      ),
                   )
                 }
               }

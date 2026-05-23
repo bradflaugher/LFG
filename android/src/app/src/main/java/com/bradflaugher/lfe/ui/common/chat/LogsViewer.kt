@@ -64,7 +64,10 @@ import kotlinx.coroutines.launch
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LogsViewer(logs: List<LogMessage>, onDismissRequest: () -> Unit) {
+fun LogsViewer(
+  logs: List<LogMessage>,
+  onDismissRequest: () -> Unit,
+) {
   val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
   val scope = rememberCoroutineScope()
 
@@ -86,7 +89,7 @@ fun LogsViewer(logs: List<LogMessage>, onDismissRequest: () -> Unit) {
               sheetState.hide()
               onDismissRequest()
             }
-          }
+          },
         ) {
           Icon(Icons.Filled.Close, contentDescription = "Close viewer")
         }
@@ -126,7 +129,7 @@ fun LogsViewer(logs: List<LogMessage>, onDismissRequest: () -> Unit) {
         mutableStateOf(setOf(LogMessageLevel.Info, LogMessageLevel.Warning, LogMessageLevel.Error))
       }
       MultiChoiceSegmentedButtonRow(
-        modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp).padding(bottom = 16.dp)
+        modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp).padding(bottom = 16.dp),
       ) {
         LogMessageLevel.entries.forEachIndexed { index, level ->
           SegmentedButton(

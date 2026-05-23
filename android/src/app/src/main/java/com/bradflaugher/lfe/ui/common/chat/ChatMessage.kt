@@ -48,7 +48,6 @@ open class ChatMessage(
   open val hideSenderLabel: Boolean = false,
   open val disableBubbleShape: Boolean = false,
 ) {
-
   open fun clone(): ChatMessage {
     val cloned =
       ChatMessage(
@@ -97,12 +96,12 @@ open class ChatMessageText(
   var data: Any? = null,
 ) :
   ChatMessage(
-    type = ChatMessageType.TEXT,
-    side = side,
-    latencyMs = latencyMs,
-    accelerator = accelerator,
-    hideSenderLabel = hideSenderLabel,
-  ) {
+      type = ChatMessageType.TEXT,
+      side = side,
+      latencyMs = latencyMs,
+      accelerator = accelerator,
+      hideSenderLabel = hideSenderLabel,
+    ) {
   override fun clone(): ChatMessageText {
     val cloned =
       ChatMessageText(
@@ -134,12 +133,12 @@ class ChatMessageImage(
   var persistedPaths: List<String>? = null,
 ) :
   ChatMessage(
-    type = ChatMessageType.IMAGE,
-    side = side,
-    latencyMs = latencyMs,
-    accelerator = accelerator,
-    hideSenderLabel = hideSenderLabel,
-  ) {
+      type = ChatMessageType.IMAGE,
+      side = side,
+      latencyMs = latencyMs,
+      accelerator = accelerator,
+      hideSenderLabel = hideSenderLabel,
+    ) {
   override fun clone(): ChatMessageImage {
     return ChatMessageImage(
       bitmaps = bitmaps.toList(),
@@ -251,11 +250,11 @@ class ChatMessageWebView(
   override val hideSenderLabel: Boolean = false,
 ) :
   ChatMessage(
-    type = ChatMessageType.WEBVIEW,
-    side = side,
-    hideSenderLabel = hideSenderLabel,
-    disableBubbleShape = true,
-  ) {
+      type = ChatMessageType.WEBVIEW,
+      side = side,
+      hideSenderLabel = hideSenderLabel,
+      disableBubbleShape = true,
+    ) {
   override fun clone(): ChatMessageWebView {
     return ChatMessageWebView(
       url = url,
@@ -293,10 +292,10 @@ class ChatMessageCollapsableProgressPanel(
   val customData: Any? = null,
 ) :
   ChatMessage(
-    type = ChatMessageType.COLLAPSABLE_PROGRESS_PANEL,
-    side = ChatSide.AGENT,
-    accelerator = accelerator,
-  ) {
+      type = ChatMessageType.COLLAPSABLE_PROGRESS_PANEL,
+      side = ChatSide.AGENT,
+      accelerator = accelerator,
+    ) {
   override fun clone(): ChatMessageCollapsableProgressPanel {
     return ChatMessageCollapsableProgressPanel(
       title = title,
@@ -319,12 +318,12 @@ class ChatMessageThinking(
   override val accelerator: String = "",
 ) :
   ChatMessage(
-    type = ChatMessageType.THINKING,
-    side = side,
-    hideSenderLabel = hideSenderLabel,
-    disableBubbleShape = true,
-    accelerator = accelerator,
-  ) {
+      type = ChatMessageType.THINKING,
+      side = side,
+      hideSenderLabel = hideSenderLabel,
+      disableBubbleShape = true,
+      accelerator = accelerator,
+    ) {
   override fun clone(): ChatMessageThinking {
     return ChatMessageThinking(
       content = content,

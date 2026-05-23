@@ -28,5 +28,8 @@ object UserDataSerializer : Serializer<UserData> {
     }
   }
 
-  override suspend fun writeTo(t: UserData, output: OutputStream) = t.writeTo(output)
+  override suspend fun writeTo(
+    t: UserData,
+    output: OutputStream,
+  ) = t.writeTo(output)
 }

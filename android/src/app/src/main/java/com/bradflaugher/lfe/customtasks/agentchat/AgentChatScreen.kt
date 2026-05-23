@@ -173,9 +173,9 @@ fun AgentChatScreen(
   ) {
     if (
       !initialQuery.isNullOrEmpty() &&
-        !initialQueryConsumed &&
-        modelInitStatus?.status == ModelInitializationStatusType.INITIALIZED &&
-        !llmChatUiState.isResettingSession
+      !initialQueryConsumed &&
+      modelInitStatus?.status == ModelInitializationStatusType.INITIALIZED &&
+      !llmChatUiState.isResettingSession
     ) {
       initialQueryConsumed = true
       sendMessageTrigger =
@@ -293,7 +293,7 @@ fun AgentChatScreen(
                   if (!action.result.isCompleted) {
                     Log.e(TAG, "JS execution timed out for skill $skillName")
                     action.result.complete(
-                      "{\"error\": \"Skill execution timed out. Check network connection.\"}"
+                      "{\"error\": \"Skill execution timed out. Check network connection.\"}",
                     )
                   }
                 }
@@ -438,14 +438,14 @@ fun AgentChatScreen(
                     buildTrackableUrlAnnotatedString(
                       url = AgentSkillsURLs.REPOSITORY,
                       linkText = "creating your own",
-                    )
+                    ),
                   )
                   append(". Explore community contributed skills on ")
                   append(
                     buildTrackableUrlAnnotatedString(
                       url = AgentSkillsURLs.DISCUSSIONS,
                       linkText = "GitHub discussions",
-                    )
+                    ),
                   )
                   append(".\n\nTry tapping a sample prompt below to see Agent Skills in action!")
                 },
@@ -564,7 +564,7 @@ private fun updateProgressPanel(
     )
   if (
     lastProgressPanelMessage != null &&
-      lastProgressPanelMessage is ChatMessageCollapsableProgressPanel
+    lastProgressPanelMessage is ChatMessageCollapsableProgressPanel
   ) {
     val title = lastProgressPanelMessage.title
     val transformed =
@@ -575,7 +575,7 @@ private fun updateProgressPanel(
         else -> title
       }
     agentTools.sendAgentAction(
-      SkillProgressAgentAction(label = transformed, inProgress = false)
+      SkillProgressAgentAction(label = transformed, inProgress = false),
     )
   }
 }
@@ -592,12 +592,18 @@ private fun resetSessionWithCurrentSkills(
   clearHistory: Boolean = true,
 ) {
   val model = modelManagerViewModel.uiState.value.selectedModel
-  val litertMessages = initialMessages.mapNotNull { chatMessage ->
-    if (chatMessage is ChatMessageText) {
-      if (chatMessage.side == ChatSide.USER) Message.user(chatMessage.content)
-      else Message.model(chatMessage.content)
-    } else null
-  }
+  val litertMessages =
+    initialMessages.mapNotNull { chatMessage ->
+      if (chatMessage is ChatMessageText) {
+        if (chatMessage.side == ChatSide.USER) {
+          Message.user(chatMessage.content)
+        } else {
+          Message.model(chatMessage.content)
+        }
+      } else {
+        null
+      }
+    }
   val actualSystemPrompt = getEffectiveBaseSystemPrompt(curSystemPrompt)
   viewModel.resetSession(
     task = task,
@@ -633,7 +639,10 @@ class ChatWebViewClient(val context: Context) : BaseGalleryWebViewClient(context
     onPageLoaded = listener
   }
 
-  override fun onPageFinished(view: WebView?, url: String?) {
+  override fun onPageFinished(
+    view: WebView?,
+    url: String?,
+  ) {
     super.onPageFinished(view, url)
     Log.d(TAG, "page loaded")
     onPageLoaded?.invoke()

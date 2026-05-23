@@ -26,7 +26,10 @@ import androidx.compose.ui.Modifier
  * Composable function to display a button to download model if the model has not been downloaded.
  */
 @Composable
-fun ModelNotDownloaded(modifier: Modifier = Modifier, onClicked: () -> Unit) {
+fun ModelNotDownloaded(
+  modifier: Modifier = Modifier,
+  onClicked: () -> Unit,
+) {
   Column(
     modifier = modifier.fillMaxSize(),
     verticalArrangement = Arrangement.Center,

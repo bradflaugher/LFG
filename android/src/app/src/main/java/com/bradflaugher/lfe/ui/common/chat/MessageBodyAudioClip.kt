@@ -16,7 +16,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun MessageBodyAudioClip(message: ChatMessageAudioClip, modifier: Modifier = Modifier) {
+fun MessageBodyAudioClip(
+  message: ChatMessageAudioClip,
+  modifier: Modifier = Modifier,
+) {
   AudioPlaybackPanel(
     audioData = message.audioData,
     sampleRate = message.sampleRate,

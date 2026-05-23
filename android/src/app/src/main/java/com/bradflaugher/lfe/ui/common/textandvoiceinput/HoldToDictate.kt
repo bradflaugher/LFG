@@ -66,7 +66,7 @@ fun HoldToDictate(
 
   val recordAudioPermissionLauncher =
     rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) {
-      permissionGranted ->
+        permissionGranted ->
       if (permissionGranted) {
         recordAudioPermissionGranted = true
       }
@@ -110,12 +110,12 @@ fun HoldToDictate(
 
                     // Release to stop recognition.
                     viewModel.stopSpeechRecognition()
-                  }
+                  },
                 )
               }
             } else {
               Modifier
-            }
+            },
           )
           .clip(CircleShape)
           .graphicsLayer { alpha = if (enabled) 1f else 0.5f }

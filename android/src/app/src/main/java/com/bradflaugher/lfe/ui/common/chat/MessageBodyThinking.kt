@@ -87,7 +87,7 @@ fun MessageBodyThinking(
                 strokeWidth = 2.dp.toPx(),
               )
             }
-            .padding(start = 12.dp)
+            .padding(start = 12.dp),
       ) {
         LongPressCopyContainer(copyText = thinkingText, onCopyClicked = onCopyClicked) {
           MarkdownText(

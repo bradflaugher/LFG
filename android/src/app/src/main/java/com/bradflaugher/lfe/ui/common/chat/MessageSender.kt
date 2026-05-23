@@ -40,7 +40,11 @@ data class MessageLayoutConfig(
  * information.
  */
 @Composable
-fun MessageSender(message: ChatMessage, agentName: String = "", imageHistoryCurIndex: Int = 0) {
+fun MessageSender(
+  message: ChatMessage,
+  agentName: String = "",
+  imageHistoryCurIndex: Int = 0,
+) {
   // No user label for system messages.
   if (message.side == ChatSide.SYSTEM) {
     return
@@ -61,7 +65,6 @@ fun MessageSender(message: ChatMessage, agentName: String = "", imageHistoryCurI
     Row(verticalAlignment = Alignment.CenterVertically) {
       // Sender label.
       Text(userLabel, style = MaterialTheme.typography.titleSmall)
-
     }
   }
 }

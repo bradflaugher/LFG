@@ -27,7 +27,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun FloatingBanner(visible: Boolean, text: String, modifier: Modifier = Modifier) {
+fun FloatingBanner(
+  visible: Boolean,
+  text: String,
+  modifier: Modifier = Modifier,
+) {
   AnimatedVisibility(
     visible = visible,
     enter = slideInVertically() + fadeIn(),
@@ -38,7 +42,7 @@ fun FloatingBanner(visible: Boolean, text: String, modifier: Modifier = Modifier
       modifier =
         Modifier.fillMaxWidth()
           .background(MaterialTheme.colorScheme.surfaceVariant, RoundedCornerShape(8.dp))
-          .padding(16.dp)
+          .padding(16.dp),
     ) {
       Text(
         text = text,

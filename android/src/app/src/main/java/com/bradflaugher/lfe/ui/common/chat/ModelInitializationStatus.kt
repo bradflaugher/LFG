@@ -48,7 +48,7 @@ fun ModelInitializationStatusChip() {
       modifier =
         Modifier.padding(8.dp)
           .clip(CircleShape)
-          .background(MaterialTheme.colorScheme.secondaryContainer)
+          .background(MaterialTheme.colorScheme.secondaryContainer),
     ) {
       Row(
         modifier = Modifier.padding(top = 4.dp, bottom = 4.dp, start = 8.dp, end = 8.dp),

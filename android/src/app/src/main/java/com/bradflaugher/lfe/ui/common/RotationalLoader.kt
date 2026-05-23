@@ -92,7 +92,7 @@ fun RotationalLoader(size: Dp) {
         R.drawable.circle,
         R.drawable.double_circle,
         R.drawable.pantegon,
-      )
+      ),
     ) { index, imageResource ->
       Box(
         modifier = Modifier.size((size - gridSpacing) / 2),

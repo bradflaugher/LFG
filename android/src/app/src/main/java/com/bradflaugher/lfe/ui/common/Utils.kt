@@ -71,7 +71,10 @@ val SMALL_BUTTON_CONTENT_PADDING =
   PaddingValues(start = 16.dp, top = 8.dp, end = 16.dp, bottom = 8.dp)
 
 /** Format the bytes into a human-readable format. */
-fun Long.humanReadableSize(si: Boolean = true, extraDecimalForGbAndAbove: Boolean = false): String {
+fun Long.humanReadableSize(
+  si: Boolean = true,
+  extraDecimalForGbAndAbove: Boolean = false,
+): String {
   val bytes = this
 
   val unit = if (si) 1000 else 1024
@@ -230,8 +233,8 @@ fun SwipingText(
               arrayOf(
                 (1f + edgeGradientRelativeSize) * progress - edgeGradientRelativeSize to color,
                 (1f + edgeGradientRelativeSize) * progress to Color.Transparent,
-              )
-          )
+              ),
+          ),
       ),
     modifier = modifier.graphicsLayer { alpha = progress },
   )
@@ -275,7 +278,7 @@ fun RevealingText(
           (1f + edgeGradientRelativeSize) * progress - edgeGradientRelativeSize to
             Color.Transparent,
           (1f + edgeGradientRelativeSize) * progress to Color.Red,
-        )
+        ),
     )
   Box(
     modifier =
@@ -312,7 +315,7 @@ fun RevealingText(
           (1f + edgeGradientRelativeSize) * animationProgress - edgeGradientRelativeSize to
             Color.Transparent,
           (1f + edgeGradientRelativeSize) * animationProgress to Color.Red,
-        )
+        ),
     )
   Box(
     modifier =

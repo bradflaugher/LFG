@@ -75,7 +75,7 @@ fun LiveCameraView(
 
   val liveCameraPermissionLauncher =
     rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) {
-      permissionGranted ->
+        permissionGranted ->
       if (permissionGranted) {
         scope.launch {
           cameraProvider =
@@ -176,7 +176,7 @@ private suspend fun startCamera(
         ResolutionStrategy(
           Size(preferredSize, preferredSize),
           ResolutionStrategy.FALLBACK_RULE_CLOSEST_LOWER_THEN_HIGHER,
-        )
+        ),
       )
       .build()
   val imageAnalysis =

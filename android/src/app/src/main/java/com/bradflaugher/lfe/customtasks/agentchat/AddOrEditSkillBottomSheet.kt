@@ -211,7 +211,7 @@ fun AddOrEditSkillBottomSheet(
         CompositionLocalProvider(LocalOverscrollFactory provides null) {
           Column(
             modifier =
-              Modifier.weight(1f).padding(horizontal = 16.dp).verticalScroll(rememberScrollState())
+              Modifier.weight(1f).padding(horizontal = 16.dp).verticalScroll(rememberScrollState()),
           ) {
             when (selectedTabIndex) {
               // Info tab.
@@ -365,7 +365,7 @@ fun AddOrEditSkillBottomSheet(
                   sheetState.hide()
                   onDismiss()
                 }
-              }
+              },
             ) {
               Text(stringResource(R.string.ok))
             }
@@ -381,7 +381,7 @@ fun AddOrEditSkillBottomSheet(
                     onDismiss()
                   }
                 }
-              }
+              },
             ) {
               Text(stringResource(R.string.cancel))
             }

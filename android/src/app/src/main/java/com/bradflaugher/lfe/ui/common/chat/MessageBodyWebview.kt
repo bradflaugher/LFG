@@ -50,7 +50,10 @@ private const val TAG = "AGMessageBodyWebview"
 /** A Composable that displays a WebView to render web content within a chat message. */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MessageBodyWebview(message: ChatMessageWebView, modifier: Modifier = Modifier) {
+fun MessageBodyWebview(
+  message: ChatMessageWebView,
+  modifier: Modifier = Modifier,
+) {
   var showBottomSheet by remember { mutableStateOf(false) }
   val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
   val scope = rememberCoroutineScope()
@@ -100,12 +103,12 @@ fun MessageBodyWebview(message: ChatMessageWebView, modifier: Modifier = Modifie
           },
           colors =
             IconButtonDefaults.iconButtonColors(
-              containerColor = MaterialTheme.colorScheme.surfaceContainer
+              containerColor = MaterialTheme.colorScheme.surfaceContainer,
             ),
           border =
             IconButtonDefaults.outlinedIconButtonBorder(true)
               .copy(
-                brush = SolidColor(MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f))
+                brush = SolidColor(MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)),
               ),
           modifier = Modifier.align(Alignment.TopEnd).padding(top = 8.dp, end = 8.dp),
         ) {

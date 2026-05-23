@@ -175,7 +175,10 @@ fun HfBrowseScreen(
 }
 
 @Composable
-private fun HfRepoCard(repo: HfModelInfo, onDownload: (HfSibling) -> Unit) {
+private fun HfRepoCard(
+  repo: HfModelInfo,
+  onDownload: (HfSibling) -> Unit,
+) {
   Card(
     modifier = Modifier.fillMaxWidth(),
     colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer),
@@ -259,7 +262,10 @@ private fun CenteredSpinner() {
 }
 
 @Composable
-private fun ErrorPanel(message: String, onRetry: () -> Unit) {
+private fun ErrorPanel(
+  message: String,
+  onRetry: () -> Unit,
+) {
   Column(
     modifier = Modifier.fillMaxSize().padding(32.dp),
     verticalArrangement = Arrangement.Center,

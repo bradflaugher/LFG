@@ -32,7 +32,7 @@ class CallJsAgentAction(
   val data: String,
   val secret: String = "",
   val result: CompletableDeferred<String> = CompletableDeferred(),
-) : AgentAction(name = AgentActionName.CALL_JS_SKILL) {}
+) : AgentAction(name = AgentActionName.CALL_JS_SKILL)
 
 class AskInfoAgentAction(
   val dialogTitle: String,
@@ -84,7 +84,8 @@ data class CallJsSkillResult(
   val webview: CallJsSkillResultWebview?,
 )
 
-@JsonClass(generateAdapter = true) data class CallJsSkillResultImage(val base64: String?)
+@JsonClass(generateAdapter = true)
+data class CallJsSkillResultImage(val base64: String?)
 
 @JsonClass(generateAdapter = true)
 data class CallJsSkillResultWebview(

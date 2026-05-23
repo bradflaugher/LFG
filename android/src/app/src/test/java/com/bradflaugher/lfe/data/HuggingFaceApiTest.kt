@@ -17,7 +17,8 @@ import org.junit.Test
 
 class HuggingFaceApiTest {
   @Test fun parsesHfModelsResponseFromCapturedJson() {
-    val json = """
+    val json =
+      """
       [
         {
           "id": "litert-community/Gemma3-1B-IT",
@@ -42,7 +43,7 @@ class HuggingFaceApiTest {
           ]
         }
       ]
-    """.trimIndent()
+      """.trimIndent()
     val parsed = Gson().fromJson(json, Array<HfModelInfo>::class.java).toList()
     assertEquals(2, parsed.size)
     assertEquals("litert-community/Gemma3-1B-IT", parsed[0].id)
@@ -51,18 +52,21 @@ class HuggingFaceApiTest {
   }
 
   @Test fun isLfeCompatibleAcceptsLitertlmAndTaskFiles() {
-    val good = HfModelInfo(
-      id = "x/y",
-      siblings = listOf(HfSibling("model.litertlm", 1000)),
-    )
-    val alsoGood = HfModelInfo(
-      id = "x/y",
-      siblings = listOf(HfSibling("model.task", 1000)),
-    )
-    val bad = HfModelInfo(
-      id = "x/y",
-      siblings = listOf(HfSibling("model.safetensors", 1000)),
-    )
+    val good =
+      HfModelInfo(
+        id = "x/y",
+        siblings = listOf(HfSibling("model.litertlm", 1000)),
+      )
+    val alsoGood =
+      HfModelInfo(
+        id = "x/y",
+        siblings = listOf(HfSibling("model.task", 1000)),
+      )
+    val bad =
+      HfModelInfo(
+        id = "x/y",
+        siblings = listOf(HfSibling("model.safetensors", 1000)),
+      )
     val empty = HfModelInfo(id = "x/y", siblings = emptyList())
 
     assertTrue(good.isLfeCompatible)
@@ -72,15 +76,17 @@ class HuggingFaceApiTest {
   }
 
   @Test fun runtimeFilesExcludesNonRuntimeSiblings() {
-    val repo = HfModelInfo(
-      id = "x/y",
-      siblings = listOf(
-        HfSibling("README.md"),
-        HfSibling("model.litertlm", 100),
-        HfSibling("config.json"),
-        HfSibling("model.task", 200),
-      ),
-    )
+    val repo =
+      HfModelInfo(
+        id = "x/y",
+        siblings =
+          listOf(
+            HfSibling("README.md"),
+            HfSibling("model.litertlm", 100),
+            HfSibling("config.json"),
+            HfSibling("model.task", 200),
+          ),
+      )
     val runtime = repo.runtimeFiles
     assertEquals(2, runtime.size)
     assertEquals(setOf("model.litertlm", "model.task"), runtime.map { it.rfilename }.toSet())
@@ -100,15 +106,16 @@ class HuggingFaceApiTest {
   }
 
   @Test fun buildSearchUrlEncodesParamsAndOrdersThem() {
-    val url = HuggingFaceApi.buildSearchUrl(
-      search = "gemma 4",
-      author = null,
-      filter = null,
-      sort = "downloads",
-      direction = "-1",
-      limit = 25,
-      full = true,
-    )
+    val url =
+      HuggingFaceApi.buildSearchUrl(
+        search = "gemma 4",
+        author = null,
+        filter = null,
+        sort = "downloads",
+        direction = "-1",
+        limit = 25,
+        full = true,
+      )
     assertNotNull(url)
     assertTrue(url.startsWith("https://huggingface.co/api/models?"))
     assertTrue(url.contains("search=gemma+4") || url.contains("search=gemma%204"))

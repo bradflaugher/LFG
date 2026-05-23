@@ -50,7 +50,6 @@ import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-
   private val modelManagerViewModel: ModelManagerViewModel by viewModels()
   private var splashScreenAboutToExit: Boolean = false
   private var contentSet: Boolean = false
@@ -77,7 +76,7 @@ class MainActivity : ComponentActivity() {
                 fadeOut(animationSpec = tween(durationMillis = 400, easing = FastOutSlowInEasing)),
             ) {
               Box(
-                modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background)
+                modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background),
               )
             }
           }

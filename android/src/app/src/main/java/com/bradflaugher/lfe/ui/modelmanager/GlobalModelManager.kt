@@ -119,7 +119,7 @@ fun GlobalModelManager(
 
   val filePickerLauncher: ActivityResultLauncher<Intent> =
     rememberLauncherForActivityResult(
-      contract = ActivityResultContracts.StartActivityForResult()
+      contract = ActivityResultContracts.StartActivityForResult(),
     ) { result ->
       if (result.resultCode == android.app.Activity.RESULT_OK) {
         result.data?.data?.let { uri ->
@@ -153,13 +153,13 @@ fun GlobalModelManager(
         .filter { it.parentModelName.isNullOrEmpty() }
         .sortedWith(
           compareBy<Model> { model ->
-              // Sort by the index in allowlistModels. Models not in the allowlist come last.
-              allowlistOrderMap[model.name] ?: Int.MAX_VALUE
-            }
+            // Sort by the index in allowlistModels. Models not in the allowlist come last.
+            allowlistOrderMap[model.name] ?: Int.MAX_VALUE
+          }
             .thenBy { model ->
               // If not in the allowlist, sort by their names.
               model.name
-            }
+            },
         )
     builtInModels.clear()
     builtInModels.addAll(sortedModels.filter { !it.imported })
@@ -247,7 +247,7 @@ fun GlobalModelManager(
       }
     },
   ) { innerPadding ->
-    Box() {
+    Box {
       LazyColumn(
         modifier =
           Modifier.background(MaterialTheme.colorScheme.surfaceContainer)
@@ -309,10 +309,10 @@ fun GlobalModelManager(
             .height(innerPadding.calculateBottomPadding())
             .background(
               Brush.verticalGradient(
-                colors = listOf(Color.Transparent, MaterialTheme.colorScheme.surfaceContainer)
-              )
+                colors = listOf(Color.Transparent, MaterialTheme.colorScheme.surfaceContainer),
+              ),
             )
-            .align(Alignment.BottomCenter)
+            .align(Alignment.BottomCenter),
       )
     }
   }
@@ -374,26 +374,26 @@ fun GlobalModelManager(
       Box(
         modifier =
           Modifier.clickable {
-              scope.launch {
-                // Give it sometime to show the click effect.
-                delay(200)
-                showImportModelSheet = false
+            scope.launch {
+              // Give it sometime to show the click effect.
+              delay(200)
+              showImportModelSheet = false
 
-                // Show file picker.
-                val intent =
-                  Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
-                    addCategory(Intent.CATEGORY_OPENABLE)
-                    type = "*/*"
-                    // Single select.
-                    putExtra(Intent.EXTRA_ALLOW_MULTIPLE, false)
-                  }
-                filePickerLauncher.launch(intent)
-              }
+              // Show file picker.
+              val intent =
+                Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
+                  addCategory(Intent.CATEGORY_OPENABLE)
+                  type = "*/*"
+                  // Single select.
+                  putExtra(Intent.EXTRA_ALLOW_MULTIPLE, false)
+                }
+              filePickerLauncher.launch(intent)
             }
+          }
             .semantics {
               role = Role.Button
               contentDescription = cbImportFromLocalFile
-            }
+            },
       ) {
         Row(
           verticalAlignment = Alignment.CenterVertically,
@@ -486,7 +486,10 @@ fun GlobalModelManager(
 }
 
 // Helper function to get the file name from a URI
-private fun getFileName(context: Context, uri: Uri): String? {
+private fun getFileName(
+  context: Context,
+  uri: Uri,
+): String? {
   if (uri.scheme == "content") {
     context.contentResolver.query(uri, null, null, null, null)?.use { cursor ->
       if (cursor.moveToFirst()) {

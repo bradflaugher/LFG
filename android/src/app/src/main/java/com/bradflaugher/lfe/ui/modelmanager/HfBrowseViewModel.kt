@@ -45,103 +45,108 @@ data class HfBrowseUiState(
 @OptIn(FlowPreview::class)
 @HiltViewModel
 class HfBrowseViewModel
-@Inject
-constructor(private val dataStoreRepository: DataStoreRepository) : ViewModel() {
-  private val _uiState = MutableStateFlow(HfBrowseUiState())
-  val uiState = _uiState.asStateFlow()
+  @Inject
+  constructor(private val dataStoreRepository: DataStoreRepository) : ViewModel() {
+    private val _uiState = MutableStateFlow(HfBrowseUiState())
+    val uiState = _uiState.asStateFlow()
 
-  private val _query = MutableStateFlow("")
-  private var activeJob: Job? = null
+    private val _query = MutableStateFlow("")
+    private var activeJob: Job? = null
 
-  init {
-    // Debounce typing so we don't hit HF on every keystroke.
-    _query
-      .debounce(450)
-      .distinctUntilChanged()
-      .drop(1) // skip the initial empty value
-      .onEach { fetch(it, append = false) }
-      .launchIn(viewModelScope)
+    init {
+      // Debounce typing so we don't hit HF on every keystroke.
+      _query
+        .debounce(450)
+        .distinctUntilChanged()
+        .drop(1) // skip the initial empty value
+        .onEach { fetch(it, append = false) }
+        .launchIn(viewModelScope)
 
-    // Kick off an initial browse so the screen isn't empty on open.
-    fetch(query = "", append = false)
-  }
+      // Kick off an initial browse so the screen isn't empty on open.
+      fetch(query = "", append = false)
+    }
 
-  fun onQueryChange(query: String) {
-    _uiState.update { it.copy(query = query) }
-    _query.value = query
-  }
+    fun onQueryChange(query: String) {
+      _uiState.update { it.copy(query = query) }
+      _query.value = query
+    }
 
-  fun toggleLiteRtOnly() {
-    _uiState.update { it.copy(liteRtOnly = !it.liteRtOnly) }
-  }
+    fun toggleLiteRtOnly() {
+      _uiState.update { it.copy(liteRtOnly = !it.liteRtOnly) }
+    }
 
-  fun loadMore() {
-    val state = _uiState.value
-    val next = state.nextPageUrl ?: return
-    if (state.loadingMore) return
-    fetch(query = state.query, append = true, pageUrl = next)
-  }
+    fun loadMore() {
+      val state = _uiState.value
+      val next = state.nextPageUrl ?: return
+      if (state.loadingMore) return
+      fetch(query = state.query, append = true, pageUrl = next)
+    }
 
-  fun retry() {
-    fetch(query = _uiState.value.query, append = false)
-  }
+    fun retry() {
+      fetch(query = _uiState.value.query, append = false)
+    }
 
-  private fun fetch(query: String, append: Boolean, pageUrl: String? = null) {
-    activeJob?.cancel()
-    activeJob =
-      viewModelScope.launch(Dispatchers.IO) {
-        _uiState.update {
-          if (append) it.copy(loadingMore = true, error = null)
-          else it.copy(loading = true, error = null)
-        }
-        val token = dataStoreRepository.readAccessTokenData()?.accessToken?.takeIf { it.isNotBlank() }
-        // Default browse with no query: surface the litert-community org so first results are
-        // immediately runnable. Once the user types, drop the author filter.
-        val page =
-          if (pageUrl != null) {
-            HuggingFaceApi.searchModels(nextPageUrl = pageUrl, authToken = token)
-          } else if (query.isBlank()) {
-            HuggingFaceApi.searchModels(
-              author = "litert-community",
-              limit = 50,
-              sort = "downloads",
-              authToken = token,
-            )
-          } else {
-            HuggingFaceApi.searchModels(
-              search = query,
-              limit = 25,
-              sort = "downloads",
-              authToken = token,
-            )
+    private fun fetch(
+      query: String,
+      append: Boolean,
+      pageUrl: String? = null,
+    ) {
+      activeJob?.cancel()
+      activeJob =
+        viewModelScope.launch(Dispatchers.IO) {
+          _uiState.update {
+            if (append) {
+              it.copy(loadingMore = true, error = null)
+            } else {
+              it.copy(loading = true, error = null)
+            }
+          }
+          val token = dataStoreRepository.readAccessTokenData()?.accessToken?.takeIf { it.isNotBlank() }
+          // Default browse with no query: surface the litert-community org so first results are
+          // immediately runnable. Once the user types, drop the author filter.
+          val page =
+            if (pageUrl != null) {
+              HuggingFaceApi.searchModels(nextPageUrl = pageUrl, authToken = token)
+            } else if (query.isBlank()) {
+              HuggingFaceApi.searchModels(
+                author = "litert-community",
+                limit = 50,
+                sort = "downloads",
+                authToken = token,
+              )
+            } else {
+              HuggingFaceApi.searchModels(
+                search = query,
+                limit = 25,
+                sort = "downloads",
+                authToken = token,
+              )
+            }
+
+          if (page == null) {
+            _uiState.update {
+              it.copy(
+                loading = false,
+                loadingMore = false,
+                error = "Couldn't reach HuggingFace. Check connection and try again.",
+              )
+            }
+            return@launch
           }
 
-        if (page == null) {
           _uiState.update {
+            val combined = if (append) it.results + page.models else page.models
             it.copy(
               loading = false,
               loadingMore = false,
-              error = "Couldn't reach HuggingFace. Check connection and try again.",
+              results = combined,
+              nextPageUrl = page.nextLink,
             )
           }
-          return@launch
         }
+    }
 
-        _uiState.update {
-          val combined = if (append) it.results + page.models else page.models
-          it.copy(
-            loading = false,
-            loadingMore = false,
-            results = combined,
-            nextPageUrl = page.nextLink,
-          )
-        }
-      }
+    private fun MutableStateFlow<HfBrowseUiState>.update(fn: (HfBrowseUiState) -> HfBrowseUiState) {
+      value = fn(value)
+    }
   }
-
-  private fun MutableStateFlow<HfBrowseUiState>.update(
-    fn: (HfBrowseUiState) -> HfBrowseUiState
-  ) {
-    value = fn(value)
-  }
-}

@@ -16,7 +16,6 @@ import kotlinx.coroutines.flow.firstOrNull
 
 /** Helper object for system prompt retrieval and compilation. */
 object SystemPromptHelper {
-
   /**
    * Retrieves the effective system prompt for the given [Task].
    *
@@ -28,7 +27,10 @@ object SystemPromptHelper {
    * @param task The target [Task] containing the identifier and the default fallback system prompt.
    * @return A [String] representing the effective system prompt instructions.
    */
-  suspend fun getEffectiveSystemPrompt(repo: SystemPromptRepository?, task: Task): String {
+  suspend fun getEffectiveSystemPrompt(
+    repo: SystemPromptRepository?,
+    task: Task,
+  ): String {
     if (repo == null) return task.defaultSystemPrompt
     val customPrompt = repo.getCustomSystemPrompt(task.id).firstOrNull()
     return customPrompt ?: task.defaultSystemPrompt

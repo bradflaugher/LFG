@@ -46,7 +46,7 @@ open class AgentTools() : ToolSet {
   /** Loads skill. */
   @Tool(description = "Loads a skill.")
   fun loadSkill(
-    @ToolParam(description = "The name of the skill to load.") skillName: String
+    @ToolParam(description = "The name of the skill to load.") skillName: String,
   ): Map<String, String> {
     return runBlocking(Dispatchers.Default) {
       val skills = skillManagerViewModel.getSelectedSkills()
@@ -66,14 +66,14 @@ open class AgentTools() : ToolSet {
             addItemTitle = "Load \"${skill.name}\"",
             addItemDescription = "Description: ${skill.description}",
             customData = skill,
-          )
+          ),
         )
       } else {
         _actionChannel.send(
           SkillProgressAgentAction(
             label = "Failed to load skill \"$skillName\"",
             inProgress = false,
-          )
+          ),
         )
       }
 
@@ -88,7 +88,7 @@ open class AgentTools() : ToolSet {
     @ToolParam(description = "The script name to run. Use 'index.html' if not provided by user")
     scriptName: String,
     @ToolParam(
-      description = "The data to pass to the script. Use empty string if not provided by user"
+      description = "The data to pass to the script. Use empty string if not provided by user",
     )
     data: String,
   ): Map<String, Any> {
@@ -107,7 +107,7 @@ open class AgentTools() : ToolSet {
           SkillProgressAgentAction(
             label = "Failed to call skill \"$scriptName\"",
             inProgress = false,
-          )
+          ),
         )
         return@runBlocking mapOf(
           "error" to "Skill \"${scriptName}\" not found",
@@ -120,7 +120,7 @@ open class AgentTools() : ToolSet {
       if (skill.requireSecret) {
         val savedSecret =
           skillManagerViewModel.dataStoreRepository.readSecret(
-            key = getSkillSecretKey(skillName = skillName)
+            key = getSkillSecretKey(skillName = skillName),
           )
         if (savedSecret == null || savedSecret.isEmpty()) {
           val action =
@@ -151,19 +151,19 @@ open class AgentTools() : ToolSet {
       val url =
         skillManagerViewModel.getJsSkillUrl(skillName = skillName, scriptName = scriptName)
           ?: return@runBlocking mapOf(
-            "result" to "JS Skill URL not set properly or skill not found"
+            "result" to "JS Skill URL not set properly or skill not found",
           )
       Log.d(TAG, "Calling JS script.\n- url: $url\n- data: $data")
 
       // Update progress.
       _actionChannel.send(
         SkillProgressAgentAction(
-          label = "Calling JS script \"${skillName}/${scriptName}\"",
+          label = "Calling JS script \"$skillName/${scriptName}\"",
           inProgress = true,
-          addItemTitle = "Call JS script: \"${skillName}/${scriptName}\"",
+          addItemTitle = "Call JS script: \"$skillName/${scriptName}\"",
           addItemDescription = "- URL: ${url.replace(LOCAL_URL_BASE, "")}\n- Data: $data",
           customData = skill,
-        )
+        ),
       )
 
       // Actually run it and wait for the result.
@@ -182,7 +182,7 @@ open class AgentTools() : ToolSet {
       // Failed to parse. Treat its whole as a result string.
       if (
         resultJson == null ||
-          (resultJson.result == null && resultJson.webview == null && resultJson.image == null)
+        (resultJson.result == null && resultJson.webview == null && resultJson.image == null)
       ) {
         mapOf("result" to result, "status" to "succeeded")
       }
@@ -217,12 +217,12 @@ open class AgentTools() : ToolSet {
 
   @Tool(
     description =
-      "Run an Android intent. It is used to interact with the app to perform certain actions."
+      "Run an Android intent. It is used to interact with the app to perform certain actions.",
   )
   fun runIntent(
     @ToolParam(description = "The intent to run.") intent: String,
     @ToolParam(
-      description = "A JSON string containing the parameter values required for the intent."
+      description = "A JSON string containing the parameter values required for the intent.",
     )
     parameters: String,
   ): Map<String, String> {
@@ -238,7 +238,7 @@ open class AgentTools() : ToolSet {
           inProgress = true,
           addItemTitle = "Execute intent \"$intent\"",
           addItemDescription = "Parameters: $parameters",
-        )
+        ),
       )
       val res =
         IntentHandler.handleAction(context, intent, parameters) { permission ->
@@ -256,7 +256,10 @@ open class AgentTools() : ToolSet {
    * found in the allowed skills list. This helps guide the model when it gets confused and tries to
    * call a skill as a tool or intent.
    */
-  private fun guardMissingEntityWithSkillFallback(name: String, type: String): Map<String, String> {
+  private fun guardMissingEntityWithSkillFallback(
+    name: String,
+    type: String,
+  ): Map<String, String> {
     val skills = skillManagerViewModel.getSelectedSkills()
     val isSkill = skills.any { it.name == name.trim() }
     val error = if (isSkill) "$type not found. Try to run it as a skill" else "Tool not found"
@@ -269,5 +272,5 @@ open class AgentTools() : ToolSet {
 }
 
 fun getSkillSecretKey(skillName: String): String {
-  return "skill___${skillName}"
+  return "skill___$skillName"
 }

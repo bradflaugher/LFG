@@ -172,7 +172,7 @@ fun ChatHistorySideSheetContent(
           onClick = {
             showConfirmDeleteDialog = false
             onHistoryItemsDeleteAll()
-          }
+          },
         ) {
           Text(stringResource(R.string.ok))
         }
@@ -198,7 +198,7 @@ fun ChatHistorySideSheetContent(
             if (toDel != null) {
               onHistoryItemDeleted(toDel)
             }
-          }
+          },
         ) {
           Text(stringResource(R.string.ok))
         }

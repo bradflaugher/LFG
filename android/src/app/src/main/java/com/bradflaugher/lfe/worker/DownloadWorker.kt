@@ -73,11 +73,11 @@ class DownloadWorker(context: Context, params: WorkerParameters) :
       // Create a notification channel for showing notifications for model downloading progress.
       val channel =
         NotificationChannel(
-            FOREGROUND_NOTIFICATION_CHANNEL_ID,
-            "Model Downloading",
-            // Make it silent.
-            NotificationManager.IMPORTANCE_LOW,
-          )
+          FOREGROUND_NOTIFICATION_CHANNEL_ID,
+          "Model Downloading",
+          // Make it silent.
+          NotificationManager.IMPORTANCE_LOW,
+        )
           .apply { description = "Notifications for model downloading" }
       notificationManager.createNotificationChannel(channel)
       channelCreated = true
@@ -111,7 +111,7 @@ class DownloadWorker(context: Context, params: WorkerParameters) :
           allFiles.add(UrlAndFileName(url = fileUrl, fileName = fileName))
           for (index in extraDataFileUrls.indices) {
             allFiles.add(
-              UrlAndFileName(url = extraDataFileUrls[index], fileName = extraDataFileNames[index])
+              UrlAndFileName(url = extraDataFileUrls[index], fileName = extraDataFileNames[index]),
             )
           }
           Log.d(TAG, "About to download: $allFiles")
@@ -151,9 +151,9 @@ class DownloadWorker(context: Context, params: WorkerParameters) :
             if (outputFileBytes > 0) {
               Log.d(
                 TAG,
-                "File '${outputTmpFile.name}' partial size: ${outputFileBytes}. Trying to resume download",
+                "File '${outputTmpFile.name}' partial size: $outputFileBytes. Trying to resume download",
               )
-              connection.setRequestProperty("Range", "bytes=${outputFileBytes}-")
+              connection.setRequestProperty("Range", "bytes=$outputFileBytes-")
               // Force the server to send non-compressed data to make download resuming work.
               connection.setRequestProperty("Accept-Encoding", "identity")
             }
@@ -162,7 +162,7 @@ class DownloadWorker(context: Context, params: WorkerParameters) :
 
             if (
               connection.responseCode == HttpURLConnection.HTTP_OK ||
-                connection.responseCode == HttpURLConnection.HTTP_PARTIAL
+              connection.responseCode == HttpURLConnection.HTTP_PARTIAL
             ) {
               val contentRange = connection.getHeaderField("Content-Range")
 
@@ -175,7 +175,7 @@ class DownloadWorker(context: Context, params: WorkerParameters) :
 
                 Log.d(
                   TAG,
-                  "Content-Range: $contentRange. Start bytes: ${startByte}, end bytes: $endByte",
+                  "Content-Range: $contentRange. Start bytes: $startByte, end bytes: $endByte",
                 )
 
                 downloadedBytes += startByte
@@ -227,13 +227,13 @@ class DownloadWorker(context: Context, params: WorkerParameters) :
                     .putLong(KEY_MODEL_DOWNLOAD_RECEIVED_BYTES, downloadedBytes)
                     .putLong(KEY_MODEL_DOWNLOAD_RATE, (bytesPerMs * 1000).toLong())
                     .putLong(KEY_MODEL_DOWNLOAD_REMAINING_MS, remainingMs.toLong())
-                    .build()
+                    .build(),
                 )
                 setForeground(
                   createForegroundInfo(
                     progress = (downloadedBytes * 100 / totalBytes).toInt(),
                     modelName = modelName,
-                  )
+                  ),
                 )
                 Log.d(TAG, "downloadedBytes: $downloadedBytes")
                 lastSetProgressTs = curTs
@@ -269,7 +269,7 @@ class DownloadWorker(context: Context, params: WorkerParameters) :
               // Unzip.
               val unzipBuffer = ByteArray(4096)
               val zipFilePath =
-                "${externalFilesDir}${File.separator}$modelDir${File.separator}$version${File.separator}${fileName}"
+                "${externalFilesDir}${File.separator}$modelDir${File.separator}$version${File.separator}$fileName"
               val zipIn = ZipInputStream(BufferedInputStream(FileInputStream(zipFilePath)))
               var zipEntry: ZipEntry? = zipIn.nextEntry
 
@@ -307,7 +307,7 @@ class DownloadWorker(context: Context, params: WorkerParameters) :
         } catch (e: IOException) {
           Log.e(TAG, e.message, e)
           Result.failure(
-            Data.Builder().putString(KEY_MODEL_DOWNLOAD_ERROR_MESSAGE, e.message).build()
+            Data.Builder().putString(KEY_MODEL_DOWNLOAD_ERROR_MESSAGE, e.message).build(),
           )
         }
       }
@@ -324,7 +324,10 @@ class DownloadWorker(context: Context, params: WorkerParameters) :
    * notification is used to keep the worker running in the foreground, indicating to the user that
    * an active download is in progress.
    */
-  private fun createForegroundInfo(progress: Int, modelName: String? = null): ForegroundInfo {
+  private fun createForegroundInfo(
+    progress: Int,
+    modelName: String? = null,
+  ): ForegroundInfo {
     // Create a notification for the foreground service
     var title = "Downloading model"
     if (modelName != null) {

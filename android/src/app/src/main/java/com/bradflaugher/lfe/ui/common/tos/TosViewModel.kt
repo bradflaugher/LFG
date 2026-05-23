@@ -17,21 +17,23 @@ import javax.inject.Inject
 
 /** ViewModel responsible for managing terms of services related tasks. */
 @HiltViewModel
-open class TosViewModel @Inject constructor(private val dataStoreRepository: DataStoreRepository) :
+open class TosViewModel
+  @Inject
+  constructor(private val dataStoreRepository: DataStoreRepository) :
   ViewModel() {
-  open fun getIsTosAccepted(): Boolean {
-    return dataStoreRepository.isTosAccepted()
-  }
+    open fun getIsTosAccepted(): Boolean {
+      return dataStoreRepository.isTosAccepted()
+    }
 
-  open fun acceptTos() {
-    dataStoreRepository.acceptTos()
-  }
+    open fun acceptTos() {
+      dataStoreRepository.acceptTos()
+    }
 
-  open fun getIsGemmaTermsOfUseAccepted(): Boolean {
-    return dataStoreRepository.isGemmaTermsOfUseAccepted()
-  }
+    open fun getIsGemmaTermsOfUseAccepted(): Boolean {
+      return dataStoreRepository.isGemmaTermsOfUseAccepted()
+    }
 
-  open fun acceptGemmaTermsOfUse() {
-    dataStoreRepository.acceptGemmaTermsOfUse()
+    open fun acceptGemmaTermsOfUse() {
+      dataStoreRepository.acceptGemmaTermsOfUse()
+    }
   }
-}

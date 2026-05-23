@@ -180,7 +180,7 @@ fun AddSkillFromUrlDialog(
                 } else {
                   showDisclaimerDialog = true
                 }
-              }
+              },
             ) {
               Text(stringResource(R.string.add))
             }

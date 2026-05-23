@@ -38,7 +38,7 @@ fun MessageBodyError(message: ChatMessageError) {
     Box(
       modifier =
         Modifier.clip(RoundedCornerShape(16.dp))
-          .background(MaterialTheme.customColors.errorContainerColor)
+          .background(MaterialTheme.customColors.errorContainerColor),
     ) {
       MarkdownText(
         text = message.content,

@@ -149,23 +149,25 @@ fun ModelImportDialog(
   val fileSize by remember { mutableLongStateOf(info.first) }
   val fileName by remember { mutableStateOf(ensureValidFileName(info.second)) }
 
-  val initialValues: Map<String, Any> = remember {
-    mutableMapOf<String, Any>().apply {
-      for (config in IMPORT_CONFIGS_LLM) {
-        put(config.key.label, config.defaultValue)
-      }
-      put(ConfigKeys.NAME.label, fileName)
-      // TODO: support other types.
-      put(ConfigKeys.MODEL_TYPE.label, "LLM")
+  val initialValues: Map<String, Any> =
+    remember {
+      mutableMapOf<String, Any>().apply {
+        for (config in IMPORT_CONFIGS_LLM) {
+          put(config.key.label, config.defaultValue)
+        }
+        put(ConfigKeys.NAME.label, fileName)
+        // TODO: support other types.
+        put(ConfigKeys.MODEL_TYPE.label, "LLM")
 
-      for ((key, value) in defaultValues) {
-        put(key.label, value)
+        for ((key, value) in defaultValues) {
+          put(key.label, value)
+        }
       }
     }
-  }
-  val values: SnapshotStateMap<String, Any> = remember {
-    mutableStateMapOf<String, Any>().apply { putAll(initialValues) }
-  }
+  val values: SnapshotStateMap<String, Any> =
+    remember {
+      mutableStateMapOf<String, Any>().apply { putAll(initialValues) }
+    }
   val interactionSource = remember { MutableInteractionSource() }
 
   Dialog(onDismissRequest = onDismiss) {
@@ -211,11 +213,13 @@ fun ModelImportDialog(
           Button(
             onClick = {
               val supportedAccelerators =
-                (convertValueToTargetType(
+                (
+                  convertValueToTargetType(
                     value = values.get(ConfigKeys.COMPATIBLE_ACCELERATORS.label)!!,
                     valueType = ValueType.STRING,
                   )
-                    as String)
+                    as String
+                )
                   .split(",")
               val defaultMaxTokens =
                 convertValueToTargetType(
@@ -280,11 +284,11 @@ fun ModelImportDialog(
                       .setSupportAudio(supportAudio)
                       .setSupportThinking(supportThinking)
                       .setSupportSpeculativeDecoding(supportSpeculativeDecoding)
-                      .build()
+                      .build(),
                   )
                   .build()
               onDone(importedModel)
-            }
+            },
           ) {
             Text("Import")
           }
@@ -442,7 +446,10 @@ private fun importModel(
   }
 }
 
-private fun getFileSizeAndDisplayNameFromUri(context: Context, uri: Uri): Pair<Long, String> {
+private fun getFileSizeAndDisplayNameFromUri(
+  context: Context,
+  uri: Uri,
+): Pair<Long, String> {
   val contentResolver = context.contentResolver
   var fileSize = 0L
   var displayName = ""

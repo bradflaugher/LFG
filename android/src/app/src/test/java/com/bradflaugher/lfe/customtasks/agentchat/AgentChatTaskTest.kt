@@ -41,23 +41,26 @@ class AgentChatTaskTest {
   }
 
   @Test fun injectSkillsReturnsEmptyWhenNoSkillsSelected() {
-    val result = injectSkills(
-      baseSystemPrompt = DEFAULT_SYSTEM_PROMPT_SKILLS_ONLY_TRIMMED,
-      skills = listOf(),
-    )
+    val result =
+      injectSkills(
+        baseSystemPrompt = DEFAULT_SYSTEM_PROMPT_SKILLS_ONLY_TRIMMED,
+        skills = listOf(),
+      )
     assertEquals("", result.toString())
   }
 
   @Test fun injectSkillsSubstitutesSelectedSkills() {
-    val skills = listOf(
-      Skill.newBuilder().setName("translator").setDescription("Translate text").setSelected(true).build(),
-      Skill.newBuilder().setName("calculate-hash").setDescription("Hash text").setSelected(false).build(),
-      Skill.newBuilder().setName("qr-code").setDescription("Make a QR").setSelected(true).build(),
-    )
-    val result = injectSkills(
-      baseSystemPrompt = "PROMPT WITH ___SKILLS___ MARKER",
-      skills = skills,
-    ).toString()
+    val skills =
+      listOf(
+        Skill.newBuilder().setName("translator").setDescription("Translate text").setSelected(true).build(),
+        Skill.newBuilder().setName("calculate-hash").setDescription("Hash text").setSelected(false).build(),
+        Skill.newBuilder().setName("qr-code").setDescription("Make a QR").setSelected(true).build(),
+      )
+    val result =
+      injectSkills(
+        baseSystemPrompt = "PROMPT WITH ___SKILLS___ MARKER",
+        skills = skills,
+      ).toString()
     assertTrue("includes translator", result.contains("translator"))
     assertTrue("includes qr-code", result.contains("qr-code"))
     assertFalse(

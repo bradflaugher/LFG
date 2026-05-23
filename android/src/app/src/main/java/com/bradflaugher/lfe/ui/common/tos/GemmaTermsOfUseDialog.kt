@@ -71,7 +71,7 @@ fun GemmaTermsOfUseDialog(
                 buildTrackableUrlAnnotatedString(
                   url = "https://ai.google.dev/gemma/terms",
                   linkText = "Gemma Terms of Service",
-                )
+                ),
               )
               append(". Please review these terms and ensure you agree before continuing.")
             },
@@ -96,9 +96,12 @@ fun GemmaTermsOfUseDialog(
           Button(onClick = onTosAccepted) {
             Text(
               stringResource(
-                if (viewingMode) R.string.close
-                else R.string.tos_dialog_agree_and_continue_button_label
-              )
+                if (viewingMode) {
+                  R.string.close
+                } else {
+                  R.string.tos_dialog_agree_and_continue_button_label
+                },
+              ),
             )
           }
         }

@@ -46,15 +46,18 @@ fun LfeNavHost(
   val modelManagerUiState by modelManagerViewModel.uiState.collectAsState()
 
   DisposableEffect(lifecycleOwner) {
-    val observer = LifecycleEventObserver { _, event ->
-      when (event) {
-        Lifecycle.Event.ON_START,
-        Lifecycle.Event.ON_RESUME -> modelManagerViewModel.setAppInForeground(foreground = true)
-        Lifecycle.Event.ON_STOP,
-        Lifecycle.Event.ON_PAUSE -> modelManagerViewModel.setAppInForeground(foreground = false)
-        else -> Unit
+    val observer =
+      LifecycleEventObserver { _, event ->
+        when (event) {
+          Lifecycle.Event.ON_START,
+          Lifecycle.Event.ON_RESUME,
+          -> modelManagerViewModel.setAppInForeground(foreground = true)
+          Lifecycle.Event.ON_STOP,
+          Lifecycle.Event.ON_PAUSE,
+          -> modelManagerViewModel.setAppInForeground(foreground = false)
+          else -> Unit
+        }
       }
-    }
     lifecycleOwner.lifecycle.addObserver(observer)
     onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }
   }
@@ -89,7 +92,7 @@ fun LfeNavHost(
                 modelManagerViewModel = modelManagerViewModel,
                 onNavUp = { navController.navigate(ROUTE_MODEL_MANAGER) },
                 initialQuery = null,
-              )
+              ),
             )
         }
       }

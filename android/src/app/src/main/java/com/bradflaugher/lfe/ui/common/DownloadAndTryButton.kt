@@ -142,8 +142,10 @@ fun DownloadAndTryButton(
   val sheetState = rememberModalBottomSheetState()
 
   val needToDownloadFirst =
-    (downloadStatus == ModelDownloadStatusType.NOT_DOWNLOADED ||
-      downloadStatus == ModelDownloadStatusType.FAILED) &&
+    (
+      downloadStatus == ModelDownloadStatusType.NOT_DOWNLOADED ||
+        downloadStatus == ModelDownloadStatusType.FAILED
+    ) &&
       model.localFileRelativeDirPathOverride.isEmpty()
   val inProgress = downloadStatus == ModelDownloadStatusType.IN_PROGRESS
   val downloadSucceeded = downloadStatus == ModelDownloadStatusType.SUCCEEDED
@@ -174,7 +176,7 @@ fun DownloadAndTryButton(
   // Once the tab is closed, try starting the download process.
   val agreementAckLauncher: ActivityResultLauncher<Intent> =
     rememberLauncherForActivityResult(
-      contract = ActivityResultContracts.StartActivityForResult()
+      contract = ActivityResultContracts.StartActivityForResult(),
     ) { result ->
       Log.d(TAG, "User closes the browser tab. Try to start downloading.")
       startDownload(modelManagerViewModel.curAccessToken)
@@ -185,7 +187,7 @@ fun DownloadAndTryButton(
   // acknowledgement is needed before proceeding with the model download.
   val authResultLauncher =
     rememberLauncherForActivityResult(
-      contract = ActivityResultContracts.StartActivityForResult()
+      contract = ActivityResultContracts.StartActivityForResult(),
     ) { result ->
       modelManagerViewModel.handleAuthResult(
         result,
@@ -280,7 +282,8 @@ fun DownloadAndTryButton(
           when (tokenStatusAndData.status) {
             // If token is not stored or expired, log in and request a new token.
             TokenStatus.NOT_STORED,
-            TokenStatus.EXPIRED -> {
+            TokenStatus.EXPIRED,
+            -> {
               withContext(Dispatchers.Main) { startTokenExchange() }
             }
 
@@ -305,7 +308,7 @@ fun DownloadAndTryButton(
               else {
                 Log.d(
                   TAG,
-                  "Download url is NOT accessible. Response code: ${responseCode}. Trying to request a new token.",
+                  "Download url is NOT accessible. Response code: $responseCode. Trying to request a new token.",
                 )
 
                 withContext(Dispatchers.Main) { startTokenExchange() }
@@ -349,14 +352,14 @@ fun DownloadAndTryButton(
           containerColor =
             if (
               (!downloadSucceeded || !canShowTryIt) &&
-                model.localFileRelativeDirPathOverride.isEmpty()
+              model.localFileRelativeDirPathOverride.isEmpty()
             ) {
               downloadButtonBackgroundColor
             } else if (task != null) {
               getTaskBgGradientColors(task = task)[1]
             } else {
               MaterialTheme.colorScheme.primary
-            }
+            },
         ),
       contentPadding = PaddingValues(horizontal = 12.dp),
       onClick = {
@@ -367,8 +370,8 @@ fun DownloadAndTryButton(
         // Check TOS before downloading.
         if (
           model.url.startsWith("https://dl.google.com/google-ai-edge-gallery/") &&
-            MODEL_NAMES_TO_SHOW_GEMMA_LICENSES.contains(model.name) &&
-            !tosViewModel.getIsGemmaTermsOfUseAccepted()
+          MODEL_NAMES_TO_SHOW_GEMMA_LICENSES.contains(model.name) &&
+          !tosViewModel.getIsGemmaTermsOfUseAccepted()
         ) {
           showGemmaTermsOfUseDialog = true
         } else {
@@ -451,15 +454,18 @@ fun DownloadAndTryButton(
           style =
             MaterialTheme.typography.bodyMedium.copy(
               // This stops numbers from "jumping around" when being updated.
-              fontFeatureSettings = "tnum"
+              fontFeatureSettings = "tnum",
             ),
           color = MaterialTheme.colorScheme.onSurface,
           modifier = Modifier.padding(start = 12.dp).width(if (compact) 32.dp else 44.dp),
         )
         if (!compact) {
           val color =
-            if (task != null) getTaskBgGradientColors(task = task)[1]
-            else MaterialTheme.colorScheme.primary
+            if (task != null) {
+              getTaskBgGradientColors(task = task)[1]
+            } else {
+              MaterialTheme.colorScheme.primary
+            }
           LinearProgressIndicator(
             modifier = Modifier.weight(1f).padding(horizontal = 4.dp),
             progress = { animatedProgress.value },
@@ -475,7 +481,7 @@ fun DownloadAndTryButton(
           },
           colors =
             IconButtonDefaults.iconButtonColors(
-              containerColor = MaterialTheme.colorScheme.surfaceContainer
+              containerColor = MaterialTheme.colorScheme.surfaceContainer,
             ),
           modifier = Modifier.semantics { contentDescription = cbStop },
         ) {
@@ -529,7 +535,7 @@ fun DownloadAndTryButton(
             }
             // Dismiss the sheet.
             showAgreementAckSheet = false
-          }
+          },
         ) {
           Text("Open user agreement")
         }

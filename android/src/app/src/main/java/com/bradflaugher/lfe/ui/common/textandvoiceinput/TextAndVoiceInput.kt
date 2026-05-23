@@ -86,7 +86,7 @@ fun TextAndVoiceInput(
               }
             } else {
               Modifier
-            }
+            },
           )
           .graphicsLayer { alpha = if (!processing) 1f else 0.5f }
           .background(MaterialTheme.colorScheme.surfaceContainerLow)
@@ -102,7 +102,7 @@ fun TextAndVoiceInput(
         if (textInputMode) Icons.Outlined.Mic else Icons.Outlined.KeyboardAlt,
         contentDescription =
           stringResource(
-            if (textInputMode) R.string.cd_switch_to_voice else R.string.cd_switch_to_keyboard
+            if (textInputMode) R.string.cd_switch_to_voice else R.string.cd_switch_to_keyboard,
           ),
         modifier = Modifier.size(24.dp),
       )
@@ -161,7 +161,7 @@ fun TextAndVoiceInput(
                           Modifier.clickable { onDone(curTextInput) }
                         } else {
                           Modifier
-                        }
+                        },
                       )
                       .graphicsLayer { alpha = if (!processing) 1f else 0.5f }
                       .background(getTaskIconColor(task = task))

@@ -45,7 +45,11 @@ private const val FADE_INTERVAL_MS = 120
  * 4. The overlay layer is instantly hidden, ready for the next text update.
  */
 @Composable
-fun BufferedFadingMarkdownText(text: String, inProgress: Boolean, modifier: Modifier = Modifier) {
+fun BufferedFadingMarkdownText(
+  text: String,
+  inProgress: Boolean,
+  modifier: Modifier = Modifier,
+) {
   var text1 by remember { mutableStateOf(text) }
   var text2 by remember { mutableStateOf("") }
   val alpha2 = remember { Animatable(0f) }
@@ -98,7 +102,7 @@ fun BufferedFadingMarkdownText(text: String, inProgress: Boolean, modifier: Modi
     // As the overlay fades in, the base text fades out. Since the sum of their alphas is always 1,
     // and BlendMode.Plus adds the colors, the transition appears as a smooth crossfade
     // without any intermediate darkening or color artifacts.
-    SelectionContainer() {
+    SelectionContainer {
       MarkdownText(text = text1, modifier = Modifier.graphicsLayer { alpha = 1f - alpha2.value })
     }
 

@@ -27,13 +27,19 @@ private val NORMALIZE_NAME_REGEX = Regex("[^a-zA-Z0-9]")
 data class PromptTemplate(val title: String, val description: String, val prompt: String)
 
 enum class ModelCapability {
-  @SerializedName("llm_thinking") LLM_THINKING,
-  @SerializedName("speculative_decoding") SPECULATIVE_DECODING,
+  @SerializedName("llm_thinking")
+  LLM_THINKING,
+
+  @SerializedName("speculative_decoding")
+  SPECULATIVE_DECODING,
 }
 
 enum class RuntimeType {
-  @SerializedName("unknown") UNKNOWN,
-  @SerializedName("litert_lm") LITERT_LM,
+  @SerializedName("unknown")
+  UNKNOWN,
+
+  @SerializedName("litert_lm")
+  LITERT_LM,
 }
 
 data class ModelFile(
@@ -56,14 +62,12 @@ data class Model(
    * IMPORTANT: it shouldn't contain "/" character.
    */
   val name: String,
-
   /**
    * The display name of the model, for display purpose.
    *
    * If this field is not set, the `name` field above will be used as the default display name.
    */
   val displayName: String = "",
-
   /**
    * (optional)
    *
@@ -72,7 +76,6 @@ data class Model(
    * Displayed in the expanded model info card.
    */
   val info: String = "",
-
   /**
    * (optional)
    *
@@ -84,14 +87,12 @@ data class Model(
    * See [Config] for more details
    */
   var configs: List<Config> = listOf(),
-
   /**
    * (optional)
    *
    * The url to jump to when clicking "learn more" in model's info card.
    */
   val learnMoreUrl: String = "",
-
   /**
    * (optional)
    *
@@ -103,7 +104,6 @@ data class Model(
    * Each task should only have one such model.
    */
   val bestForTaskIds: List<String> = listOf(),
-
   /**
    * (optional)
    *
@@ -113,13 +113,11 @@ data class Model(
    * model screen.
    */
   val minDeviceMemoryInGb: Int? = null,
-
-  //////////////////////////////////////////////////////////////////////////////////////////////////
+  // ////////////////////////////////////////////////////////////////////////////////////////////////
   // Fill in the following fields if the model file needs to be downloaded from internet.
   //
   // If you want to manually manage model files without downloading them from internet, set the
   // `localFilePathOverride` field below.
-
   /**
    * The URL to download the model from.
    *
@@ -127,14 +125,12 @@ data class Model(
    * model is gated.
    */
   val url: String = "",
-
   /**
    * The size of the model file in bytes.
    *
    * This will be used to calculate download progress.
    */
   val sizeInBytes: Long = 0L,
-
   /**
    * The name of the downloaded model file.
    *
@@ -142,7 +138,6 @@ data class Model(
    * {context.getExternalFilesDir}/{normalizedName}/{version}/{downloadFileName}
    */
   var downloadFileName: String = "_",
-
   /**
    * (optional)
    *
@@ -152,17 +147,14 @@ data class Model(
    * {context.getExternalFilesDir}/{normalizedName}/{version}/{downloadFileName}
    */
   var version: String = "_",
-
   /**
    * (optional, experimental)
    *
    * A list of additional data files required by the model.
    */
   val extraDataFiles: List<ModelDataFile> = listOf(),
-
   /** Whether the model is LLM or not. */
   val isLlm: Boolean = false,
-
   /**
    * The name of the parent model that this model is a variant of.
    *
@@ -170,10 +162,8 @@ data class Model(
    * model card,
    */
   val parentModelName: String? = null,
-
   /** The label of the model variant. */
   val variantLabel: String? = null,
-
   /**
    * The model files that this model can be upgraded from.
    *
@@ -182,20 +172,16 @@ data class Model(
    * update button or update info) for them to choose to update.
    */
   val updatableModelFiles: List<ModelFile> = listOf(),
-
   /**
    * The information about the model update.
    *
    * If set, the UI will show users this information when they tap on the update info.
    */
   val updateInfo: String = "",
-
   // End of model download related fields.
-  //////////////////////////////////////////////////////////////////////////////////////////////////
-
+  // ////////////////////////////////////////////////////////////////////////////////////////////////
   /** The type of local runtime environment to use for running the model. */
   val runtimeType: RuntimeType = RuntimeType.UNKNOWN,
-
   /**
    * Set this to a relative path pointing to a dir (e.g., my_model/local_dir/) if you want to
    * manually manage model files instead of downloading them. This dir is relative to the app's
@@ -220,57 +206,41 @@ data class Model(
    *   especially for demos.
    */
   val localFileRelativeDirPathOverride: String = "",
-
   /**
    * When set, the app will try to use this path to find the model file.
    *
    * For testing purpose only.
    */
   val localModelFilePathOverride: String = "",
-
   // The following fields are only used for built-in tasks. Can ignore if you are creating your own
   // custom tasks.
   //
-
   /** Whether to show the "run again" button in the UI. */
   val showRunAgainButton: Boolean = true,
-
   /** Whether to show the "benchmark" button in the UI. */
   val showBenchmarkButton: Boolean = true,
-
   /** Indicates whether the model is a zip file. */
   val isZip: Boolean = false,
-
   /** The name of the directory to unzip the model to (if it's a zip file). */
   val unzipDir: String = "",
-
   /** The prompt templates for the model (only for LLM). */
   val llmPromptTemplates: List<PromptTemplate> = listOf(),
-
   /** Whether the LLM model supports image input. */
   val llmSupportImage: Boolean = false,
-
   /** Whether the LLM model supports audio input. */
   val llmSupportAudio: Boolean = false,
-
   /** The capabilities of the model. */
   val capabilities: List<ModelCapability> = listOf(),
-
   /** The max token for llm model. */
   val llmMaxToken: Int = 0,
-
   /** Compatible accelerators. */
   val accelerators: List<Accelerator> = listOf(),
-
   /** Accelerator for running vision encoder. */
   val visionAccelerator: Accelerator = Accelerator.GPU,
-
   /** Whether the model is imported or not. */
   val imported: Boolean = false,
-
   /** A map of model capability to the task type ids that the model capability is allowed for. */
   val capabilityToTaskTypes: Map<ModelCapability, List<String>> = mapOf(),
-
   // The following fields are managed by the app. Don't need to set manually.
   //
   var normalizedName: String = "",
@@ -282,7 +252,6 @@ data class Model(
   var prevConfigValues: Map<String, Any> = mapOf(),
   var totalBytes: Long = 0L,
   var accessToken: String? = null,
-
   /**
    * Indicates whether the model currently on the device is an older version that can be updated.
    *
@@ -291,7 +260,6 @@ data class Model(
    * instead of the latest one.
    */
   var updatable: Boolean = false,
-
   /**
    * Stores the latest model file details (such as filename and commit hash) corresponding to this
    * model as available in the allowlist.
@@ -317,7 +285,10 @@ data class Model(
     this.totalBytes = this.sizeInBytes + this.extraDataFiles.sumOf { it.sizeInBytes }
   }
 
-  fun getPath(context: Context, fileName: String = downloadFileName): String {
+  fun getPath(
+    context: Context,
+    fileName: String = downloadFileName,
+  ): String {
     if (imported) {
       return listOf(context.getExternalFilesDir(null)?.absolutePath ?: "", fileName)
         .joinToString(File.separator)
@@ -329,10 +300,10 @@ data class Model(
 
     if (localFileRelativeDirPathOverride.isNotEmpty()) {
       return listOf(
-          context.getExternalFilesDir(null)?.absolutePath ?: "",
-          localFileRelativeDirPathOverride,
-          fileName,
-        )
+        context.getExternalFilesDir(null)?.absolutePath ?: "",
+        localFileRelativeDirPathOverride,
+        fileName,
+      )
         .joinToString(File.separator)
     }
 
@@ -346,17 +317,26 @@ data class Model(
     }
   }
 
-  fun getIntConfigValue(key: ConfigKey, defaultValue: Int = 0): Int {
+  fun getIntConfigValue(
+    key: ConfigKey,
+    defaultValue: Int = 0,
+  ): Int {
     return getTypedConfigValue(key = key, valueType = ValueType.INT, defaultValue = defaultValue)
       as Int
   }
 
-  fun getFloatConfigValue(key: ConfigKey, defaultValue: Float = 0.0f): Float {
+  fun getFloatConfigValue(
+    key: ConfigKey,
+    defaultValue: Float = 0.0f,
+  ): Float {
     return getTypedConfigValue(key = key, valueType = ValueType.FLOAT, defaultValue = defaultValue)
       as Float
   }
 
-  fun getBooleanConfigValue(key: ConfigKey, defaultValue: Boolean = false): Boolean {
+  fun getBooleanConfigValue(
+    key: ConfigKey,
+    defaultValue: Boolean = false,
+  ): Boolean {
     return getTypedConfigValue(
       key = key,
       valueType = ValueType.BOOLEAN,
@@ -365,7 +345,10 @@ data class Model(
       as Boolean
   }
 
-  fun getStringConfigValue(key: ConfigKey, defaultValue: String = ""): String {
+  fun getStringConfigValue(
+    key: ConfigKey,
+    defaultValue: String = "",
+  ): String {
     return getTypedConfigValue(key = key, valueType = ValueType.STRING, defaultValue = defaultValue)
       as String
   }
@@ -374,7 +357,11 @@ data class Model(
     return extraDataFiles.find { it.name == name }
   }
 
-  private fun getTypedConfigValue(key: ConfigKey, valueType: ValueType, defaultValue: Any): Any {
+  private fun getTypedConfigValue(
+    key: ConfigKey,
+    valueType: ValueType,
+    defaultValue: Any,
+  ): Any {
     return convertValueToTargetType(
       value = configValues.getOrDefault(key.label, defaultValue),
       valueType = valueType,
@@ -400,7 +387,7 @@ data class ModelDownloadStatus(
   val remainingMs: Long = 0,
 )
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
+// //////////////////////////////////////////////////////////////////////////////////////////////////
 // Configs.
 
 val EMPTY_MODEL: Model =

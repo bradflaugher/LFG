@@ -42,7 +42,10 @@ data class Task(
   var index: Int = -1,
   val updateTrigger: MutableState<Long> = mutableLongStateOf(0),
 ) {
-  fun allowCapability(capability: ModelCapability, model: Model): Boolean {
+  fun allowCapability(
+    capability: ModelCapability,
+    model: Model,
+  ): Boolean {
     return model.capabilityToTaskTypes[capability]?.contains(id) == true
   }
 }
@@ -51,4 +54,6 @@ object BuiltInTaskId {
   const val LLM_AGENT_CHAT = "llm_agent_chat"
 }
 
-fun isLegacyTasks(@Suppress("UNUSED_PARAMETER") id: String): Boolean = false
+fun isLegacyTasks(
+  @Suppress("UNUSED_PARAMETER") id: String,
+): Boolean = false

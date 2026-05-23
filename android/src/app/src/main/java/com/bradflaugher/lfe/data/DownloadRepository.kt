@@ -74,6 +74,7 @@ class DefaultDownloadRepository(
   private val lifecycleProvider: AppLifecycleProvider,
 ) : DownloadRepository {
   private val workManager = WorkManager.getInstance(context)
+
   /**
    * Stores the start time of a model download.
    *
@@ -206,7 +207,8 @@ class DefaultDownloadRepository(
           }
 
           WorkInfo.State.FAILED,
-          WorkInfo.State.CANCELLED -> {
+          WorkInfo.State.CANCELLED,
+          -> {
             var status = ModelDownloadStatusType.FAILED
             val errorMessage = workInfo.outputData.getString(KEY_MODEL_DOWNLOAD_ERROR_MESSAGE) ?: ""
             Log.d(
@@ -237,7 +239,12 @@ class DefaultDownloadRepository(
     }
   }
 
-  private fun sendNotification(title: String, text: String, taskId: String, modelName: String) {
+  private fun sendNotification(
+    title: String,
+    text: String,
+    taskId: String,
+    modelName: String,
+  ) {
     // Don't send notification if app is in foreground.
     if (lifecycleProvider.isAppInForeground) {
       return
@@ -265,13 +272,12 @@ class DefaultDownloadRepository(
         Intent(Intent.ACTION_VIEW, "com.bradflaugher.lfe://global_model_manager".toUri())
           .apply { flags = Intent.FLAG_ACTIVITY_NEW_TASK }
     } else {
-
       // Otherwise, create the deep link as before.
       intent =
         Intent(
-            Intent.ACTION_VIEW,
-            "com.bradflaugher.lfe://model/$taskId/${modelName}".toUri(),
-          )
+          Intent.ACTION_VIEW,
+          "com.bradflaugher.lfe://model/$taskId/$modelName".toUri(),
+        )
           .apply { flags = Intent.FLAG_ACTIVITY_NEW_TASK }
     }
 
@@ -298,7 +304,7 @@ class DefaultDownloadRepository(
       // notificationId is a unique int for each notification that you must define
       if (
         ActivityCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) !=
-          PackageManager.PERMISSION_GRANTED
+        PackageManager.PERMISSION_GRANTED
       ) {
         // Permission not granted, return or handle accordingly. In real app, request permission.
         return

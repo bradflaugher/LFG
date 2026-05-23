@@ -21,7 +21,11 @@ import com.bradflaugher.lfe.data.Model
 
 /** Composable function to display a confirmation dialog for deleting a model. */
 @Composable
-fun ConfirmDeleteModelDialog(model: Model, onConfirm: () -> Unit, onDismiss: () -> Unit) {
+fun ConfirmDeleteModelDialog(
+  model: Model,
+  onConfirm: () -> Unit,
+  onDismiss: () -> Unit,
+) {
   AlertDialog(
     onDismissRequest = onDismiss,
     title = { Text(stringResource(R.string.confirm_delete_model_dialog_title)) },

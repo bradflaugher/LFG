@@ -18,7 +18,6 @@ import javax.inject.Inject
 
 @HiltAndroidApp
 class LfeApplication : Application() {
-
   @Inject lateinit var dataStoreRepository: DataStoreRepository
 
   override fun onCreate() {

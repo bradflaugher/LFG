@@ -36,103 +36,113 @@ private const val AUDIO_METER_MAX_DB = 100.0f
 data class HoldToDictateUiState(val recognizing: Boolean = false, val recognizedText: String = "")
 
 @HiltViewModel
-class HoldToDictateViewModel @Inject constructor(@ApplicationContext private val context: Context) :
+class HoldToDictateViewModel
+  @Inject
+  constructor(
+    @ApplicationContext private val context: Context,
+  ) :
   ViewModel(), RecognitionListener {
-  protected val _uiState = MutableStateFlow(HoldToDictateUiState())
-  val uiState = _uiState.asStateFlow()
+    protected val _uiState = MutableStateFlow(HoldToDictateUiState())
+    val uiState = _uiState.asStateFlow()
 
-  private val speechRecognizer: SpeechRecognizer
-  private val recognizerIntent: Intent
-  private var onRecognitionDone: ((String) -> Unit)? = null
-  private var onAmplitudeChanged: ((Int) -> Unit)? = null
+    private val speechRecognizer: SpeechRecognizer
+    private val recognizerIntent: Intent
+    private var onRecognitionDone: ((String) -> Unit)? = null
+    private var onAmplitudeChanged: ((Int) -> Unit)? = null
 
-  init {
-    // Initialize SpeechRecognizer
-    speechRecognizer =
-      SpeechRecognizer.createSpeechRecognizer(context).apply {
-        setRecognitionListener(this@HoldToDictateViewModel)
+    init {
+      // Initialize SpeechRecognizer
+      speechRecognizer =
+        SpeechRecognizer.createSpeechRecognizer(context).apply {
+          setRecognitionListener(this@HoldToDictateViewModel)
+        }
+
+      // Initialize Intent (used for language/model settings)
+      recognizerIntent =
+        Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).apply {
+          putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
+          putExtra(RecognizerIntent.EXTRA_LANGUAGE, "en-US")
+          putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 1)
+          putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, true)
+        }
+    }
+
+    fun startSpeechRecognition(
+      onDone: (String) -> Unit,
+      onAmplitudeChanged: (Int) -> Unit,
+    ) {
+      onRecognitionDone = onDone
+      this.onAmplitudeChanged = onAmplitudeChanged
+
+      speechRecognizer.startListening(recognizerIntent)
+      setRecognizedText(text = "")
+      setRecognizing(recognizing = true)
+    }
+
+    fun stopSpeechRecognition() {
+      viewModelScope.launch {
+        delay(500)
+        speechRecognizer.stopListening()
+        setRecognizing(recognizing = false)
       }
+    }
 
-    // Initialize Intent (used for language/model settings)
-    recognizerIntent =
-      Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).apply {
-        putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
-        putExtra(RecognizerIntent.EXTRA_LANGUAGE, "en-US")
-        putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 1)
-        putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, true)
-      }
-  }
-
-  fun startSpeechRecognition(onDone: (String) -> Unit, onAmplitudeChanged: (Int) -> Unit) {
-    onRecognitionDone = onDone
-    this.onAmplitudeChanged = onAmplitudeChanged
-
-    speechRecognizer.startListening(recognizerIntent)
-    setRecognizedText(text = "")
-    setRecognizing(recognizing = true)
-  }
-
-  fun stopSpeechRecognition() {
-    viewModelScope.launch {
-      delay(500)
-      speechRecognizer.stopListening()
+    fun cancelSpeechRecognition() {
       setRecognizing(recognizing = false)
     }
-  }
 
-  fun cancelSpeechRecognition() {
-    setRecognizing(recognizing = false)
-  }
-
-  fun setRecognizing(recognizing: Boolean) {
-    _uiState.update { uiState.value.copy(recognizing = recognizing) }
-  }
-
-  fun setRecognizedText(text: String) {
-    _uiState.update { uiState.value.copy(recognizedText = text) }
-  }
-
-  override fun onReadyForSpeech(params: Bundle?) {}
-
-  override fun onBeginningOfSpeech() {}
-
-  override fun onRmsChanged(rmsdB: Float) {
-    onAmplitudeChanged?.invoke(convertRmsDbToAmplitude(rmsdB = rmsdB))
-  }
-
-  override fun onBufferReceived(buffer: ByteArray?) {}
-
-  override fun onEndOfSpeech() {}
-
-  override fun onError(error: Int) {}
-
-  override fun onResults(results: Bundle?) {
-    val matches = results?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
-    if (matches != null && matches.size > 0) {
-      setRecognizedText(matches.get(0) ?: "")
-    } else {
-      setRecognizedText("")
+    fun setRecognizing(recognizing: Boolean) {
+      _uiState.update { uiState.value.copy(recognizing = recognizing) }
     }
 
-    val curOnRecognitionDone = onRecognitionDone
-    if (curOnRecognitionDone != null) {
-      curOnRecognitionDone(uiState.value.recognizedText)
+    fun setRecognizedText(text: String) {
+      _uiState.update { uiState.value.copy(recognizedText = text) }
     }
 
-    setRecognizing(recognizing = false)
-  }
+    override fun onReadyForSpeech(params: Bundle?) {}
 
-  override fun onPartialResults(partialResults: Bundle?) {
-    val matches = partialResults?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
-    if (matches != null && matches.size > 0) {
-      setRecognizedText(matches.get(0) ?: "")
-    } else {
-      setRecognizedText("")
+    override fun onBeginningOfSpeech() {}
+
+    override fun onRmsChanged(rmsdB: Float) {
+      onAmplitudeChanged?.invoke(convertRmsDbToAmplitude(rmsdB = rmsdB))
     }
-  }
 
-  override fun onEvent(eventType: Int, params: Bundle?) {}
-}
+    override fun onBufferReceived(buffer: ByteArray?) {}
+
+    override fun onEndOfSpeech() {}
+
+    override fun onError(error: Int) {}
+
+    override fun onResults(results: Bundle?) {
+      val matches = results?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
+      if (matches != null && matches.size > 0) {
+        setRecognizedText(matches.get(0) ?: "")
+      } else {
+        setRecognizedText("")
+      }
+
+      val curOnRecognitionDone = onRecognitionDone
+      if (curOnRecognitionDone != null) {
+        curOnRecognitionDone(uiState.value.recognizedText)
+      }
+
+      setRecognizing(recognizing = false)
+    }
+
+    override fun onPartialResults(partialResults: Bundle?) {
+      val matches = partialResults?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
+      if (matches != null && matches.size > 0) {
+        setRecognizedText(matches.get(0) ?: "")
+      } else {
+        setRecognizedText("")
+      }
+    }
+
+    override fun onEvent(
+      eventType: Int,
+      params: Bundle?,
+    ) {}
+  }
 
 private fun convertRmsDbToAmplitude(rmsdB: Float): Int {
   // Clamp the input value to the defined range

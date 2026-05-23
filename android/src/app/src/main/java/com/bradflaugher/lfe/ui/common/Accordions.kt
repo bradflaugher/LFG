@@ -71,7 +71,7 @@ fun Accordions(
           title,
           style =
             MaterialTheme.typography.bodyMedium.copy(
-              fontWeight = if (boldTitle) FontWeight.SemiBold else FontWeight.Normal
+              fontWeight = if (boldTitle) FontWeight.SemiBold else FontWeight.Normal,
             ),
           color = MaterialTheme.colorScheme.onSurface,
           maxLines = 1,

@@ -66,7 +66,10 @@ fun DownloadModelPanel(
       horizontalArrangement = Arrangement.End,
       verticalAlignment = Alignment.CenterVertically,
     ) {
-      fun isDownloadButtonEnabled(downloadStatus: ModelDownloadStatusType?, model: Model): Boolean {
+      fun isDownloadButtonEnabled(
+        downloadStatus: ModelDownloadStatusType?,
+        model: Model,
+      ): Boolean {
         val downloadFailed = downloadStatus == ModelDownloadStatusType.FAILED
         val isLitertLm = model.runtimeType == RuntimeType.LITERT_LM
         return !downloadFailed || isLitertLm
@@ -81,14 +84,14 @@ fun DownloadModelPanel(
         Button(
           modifier =
             Modifier.sharedElement(
-                sharedContentState =
-                  rememberSharedContentState(key = "update_button_${model.name}"),
-                animatedVisibilityScope = animatedVisibilityScope,
-              )
+              sharedContentState =
+                rememberSharedContentState(key = "update_button_${model.name}"),
+              animatedVisibilityScope = animatedVisibilityScope,
+            )
               .then(buttonModifier),
           colors =
             ButtonDefaults.buttonColors(
-              containerColor = MaterialTheme.colorScheme.secondaryContainer
+              containerColor = MaterialTheme.colorScheme.secondaryContainer,
             ),
           contentPadding = PaddingValues(horizontal = 12.dp),
           onClick = {

@@ -38,7 +38,7 @@ fun MessageBodyWarning(message: ChatMessageWarning) {
     Box(
       modifier =
         Modifier.clip(RoundedCornerShape(16.dp))
-          .background(MaterialTheme.customColors.warningContainerColor)
+          .background(MaterialTheme.customColors.warningContainerColor),
     ) {
       MarkdownText(
         text = message.content,

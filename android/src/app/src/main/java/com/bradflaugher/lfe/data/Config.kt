@@ -118,11 +118,11 @@ class NumberSliderConfig(
   override val needReinitialization: Boolean = true,
 ) :
   Config(
-    type = ConfigEditorType.NUMBER_SLIDER,
-    key = key,
-    defaultValue = defaultValue,
-    valueType = valueType,
-  )
+      type = ConfigEditorType.NUMBER_SLIDER,
+      key = key,
+      defaultValue = defaultValue,
+      valueType = valueType,
+    )
 
 /** Configuration setting for a boolean switch. */
 class BooleanSwitchConfig(
@@ -131,11 +131,11 @@ class BooleanSwitchConfig(
   override val needReinitialization: Boolean = true,
 ) :
   Config(
-    type = ConfigEditorType.BOOLEAN_SWITCH,
-    key = key,
-    defaultValue = defaultValue,
-    valueType = ValueType.BOOLEAN,
-  )
+      type = ConfigEditorType.BOOLEAN_SWITCH,
+      key = key,
+      defaultValue = defaultValue,
+      valueType = ValueType.BOOLEAN,
+    )
 
 /** Configuration setting for a segmented button. */
 class SegmentedButtonConfig(
@@ -145,12 +145,12 @@ class SegmentedButtonConfig(
   val allowMultiple: Boolean = false,
 ) :
   Config(
-    type = ConfigEditorType.SEGMENTED_BUTTON,
-    key = key,
-    defaultValue = defaultValue,
-    // The emitted value will be comma-separated labels when allowMultiple=true.
-    valueType = ValueType.STRING,
-  )
+      type = ConfigEditorType.SEGMENTED_BUTTON,
+      key = key,
+      defaultValue = defaultValue,
+      // The emitted value will be comma-separated labels when allowMultiple=true.
+      valueType = ValueType.STRING,
+    )
 
 /** Configuration setting for a bottom sheet selector. */
 class BottomSheetSelectorConfig(
@@ -160,15 +160,18 @@ class BottomSheetSelectorConfig(
   @StringRes val bottomSheetTitleResId: Int? = null,
 ) :
   Config(
-    type = ConfigEditorType.BOTTOMSHEET_SELECTOR,
-    key = key,
-    defaultValue = defaultValue,
-    valueType = ValueType.STRING,
-  )
+      type = ConfigEditorType.BOTTOMSHEET_SELECTOR,
+      key = key,
+      defaultValue = defaultValue,
+      valueType = ValueType.STRING,
+    )
 
 data class BottomSheetSelectorItem(val label: String)
 
-fun convertValueToTargetType(value: Any, valueType: ValueType): Any {
+fun convertValueToTargetType(
+  value: Any,
+  valueType: ValueType,
+): Any {
   return when (valueType) {
     ValueType.INT ->
       when (value) {
@@ -238,34 +241,34 @@ fun createLlmChatConfigs(
   }
   val configs =
     listOf(
-        maxTokensConfig,
-        NumberSliderConfig(
-          key = ConfigKeys.TOPK,
-          sliderMin = 5f,
-          sliderMax = 100f,
-          defaultValue = defaultTopK.toFloat(),
-          valueType = ValueType.INT,
-        ),
-        NumberSliderConfig(
-          key = ConfigKeys.TOPP,
-          sliderMin = 0.0f,
-          sliderMax = 1.0f,
-          defaultValue = defaultTopP,
-          valueType = ValueType.FLOAT,
-        ),
-        NumberSliderConfig(
-          key = ConfigKeys.TEMPERATURE,
-          sliderMin = 0.0f,
-          sliderMax = 2.0f,
-          defaultValue = defaultTemperature,
-          valueType = ValueType.FLOAT,
-        ),
-        SegmentedButtonConfig(
-          key = ConfigKeys.ACCELERATOR,
-          defaultValue = accelerators[0].label,
-          options = accelerators.map { it.label },
-        ),
-      )
+      maxTokensConfig,
+      NumberSliderConfig(
+        key = ConfigKeys.TOPK,
+        sliderMin = 5f,
+        sliderMax = 100f,
+        defaultValue = defaultTopK.toFloat(),
+        valueType = ValueType.INT,
+      ),
+      NumberSliderConfig(
+        key = ConfigKeys.TOPP,
+        sliderMin = 0.0f,
+        sliderMax = 1.0f,
+        defaultValue = defaultTopP,
+        valueType = ValueType.FLOAT,
+      ),
+      NumberSliderConfig(
+        key = ConfigKeys.TEMPERATURE,
+        sliderMin = 0.0f,
+        sliderMax = 2.0f,
+        defaultValue = defaultTemperature,
+        valueType = ValueType.FLOAT,
+      ),
+      SegmentedButtonConfig(
+        key = ConfigKeys.ACCELERATOR,
+        defaultValue = accelerators[0].label,
+        options = accelerators.map { it.label },
+      ),
+    )
       .toMutableList()
 
   if (supportThinking) {
@@ -273,7 +276,7 @@ fun createLlmChatConfigs(
   }
   if (supportSpeculativeDecoding) {
     configs.add(
-      BooleanSwitchConfig(key = ConfigKeys.ENABLE_SPECULATIVE_DECODING, defaultValue = false)
+      BooleanSwitchConfig(key = ConfigKeys.ENABLE_SPECULATIVE_DECODING, defaultValue = false),
     )
   }
   return configs
@@ -298,7 +301,10 @@ fun createLlmChatConfigsForNpuModel(
   )
 }
 
-fun getConfigValueString(value: Any, config: Config): String {
+fun getConfigValueString(
+  value: Any,
+  config: Config,
+): String {
   var strNewValue = "$value"
   if (config.valueType == ValueType.FLOAT) {
     strNewValue = "%.2f".format(value)

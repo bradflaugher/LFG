@@ -33,12 +33,15 @@ import com.bradflaugher.lfe.ui.theme.customColors
  * Supports markdown.
  */
 @Composable
-fun MessageBodyInfo(message: ChatMessageInfo, smallFontSize: Boolean = true) {
+fun MessageBodyInfo(
+  message: ChatMessageInfo,
+  smallFontSize: Boolean = true,
+) {
   Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
     Box(
       modifier =
         Modifier.clip(RoundedCornerShape(16.dp))
-          .background(MaterialTheme.customColors.agentBubbleBgColor)
+          .background(MaterialTheme.customColors.agentBubbleBgColor),
     ) {
       MarkdownText(
         text = message.content,

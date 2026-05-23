@@ -111,9 +111,11 @@ object LlmChatModelHelper : LlmModelHelper {
         audioBackend = if (shouldEnableAudio) Backend.CPU() else null, // must be CPU for Gemma 3n
         maxNumTokens = maxTokens,
         cacheDir =
-          if (modelPath.startsWith("/data/local/tmp"))
+          if (modelPath.startsWith("/data/local/tmp")) {
             context.getExternalFilesDir(null)?.absolutePath
-          else null,
+          } else {
+            null
+          },
       )
 
     // Check if the model file supports speculative decoding.
@@ -133,8 +135,8 @@ object LlmChatModelHelper : LlmModelHelper {
       // speculative decoding is enabled in the settings.
       if (
         supportsSpeculativeDecoding &&
-          model.capabilityToTaskTypes[ModelCapability.SPECULATIVE_DECODING]?.contains(taskId) ==
-            true
+        model.capabilityToTaskTypes[ModelCapability.SPECULATIVE_DECODING]?.contains(taskId) ==
+        true
       ) {
         speculativeDecoding =
           model.getBooleanConfigValue(
@@ -165,7 +167,7 @@ object LlmChatModelHelper : LlmModelHelper {
               },
             systemInstruction = systemInstruction,
             tools = tools,
-          )
+          ),
         )
       ExperimentalFlags.enableConversationConstrainedDecoding = false
       model.instance = LlmModelInstance(engine = engine, conversation = conversation)
@@ -224,7 +226,7 @@ object LlmChatModelHelper : LlmModelHelper {
             systemInstruction = systemInstruction,
             tools = tools,
             initialMessages = initialMessages,
-          )
+          ),
         )
       ExperimentalFlags.enableConversationConstrainedDecoding = false
       instance.conversation = newConversation
@@ -235,7 +237,10 @@ object LlmChatModelHelper : LlmModelHelper {
     }
   }
 
-  override fun cleanUp(model: Model, onDone: () -> Unit) {
+  override fun cleanUp(
+    model: Model,
+    onDone: () -> Unit,
+  ) {
     if (model.instance == null) {
       return
     }

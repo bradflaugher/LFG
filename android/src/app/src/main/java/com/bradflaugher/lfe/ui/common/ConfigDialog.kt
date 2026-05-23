@@ -101,7 +101,9 @@ import kotlinx.coroutines.launch
 
 private const val TAG = "AGConfigDialog"
 
-private data class Tab(@StringRes val labelResId: Int)
+private data class Tab(
+  @StringRes val labelResId: Int,
+)
 
 private val TABS =
   listOf(
@@ -126,9 +128,10 @@ fun ConfigDialog(
   defaultSystemPrompt: String = "",
   curSystemPrompt: String = "",
 ) {
-  val values: SnapshotStateMap<String, Any> = remember {
-    mutableStateMapOf<String, Any>().apply { putAll(initialValues) }
-  }
+  val values: SnapshotStateMap<String, Any> =
+    remember {
+      mutableStateMapOf<String, Any>().apply { putAll(initialValues) }
+    }
   val interactionSource = remember { MutableInteractionSource() }
   var selectedTabIndex by remember { mutableIntStateOf(0) }
   val savedSystemPrompt = remember { curSystemPrompt }
@@ -183,8 +186,11 @@ fun ConfigDialog(
                     horizontalArrangement = Arrangement.spacedBy(4.dp),
                   ) {
                     val titleColor =
-                      if (selectedTabIndex == index) MaterialTheme.colorScheme.primary
-                      else MaterialTheme.colorScheme.onSurfaceVariant
+                      if (selectedTabIndex == index) {
+                        MaterialTheme.colorScheme.primary
+                      } else {
+                        MaterialTheme.colorScheme.onSurfaceVariant
+                      }
                     Text(stringResource(tab.labelResId), color = titleColor)
                   }
                 },
@@ -254,7 +260,7 @@ fun ConfigDialog(
               onClick = {
                 Log.d(TAG, "Values from dialog: $values")
                 onOk(values.toMap(), savedSystemPrompt, systemPrompt)
-              }
+              },
             ) {
               Text(okBtnLabel)
             }
@@ -267,7 +273,10 @@ fun ConfigDialog(
 
 /** Composable function to display a list of config editor rows. */
 @Composable
-fun ConfigEditorsPanel(configs: List<Config>, values: SnapshotStateMap<String, Any>) {
+fun ConfigEditorsPanel(
+  configs: List<Config>,
+  values: SnapshotStateMap<String, Any>,
+) {
   for (config in configs) {
     when (config) {
       // Label.
@@ -301,7 +310,10 @@ fun ConfigEditorsPanel(configs: List<Config>, values: SnapshotStateMap<String, A
 }
 
 @Composable
-fun LabelRow(config: LabelConfig, values: SnapshotStateMap<String, Any>) {
+fun LabelRow(
+  config: LabelConfig,
+  values: SnapshotStateMap<String, Any>,
+) {
   Column(modifier = Modifier.fillMaxWidth()) {
     // Field label.
     Text(config.key.label, style = MaterialTheme.typography.titleSmall)
@@ -316,7 +328,10 @@ fun LabelRow(config: LabelConfig, values: SnapshotStateMap<String, Any>) {
   }
 }
 
-fun getTextFieldDisplayValue(valueType: ValueType, value: Float): String {
+fun getTextFieldDisplayValue(
+  valueType: ValueType,
+  value: Float,
+): String {
   return try {
     when (valueType) {
       ValueType.FLOAT -> {
@@ -344,7 +359,10 @@ fun getTextFieldDisplayValue(valueType: ValueType, value: Float): String {
  * text field provides precise numeric input.
  */
 @Composable
-fun NumberSliderRow(config: NumberSliderConfig, values: SnapshotStateMap<String, Any>) {
+fun NumberSliderRow(
+  config: NumberSliderConfig,
+  values: SnapshotStateMap<String, Any>,
+) {
   val focusManager = LocalFocusManager.current
 
   Column(modifier = Modifier.fillMaxWidth().semantics(mergeDescendants = true) {}) {
@@ -362,7 +380,7 @@ fun NumberSliderRow(config: NumberSliderConfig, values: SnapshotStateMap<String,
       // value or out of the slider range, temporary while user is still editing the text.
       var textFieldDisplayValue by remember {
         mutableStateOf(
-          getTextFieldDisplayValue(config.valueType, values[config.key.label] as Float)
+          getTextFieldDisplayValue(config.valueType, values[config.key.label] as Float),
         )
       }
 
@@ -420,10 +438,13 @@ fun NumberSliderRow(config: NumberSliderConfig, values: SnapshotStateMap<String,
             Modifier.border(
               width = if (isFocused) 2.dp else 1.dp,
               color =
-                if (isFocused) MaterialTheme.colorScheme.primary
-                else MaterialTheme.colorScheme.outline,
+                if (isFocused) {
+                  MaterialTheme.colorScheme.primary
+                } else {
+                  MaterialTheme.colorScheme.outline
+                },
               shape = RoundedCornerShape(4.dp),
-            )
+            ),
         ) {
           Box(modifier = Modifier.padding(8.dp)) { innerTextField() }
         }
@@ -456,7 +477,10 @@ fun NumberSliderRow(config: NumberSliderConfig, values: SnapshotStateMap<String,
  * value.
  */
 @Composable
-fun BooleanSwitchRow(config: BooleanSwitchConfig, values: SnapshotStateMap<String, Any>) {
+fun BooleanSwitchRow(
+  config: BooleanSwitchConfig,
+  values: SnapshotStateMap<String, Any>,
+) {
   val switchValue =
     try {
       values[config.key.label] as Boolean
@@ -476,11 +500,14 @@ fun BooleanSwitchRow(config: BooleanSwitchConfig, values: SnapshotStateMap<Strin
  * one or more options from a list.
  */
 @Composable
-fun SegmentedButtonRow(config: SegmentedButtonConfig, values: SnapshotStateMap<String, Any>) {
+fun SegmentedButtonRow(
+  config: SegmentedButtonConfig,
+  values: SnapshotStateMap<String, Any>,
+) {
   val selectedOptions: List<String> = remember { (values[config.key.label] as String).split(",") }
   var selectionStates: List<Boolean> by remember {
     mutableStateOf(
-      List(config.options.size) { index -> selectedOptions.contains(config.options[index]) }
+      List(config.options.size) { index -> selectedOptions.contains(config.options[index]) },
     )
   }
 
@@ -541,7 +568,7 @@ fun BottomSheetSelectorRow(
         null
       } else {
         config.options.find { it.label == config.defaultValue }
-      }
+      },
     )
   }
   var showBottomSheet by remember { mutableStateOf(false) }
@@ -602,15 +629,15 @@ fun BottomSheetSelectorRow(
             Row(
               modifier =
                 Modifier.clickable {
-                    selectedOption = option
-                    values[config.key.label] = option.label
-                    onSelected(option)
-                    scope.launch {
-                      delay(200)
-                      sheetState.hide()
-                      showBottomSheet = false
-                    }
+                  selectedOption = option
+                  values[config.key.label] = option.label
+                  onSelected(option)
+                  scope.launch {
+                    delay(200)
+                    sheetState.hide()
+                    showBottomSheet = false
                   }
+                }
                   .padding(horizontal = 16.dp, vertical = 12.dp)
                   .fillMaxWidth(),
               verticalAlignment = Alignment.CenterVertically,

@@ -66,5 +66,8 @@ class SteadinessMonitor(context: Context, private val steadyDurationMs: Long = 2
     }
   }
 
-  override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {}
+  override fun onAccuracyChanged(
+    sensor: Sensor?,
+    accuracy: Int,
+  ) {}
 }

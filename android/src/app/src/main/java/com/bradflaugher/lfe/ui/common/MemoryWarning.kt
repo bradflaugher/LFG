@@ -27,7 +27,10 @@ private const val BYTES_IN_GB = 1024f * 1024 * 1024
 
 /** Composable function to display a memory warning alert dialog. */
 @Composable
-fun MemoryWarningAlert(onProceeded: () -> Unit, onDismissed: () -> Unit) {
+fun MemoryWarningAlert(
+  onProceeded: () -> Unit,
+  onDismissed: () -> Unit,
+) {
   AlertDialog(
     title = { Text(stringResource(R.string.memory_warning_title)) },
     text = { Text(stringResource(R.string.memory_warning_content)) },
@@ -42,7 +45,10 @@ fun MemoryWarningAlert(onProceeded: () -> Unit, onDismissed: () -> Unit) {
 }
 
 /** Checks if the device's memory is lower than the required minimum for the given model. */
-fun isMemoryLow(context: Context, model: Model): Boolean {
+fun isMemoryLow(
+  context: Context,
+  model: Model,
+): Boolean {
   val activityManager =
     context.getSystemService(android.app.Activity.ACTIVITY_SERVICE) as? ActivityManager
   val minDeviceMemoryInGb = model.minDeviceMemoryInGb

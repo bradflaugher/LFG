@@ -112,10 +112,12 @@ fun ChatView(
   navigateUp: () -> Unit,
   modifier: Modifier = Modifier,
   skillCount: Int = 0,
-  onResetSessionClicked:
-    (
-      model: Model, initialMessages: List<ChatMessage>, clearHistory: Boolean, onDone: () -> Unit,
-    ) -> Unit =
+  onResetSessionClicked: (
+    model: Model,
+    initialMessages: List<ChatMessage>,
+    clearHistory: Boolean,
+    onDone: () -> Unit,
+  ) -> Unit =
     { _, _, _, onDone ->
       onDone()
     },
@@ -294,10 +296,10 @@ fun ChatView(
             composableBelowMessageList(selectedModel)
 
             Column(
-              modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.surface)
+              modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.surface),
             ) {
               AnimatedContent(
-                targetState = curModelDownloadStatus?.status == ModelDownloadStatusType.SUCCEEDED
+                targetState = curModelDownloadStatus?.status == ModelDownloadStatusType.SUCCEEDED,
               ) { targetState ->
                 when (targetState) {
                   // Main UI when model is downloaded.
@@ -319,7 +321,7 @@ fun ChatView(
                           model = selectedModel,
                           message =
                             ChatMessageInfo(
-                              content = "Live camera session ended. Average FPS: $averageFps"
+                              content = "Live camera session ended. Average FPS: $averageFps",
                             ),
                         )
                       },
@@ -548,9 +550,7 @@ private fun buildFirstMessageWithHistory(
  * @param protoMessages The list of saved protobuf messages.
  * @return The list of restored UI/domain message objects.
  */
-private fun deserializeProtoMessages(
-  protoMessages: List<com.bradflaugher.lfe.proto.ChatMessageProto>
-): List<ChatMessage> {
+private fun deserializeProtoMessages(protoMessages: List<com.bradflaugher.lfe.proto.ChatMessageProto>): List<ChatMessage> {
   return protoMessages.mapNotNull { protoMsg ->
     val side =
       when (protoMsg.side) {
@@ -594,7 +594,9 @@ private fun deserializeProtoMessages(
             hideSenderLabel = protoMsg.hideSenderLabel,
             persistedPaths = protoMsg.imageFilePathsList.toList(),
           )
-        } else null
+        } else {
+          null
+        }
       }
       "AUDIO_CLIP" -> {
         val firstAudio = protoMsg.audioClipsList.firstOrNull()
@@ -610,7 +612,9 @@ private fun deserializeProtoMessages(
           } catch (e: Exception) {
             null
           }
-        } else null
+        } else {
+          null
+        }
       }
       else -> null
     }

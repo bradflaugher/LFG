@@ -102,7 +102,7 @@ fun ModelPicker(
               }
             }
             .background(
-              if (selected) MaterialTheme.colorScheme.surfaceContainer else Color.Transparent
+              if (selected) MaterialTheme.colorScheme.surfaceContainer else Color.Transparent,
             )
             .padding(horizontal = 16.dp, vertical = 8.dp),
       ) {

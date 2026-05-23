@@ -119,18 +119,20 @@ data class AllowedModel(
         }
       }
       if (defaultConfig.visionAccelerator != null) {
-        visionAccelerator = when (defaultConfig.visionAccelerator) {
-          "cpu" -> Accelerator.CPU
-          "gpu" -> Accelerator.GPU
-          "npu" -> Accelerator.NPU
-          else -> visionAccelerator
-        }
+        visionAccelerator =
+          when (defaultConfig.visionAccelerator) {
+            "cpu" -> Accelerator.CPU
+            "gpu" -> Accelerator.GPU
+            "npu" -> Accelerator.NPU
+            else -> visionAccelerator
+          }
       }
       val npuOnly =
         accelerators.size == 1 &&
           (accelerators[0] == Accelerator.NPU || accelerators[0] == Accelerator.TPU)
       configs =
-        (if (npuOnly) {
+        (
+          if (npuOnly) {
             createLlmChatConfigsForNpuModel(
               defaultMaxToken = llmMaxToken,
               accelerators = accelerators,
@@ -147,11 +149,12 @@ data class AllowedModel(
               supportSpeculativeDecoding =
                 capabilities?.contains(ModelCapability.SPECULATIVE_DECODING) == true,
             )
-          })
+          }
+        )
           .toMutableList()
     }
 
-    val learnMoreUrl = "https://huggingface.co/${modelId}"
+    val learnMoreUrl = "https://huggingface.co/$modelId"
 
     return Model(
       name = name,
@@ -194,7 +197,7 @@ data class NamedDeviceGroup(
 )
 
 data class DeviceRequirements(
-  @SerializedName("allowedDeviceGroups") val allowedDeviceGroups: List<NamedDeviceGroup>? = null
+  @SerializedName("allowedDeviceGroups") val allowedDeviceGroups: List<NamedDeviceGroup>? = null,
 )
 
 data class ModelAllowlist(

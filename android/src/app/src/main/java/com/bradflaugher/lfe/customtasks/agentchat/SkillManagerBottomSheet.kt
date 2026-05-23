@@ -39,7 +39,6 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.outlined.ListAlt
 import androidx.compose.material.icons.automirrored.outlined.OpenInNew
 import androidx.compose.material.icons.outlined.Cancel
 import androidx.compose.material.icons.outlined.Delete
@@ -247,7 +246,7 @@ fun SkillManagerBottomSheet(
     onDismissRequest = {
       onDismiss(
         savedSelectedSkillsNamesAndDescriptions !=
-          skillManagerViewModel.getSelectedSkillsNamesAndDescriptions()
+          skillManagerViewModel.getSelectedSkillsNamesAndDescriptions(),
       )
     },
     sheetState = sheetState,
@@ -271,10 +270,10 @@ fun SkillManagerBottomSheet(
         Column(
           modifier =
             Modifier.padding(horizontal = 16.dp).padding(bottom = 16.dp).fillMaxSize().pointerInput(
-              Unit
+              Unit,
             ) {
               detectTapGestures(onTap = { focusManager.clearFocus() })
-            }
+            },
         ) {
           // Title or Multi-Select Context Bar.
           if (inMultiSelectMode) {
@@ -286,7 +285,7 @@ fun SkillManagerBottomSheet(
                 onClick = {
                   inMultiSelectMode = false
                   selectedCustomSkillNames.clear()
-                }
+                },
               ) {
                 Icon(
                   Icons.Rounded.Close,
@@ -336,7 +335,7 @@ fun SkillManagerBottomSheet(
                     sheetState.hide()
                     onDismiss(
                       savedSelectedSkillsNamesAndDescriptions !=
-                        skillManagerViewModel.getSelectedSkillsNamesAndDescriptions()
+                        skillManagerViewModel.getSelectedSkillsNamesAndDescriptions(),
                     )
                   }
                 },
@@ -420,12 +419,12 @@ fun SkillManagerBottomSheet(
               // Select all / Deselect all.
               Row(verticalAlignment = Alignment.CenterVertically) {
                 TextButton(
-                  onClick = { skillManagerViewModel.setAllSkillsSelected(selected = true) }
+                  onClick = { skillManagerViewModel.setAllSkillsSelected(selected = true) },
                 ) {
                   Text(stringResource(R.string.turn_on_all))
                 }
                 TextButton(
-                  onClick = { skillManagerViewModel.setAllSkillsSelected(selected = false) }
+                  onClick = { skillManagerViewModel.setAllSkillsSelected(selected = false) },
                 ) {
                   Text(stringResource(R.string.turn_off_all))
                 }
@@ -607,19 +606,24 @@ fun SkillManagerBottomSheet(
       onDismissRequest = { showDeleteSkillDialog = false },
       title = {
         Text(
-          if (inMultiSelectMode) stringResource(R.string.delete_selected_skills_title)
-          else stringResource(R.string.delete_skill_dialog_title)
+          if (inMultiSelectMode) {
+            stringResource(R.string.delete_selected_skills_title)
+          } else {
+            stringResource(R.string.delete_skill_dialog_title)
+          },
         )
       },
       text = {
         Text(
-          if (inMultiSelectMode)
+          if (inMultiSelectMode) {
             pluralStringResource(
               R.plurals.delete_selected_skills_content,
               selectedCustomSkillNames.size,
               selectedCustomSkillNames.size,
             )
-          else stringResource(R.string.delete_skill_dialog_content)
+          } else {
+            stringResource(R.string.delete_skill_dialog_content)
+          },
         )
       },
       confirmButton = {
@@ -732,8 +736,8 @@ fun SkillManagerBottomSheet(
       var curSecret by remember {
         mutableStateOf(
           skillManagerViewModel.dataStoreRepository.readSecret(
-            getSkillSecretKey(skillName = it.skill.name)
-          ) ?: ""
+            getSkillSecretKey(skillName = it.skill.name),
+          ) ?: "",
         )
       }
       SecretEditorDialog(
@@ -859,7 +863,9 @@ private fun SkillItemRow(
               },
               onLongClick = onLongClick,
             )
-          } else Modifier
+          } else {
+            Modifier
+          },
         )
         .padding(horizontal = 16.dp, vertical = 12.dp),
     verticalAlignment = Alignment.CenterVertically,
@@ -1000,7 +1006,10 @@ private fun SkillItemRow(
   }
 }
 
-private fun scrollToBottomOfList(scope: CoroutineScope, listState: LazyListState) {
+private fun scrollToBottomOfList(
+  scope: CoroutineScope,
+  listState: LazyListState,
+) {
   scope.launch {
     // Scroll to the bottom of the LazyColumn.
     delay(300)
@@ -1033,7 +1042,7 @@ private fun AddSkillOptionsBottomSheet(
                   onOptionSelected(option)
                   onDismiss()
                 }
-                .padding(horizontal = 16.dp, vertical = 8.dp)
+                .padding(horizontal = 16.dp, vertical = 8.dp),
           ) {
             Column(modifier = Modifier.fillMaxWidth()) {
               // Row for Icon and Title

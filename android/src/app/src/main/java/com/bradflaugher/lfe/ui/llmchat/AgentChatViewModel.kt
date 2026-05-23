@@ -205,7 +205,7 @@ open class AgentChatViewModelBase(
                 currentLastMessage = getLastMessage(model = model)
                 if (
                   currentLastMessage?.type != ChatMessageType.TEXT ||
-                    currentLastMessage.side != ChatSide.AGENT
+                  currentLastMessage.side != ChatSide.AGENT
                 ) {
                   // Add an empty message that will receive streaming results.
                   addMessage(
@@ -414,8 +414,8 @@ open class AgentChatViewModelBase(
 
 @HiltViewModel
 class AgentChatViewModel
-@Inject
-constructor(
-  systemPromptRepository: SystemPromptRepository,
-  userDataDataStore: DataStore<UserData>,
-) : AgentChatViewModelBase(systemPromptRepository, userDataDataStore, null)
+  @Inject
+  constructor(
+    systemPromptRepository: SystemPromptRepository,
+    userDataDataStore: DataStore<UserData>,
+  ) : AgentChatViewModelBase(systemPromptRepository, userDataDataStore, null)

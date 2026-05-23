@@ -1,39 +1,37 @@
-name: Build
+name: Instrumented
 
-# PR-side sanity check: unit tests + instrumented tests on an Android 16
-# emulator. Catches DI / Compose / launch crashes before they merge.
+# Boots an Android 16 (API 36) emulator and runs the instrumented test suite.
+# This is the gate for release: only when this passes does release.yml fire.
+#
+# Runs on push to main (so /releases/latest is always backed by an actual
+# device run). Slow (~10-20 min including AVD cache warm), so we keep it out
+# of the PR feedback loop.
 
 on:
-  pull_request:
+  push:
     branches: [main]
     paths:
       - android/**
-      - .github/workflows/build.yml
+      - .github/workflows/instrumented.yml
+      - .github/actions/setup-android/**
   workflow_dispatch:
 
+concurrency:
+  group: instrumented-${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
-  build:
-    name: Test + assemble debug
+  instrumented:
+    name: Android 16 emulator
     runs-on: ubuntu-latest
+    timeout-minutes: 45
     defaults:
       run:
         working-directory: android/src
 
     steps:
       - uses: actions/checkout@v4
-
-      - name: Set up JDK 21
-        uses: actions/setup-java@v4
-        with:
-          distribution: temurin
-          java-version: '21'
-          cache: gradle
-
-      - name: Gradle wrapper executable
-        run: chmod +x gradlew
-
-      - name: Unit tests
-        run: ./gradlew test
+      - uses: ./.github/actions/setup-android
 
       - name: Enable KVM
         run: |
@@ -76,13 +74,10 @@ jobs:
           working-directory: android/src
           script: ./gradlew connectedDebugAndroidTest --info
 
-      - name: Assemble debug APK
-        run: ./gradlew assembleDebug
-
-      - name: Upload debug APK artifact
+      - name: Upload instrumented test report on failure
+        if: failure()
         uses: actions/upload-artifact@v4
         with:
-          name: lfe-debug-apk
-          path: android/src/app/build/outputs/apk/debug/*.apk
-          if-no-files-found: error
+          name: instrumented-test-report
+          path: android/src/app/build/reports/androidTests/
           retention-days: 14

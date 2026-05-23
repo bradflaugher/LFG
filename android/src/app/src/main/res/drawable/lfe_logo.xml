@@ -1,0 +1,24 @@
+<!-- LFE wordmark drawable. Black background, white "LFE" letters. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- Full black background. -->
+    <path
+        android:fillColor="#FF000000"
+        android:pathData="M0,0H108V108H0z" />
+    <!-- "LFE" wordmark, centered, white. Three letters as vector strokes. -->
+    <!-- L -->
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M26,40 L26,72 L42,72 L42,68 L30,68 L30,40 Z" />
+    <!-- F -->
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M48,40 L48,72 L52,72 L52,58 L62,58 L62,54 L52,54 L52,44 L64,44 L64,40 Z" />
+    <!-- E -->
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M70,40 L70,72 L84,72 L84,68 L74,68 L74,58 L82,58 L82,54 L74,54 L74,44 L84,44 L84,40 Z" />
+</vector>

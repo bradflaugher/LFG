@@ -34,7 +34,7 @@ class HyperGemmaTest {
 
     val envEndpoint = System.getenv("HYPER_API_ENDPOINT")
     val endpoint = if (envEndpoint.isNullOrEmpty()) {
-      "https://api.hyper.space/v1/"
+      "https://hyper.charm.land/v1/"
     } else {
       var ep = envEndpoint.trim()
       if (ep.endsWith("/chat/completions")) {
@@ -47,7 +47,7 @@ class HyperGemmaTest {
       }
       ep
     }
-    val modelId = "gemma-4-2b-it"
+    val modelId = "gemma-4-26b-a4b-it"
 
     try {
       val config = OpenAIConfig(

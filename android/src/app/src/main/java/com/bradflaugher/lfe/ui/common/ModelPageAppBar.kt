@@ -13,11 +13,14 @@ package com.bradflaugher.lfe.ui.common
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.History
 import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.material.icons.rounded.Tune
+import androidx.compose.material.icons.rounded.Language
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -64,6 +67,7 @@ fun ModelPageAppBar(
   curSystemPrompt: String = "",
   onSystemPromptChanged: (String) -> Unit = {},
   shouldShowHistoryButton: Boolean = false,
+  onWebLoginClicked: () -> Unit = {},
   onHistoryClicked: (Model) -> Unit = {},
   onSettingsClicked: () -> Unit = {},
   hideBackButton: Boolean = false,
@@ -121,18 +125,31 @@ fun ModelPageAppBar(
     actions = {
       val downloadSucceeded = curDownloadStatus?.status == ModelDownloadStatusType.SUCCEEDED
       val showConfigButton = model.configs.isNotEmpty() && downloadSucceeded
-      Box(modifier = Modifier.size(42.dp), contentAlignment = Alignment.Center) {
-        var configButtonOffset = 0.dp
-        if (showConfigButton && shouldShowHistoryButton) {
-          configButtonOffset = (-40).dp
+      Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(4.dp)
+      ) {
+        if (downloadSucceeded) {
+          val enableWebLoginButton = !isModelInitializing && !inProgress
+          IconButton(
+            onClick = onWebLoginClicked,
+            enabled = enableWebLoginButton,
+            modifier = Modifier.alpha(if (!enableWebLoginButton) 0.5f else 1f),
+          ) {
+            Icon(
+              imageVector = Icons.Rounded.Language,
+              contentDescription = "Web Session Login",
+              tint = MaterialTheme.colorScheme.onSurface,
+              modifier = Modifier.size(20.dp),
+            )
+          }
         }
         if (showConfigButton) {
           val enableConfigButton = !isModelInitializing && !inProgress && isModelInitialized
           IconButton(
             onClick = { showConfigDialog = true },
             enabled = enableConfigButton,
-            modifier =
-              Modifier.offset(x = configButtonOffset).alpha(if (!enableConfigButton) 0.5f else 1f),
+            modifier = Modifier.alpha(if (!enableConfigButton) 0.5f else 1f),
           ) {
             Icon(
               imageVector = Icons.Rounded.Tune,

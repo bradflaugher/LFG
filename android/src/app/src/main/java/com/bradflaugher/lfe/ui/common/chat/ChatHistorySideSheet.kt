@@ -56,17 +56,6 @@ import android.widget.Toast
 import android.util.Log
 import androidx.compose.material.icons.outlined.FileDownload
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.material.icons.rounded.Language
-import androidx.compose.ui.viewinterop.AndroidView
-import android.webkit.WebView
-import android.webkit.WebViewClient
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Box
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.TextButton
-import androidx.compose.material3.Surface
-import androidx.compose.ui.graphics.Color
 
 @Composable
 fun ChatHistorySideSheetContent(
@@ -81,11 +70,6 @@ fun ChatHistorySideSheetContent(
   val context = LocalContext.current
   var itemToDelete by remember { mutableStateOf<String?>(null) }
   var showConfirmDeleteDialog by remember { mutableStateOf(false) }
-  var showWebLoginDialog by remember { mutableStateOf(false) }
-
-  if (showWebLoginDialog) {
-    WebLoginDialog(onDismiss = { showWebLoginDialog = false })
-  }
 
   Column(modifier = Modifier.fillMaxSize().padding(24.dp)) {
     // Top Row: Title and Close button
@@ -100,10 +84,10 @@ fun ChatHistorySideSheetContent(
       }
     }
 
-    // Actions Row: "+ New chat" pill and "Web Login" pill
+    // Actions Row: "+ New chat" pill
     Row(
       modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp),
-      horizontalArrangement = Arrangement.spacedBy(8.dp),
+      horizontalArrangement = Arrangement.Start,
       verticalAlignment = Alignment.CenterVertically,
     ) {
       Button(
@@ -117,19 +101,6 @@ fun ChatHistorySideSheetContent(
         Icon(Icons.Rounded.AddComment, contentDescription = null, modifier = Modifier.size(18.dp))
         Spacer(modifier = Modifier.size(8.dp))
         Text(stringResource(R.string.new_chat))
-      }
-
-      Button(
-        onClick = { showWebLoginDialog = true },
-        colors =
-          ButtonDefaults.buttonColors(
-            containerColor = MaterialTheme.colorScheme.secondaryContainer,
-            contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
-          ),
-      ) {
-        Icon(Icons.Rounded.Language, contentDescription = null, modifier = Modifier.size(18.dp))
-        Spacer(modifier = Modifier.size(8.dp))
-        Text("Web Login")
       }
     }
 
@@ -293,154 +264,4 @@ private fun exportChatSession(context: android.content.Context, session: com.bra
   }
 }
 
-/**
- * A beautiful, full-screen dialog containing an interactive WebView browser.
- * Enables users to log in to subscription or paywalled sites (e.g., NYT, WSJ, Bloomberg)
- * within the application process. Session cookies are automatically stored in the shared
- * CookieManager, allowing background article summarize/finder tasks to read full contents.
- */
-@Composable
-fun WebLoginDialog(
-  onDismiss: () -> Unit
-) {
-  var urlInput by remember { mutableStateOf("https://www.nytimes.com") }
-  var currentUrl by remember { mutableStateOf("https://www.nytimes.com") }
-  var webViewRef by remember { mutableStateOf<WebView?>(null) }
 
-  androidx.compose.ui.window.Dialog(
-    onDismissRequest = onDismiss,
-    properties = androidx.compose.ui.window.DialogProperties(
-      usePlatformDefaultWidth = false
-    )
-  ) {
-    Surface(
-      modifier = Modifier
-        .fillMaxWidth()
-        .fillMaxHeight()
-        .padding(16.dp),
-      shape = RoundedCornerShape(16.dp),
-      color = MaterialTheme.colorScheme.background
-    ) {
-      Column(
-        modifier = Modifier
-          .fillMaxSize()
-          .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
-      ) {
-        // Top row: Title and Done button
-        Row(
-          modifier = Modifier.fillMaxWidth(),
-          horizontalArrangement = Arrangement.SpaceBetween,
-          verticalAlignment = Alignment.CenterVertically
-        ) {
-          Text(
-            text = "Web Session Login",
-            style = MaterialTheme.typography.titleLarge
-          )
-          TextButton(onClick = onDismiss) {
-            Text("Done")
-          }
-        }
-
-        Text(
-          text = "Sign in to any subscription or paywalled website below. The agent will share your browser cookies to fetch full articles.",
-          style = MaterialTheme.typography.bodySmall,
-          color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
-
-        // URL Input and Go button
-        Row(
-          modifier = Modifier.fillMaxWidth(),
-          horizontalArrangement = Arrangement.spacedBy(8.dp),
-          verticalAlignment = Alignment.CenterVertically
-        ) {
-          OutlinedTextField(
-            value = urlInput,
-            onValueChange = { urlInput = it },
-            label = { Text("URL") },
-            modifier = Modifier.weight(1f),
-            singleLine = true
-          )
-          Button(onClick = {
-            var target = urlInput.trim()
-            if (!target.startsWith("http://") && !target.startsWith("https://")) {
-              target = "https://$target"
-            }
-            currentUrl = target
-            webViewRef?.loadUrl(target)
-          }) {
-            Text("Go")
-          }
-        }
-
-        // Quick Shortcuts Row
-        Row(
-          modifier = Modifier.fillMaxWidth(),
-          horizontalArrangement = Arrangement.spacedBy(4.dp)
-        ) {
-          val sites = listOf(
-            "NYT" to "https://www.nytimes.com",
-            "WSJ" to "https://www.wsj.com",
-            "Bloomberg" to "https://www.bloomberg.com",
-            "FT" to "https://www.ft.com"
-          )
-          for ((name, targetUrl) in sites) {
-            Button(
-              onClick = {
-                urlInput = targetUrl
-                currentUrl = targetUrl
-                webViewRef?.loadUrl(targetUrl)
-              },
-              contentPadding = PaddingValues(horizontal = 8.dp, vertical = 2.dp),
-              modifier = Modifier.height(32.dp),
-              colors = ButtonDefaults.buttonColors(
-                containerColor = MaterialTheme.colorScheme.secondaryContainer,
-                contentColor = MaterialTheme.colorScheme.onSecondaryContainer
-              )
-            ) {
-              Text(name, style = MaterialTheme.typography.labelSmall)
-            }
-          }
-        }
-
-        // WebView rendering
-        Box(
-          modifier = Modifier
-            .weight(1f)
-            .fillMaxWidth()
-            .clip(RoundedCornerShape(8.dp))
-            .background(Color.White)
-        ) {
-          AndroidView(
-            factory = { ctx ->
-              WebView(ctx).apply {
-                webViewRef = this
-                settings.javaScriptEnabled = true
-                settings.domStorageEnabled = true
-                settings.userAgentString = "Mozilla/5.0 (Linux; Android 16) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Mobile Safari/537.36"
-                
-                android.webkit.CookieManager.getInstance().setAcceptCookie(true)
-                android.webkit.CookieManager.getInstance().setAcceptThirdPartyCookies(this, true)
-
-                webViewClient = object : WebViewClient() {
-                  override fun onPageFinished(view: WebView?, url: String?) {
-                    super.onPageFinished(view, url)
-                    url?.let {
-                      urlInput = it
-                      currentUrl = it
-                    }
-                  }
-                }
-                loadUrl(currentUrl)
-              }
-            },
-            update = {
-              // Navigation handled inside factory/buttons
-            },
-            modifier = Modifier.fillMaxSize()
-          )
-        }
-      }
-    }
-  }
-}

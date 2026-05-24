@@ -145,6 +145,11 @@ fun ChatView(
   var showImageViewer by remember { mutableStateOf(false) }
   val snackbarHostState = remember { SnackbarHostState() }
 
+  var showWebLoginDialog by remember { mutableStateOf(false) }
+  if (showWebLoginDialog) {
+    WebLoginDialog(onDismiss = { showWebLoginDialog = false })
+  }
+
   // Chat history drawer.
   val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
   val allHistorySessions by viewModel.historySessions.collectAsState()
@@ -282,6 +287,7 @@ fun ChatView(
               allowEditingSystemPrompt = allowEditingSystemPrompt,
               curSystemPrompt = curSystemPrompt,
               onSystemPromptChanged = onSystemPromptChanged,
+              onWebLoginClicked = { showWebLoginDialog = true },
               onHistoryClicked = { scope.launch { drawerState.open() } },
             )
           },

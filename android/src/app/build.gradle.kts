@@ -46,14 +46,29 @@ android {
       keyAlias = "androiddebugkey"
       keyPassword = "android"
     }
+
+    create("release") {
+      if (project.hasProperty("LFE_RELEASE_STORE_FILE")) {
+        storeFile = file(project.property("LFE_RELEASE_STORE_FILE") as String)
+        storePassword = project.property("LFE_RELEASE_STORE_PASSWORD") as String
+        keyAlias = project.property("LFE_RELEASE_KEY_ALIAS") as String
+        keyPassword = project.property("LFE_RELEASE_KEY_PASSWORD") as String
+      } else {
+        // Fallback to debug configuration if credentials aren't present
+        storeFile = file("debug.keystore")
+        storePassword = "android"
+        keyAlias = "androiddebugkey"
+        keyPassword = "android"
+      }
+    }
   }
 
   buildTypes {
     release {
       isMinifyEnabled = false
       proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
-      // Debug-signed release for now — CI produces a sideloadable APK with no Play setup.
-      signingConfig = signingConfigs.getByName("debug")
+      // Use the newly defined release signing configuration
+      signingConfig = signingConfigs.getByName("release")
     }
   }
   compileOptions {

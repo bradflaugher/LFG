@@ -124,6 +124,33 @@
         "llm_thinking": ["llm_agent_chat"],
         "speculative_decoding": ["llm_agent_chat"]
       }
+    },
+    {
+      "name": "Cloud-Model-OpenAI-Compatible",
+      "variantLabel": "Cloud",
+      "modelId": "cloud/openai-compatible",
+      "modelFile": "cloud-model-openai-compatible.litertlm",
+      "description": "An OpenAI-compatible cloud endpoint model. Use the 'Configure Cloud Provider' dialog to set up custom hosts (like Gemma on Hyper) and credentials.",
+      "sizeInBytes": 0,
+      "minDeviceMemoryInGb": 0,
+      "commitHash": "none",
+      "llmSupportImage": true,
+      "llmSupportAudio": false,
+      "capabilities": ["llm_thinking"],
+      "defaultConfig": {
+        "topK": 64,
+        "topP": 0.95,
+        "temperature": 1.0,
+        "maxContextLength": 32000,
+        "maxTokens": 4000,
+        "accelerators": "gpu,cpu"
+      },
+      "taskTypes": ["llm_agent_chat"],
+      "bestForTaskTypes": [],
+      "capabilityToTaskTypes": {
+        "llm_thinking": ["llm_agent_chat"]
+      }
     }
   ]
 }
+

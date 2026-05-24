@@ -71,6 +71,7 @@ fun ModelManager(
   var showImportDialog by remember { mutableStateOf(false) }
   var importingInfo by remember { mutableStateOf<com.bradflaugher.lfe.proto.ImportedModel?>(null) }
   var showImportingDialog by remember { mutableStateOf(false) }
+  var showCloudProviderDialog by remember { mutableStateOf(false) }
 
   val filePickerLauncher =
     rememberLauncherForActivityResult(
@@ -111,7 +112,15 @@ fun ModelManager(
       onModelClicked = onModelClicked,
       onBenchmarkClicked = onBenchmarkClicked,
       onImportLocalModelClicked = launchPicker,
+      onConfigureCloudProviderClicked = { showCloudProviderDialog = true },
       modifier = Modifier.fillMaxSize(),
+    )
+  }
+
+  if (showCloudProviderDialog) {
+    CloudProviderDialog(
+      dataStoreRepository = viewModel.dataStoreRepository,
+      onDismiss = { showCloudProviderDialog = false }
     )
   }
 

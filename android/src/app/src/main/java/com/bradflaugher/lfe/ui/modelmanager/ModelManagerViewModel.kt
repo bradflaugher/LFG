@@ -1169,6 +1169,14 @@ open class ModelManagerViewModel
     private fun getModelDownloadStatus(model: Model): ModelDownloadStatus {
       Log.d(TAG, "Checking model ${model.name} download status...")
 
+      if (model.name == "Cloud-Model-OpenAI-Compatible") {
+        return ModelDownloadStatus(
+          status = ModelDownloadStatusType.SUCCEEDED,
+          receivedBytes = 0,
+          totalBytes = 0,
+        )
+      }
+
       if (model.localFileRelativeDirPathOverride.isNotEmpty()) {
         Log.d(TAG, "Model has localFileRelativeDirPathOverride set. Set status to SUCCEEDED")
         return ModelDownloadStatus(

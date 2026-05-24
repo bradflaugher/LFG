@@ -42,12 +42,48 @@ import com.google.ai.edge.litertlm.ToolProvider
 import java.io.ByteArrayOutputStream
 import java.util.concurrent.CancellationException
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import dagger.hilt.EntryPoint
+import dagger.hilt.InstallIn
+import dagger.hilt.android.EntryPointAccessors
+import dagger.hilt.components.SingletonComponent
+import com.bradflaugher.lfe.data.DataStoreRepository
+import org.json.JSONObject
+import com.aallam.openai.client.OpenAI
+import com.aallam.openai.client.OpenAIConfig
+import com.aallam.openai.client.OpenAIHost
+import com.aallam.openai.api.http.Timeout
+import com.aallam.openai.api.chat.ChatCompletionRequest
+import com.aallam.openai.api.chat.ChatMessage
+import com.aallam.openai.api.chat.ChatRole
+import com.aallam.openai.api.model.ModelId
+import kotlin.time.Duration.Companion.seconds
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.onCompletion
+import kotlinx.coroutines.flow.onEach
 
 private const val TAG = "AGLlmChatModelHelper"
 
 data class LlmModelInstance(val engine: Engine, var conversation: Conversation)
 
 object LlmChatModelHelper : LlmModelHelper {
+  @EntryPoint
+  @InstallIn(SingletonComponent::class)
+  interface LlmChatModelHelperEntryPoint {
+    fun dataStoreRepository(): DataStoreRepository
+  }
+
+  private fun entryPoint(context: Context): LlmChatModelHelperEntryPoint {
+    return EntryPointAccessors.fromApplication(
+      context.applicationContext,
+      LlmChatModelHelperEntryPoint::class.java,
+    )
+  }
+
+  private var appContext: Context? = null
+
   // Indexed by model name.
   private val cleanUpListeners: MutableMap<String, CleanUpListener> = mutableMapOf()
 
@@ -64,6 +100,13 @@ object LlmChatModelHelper : LlmModelHelper {
     enableConversationConstrainedDecoding: Boolean,
     coroutineScope: CoroutineScope?,
   ) {
+    appContext = context.applicationContext
+    if (model.name == "Cloud-Model-OpenAI-Compatible") {
+      model.instance = "CloudLlmModelInstance"
+      onDone("")
+      return
+    }
+
     // Prepare options.
     val maxTokens =
       model.getIntConfigValue(key = ConfigKeys.MAX_TOKENS, defaultValue = DEFAULT_MAX_TOKEN)
@@ -188,6 +231,9 @@ object LlmChatModelHelper : LlmModelHelper {
     enableConversationConstrainedDecoding: Boolean,
     initialMessages: List<Message>,
   ) {
+    if (model.name == "Cloud-Model-OpenAI-Compatible") {
+      return
+    }
     try {
       Log.d(TAG, "Resetting conversation for model '${model.name}'")
 
@@ -241,6 +287,11 @@ object LlmChatModelHelper : LlmModelHelper {
     model: Model,
     onDone: () -> Unit,
   ) {
+    if (model.name == "Cloud-Model-OpenAI-Compatible") {
+      model.instance = null
+      onDone()
+      return
+    }
     if (model.instance == null) {
       return
     }
@@ -270,6 +321,9 @@ object LlmChatModelHelper : LlmModelHelper {
   }
 
   override fun stopResponse(model: Model) {
+    if (model.name == "Cloud-Model-OpenAI-Compatible") {
+      return
+    }
     val instance = model.instance as? LlmModelInstance ?: return
     instance.conversation.cancelProcess()
   }
@@ -285,6 +339,90 @@ object LlmChatModelHelper : LlmModelHelper {
     coroutineScope: CoroutineScope?,
     extraContext: Map<String, String>?,
   ) {
+    if (model.name == "Cloud-Model-OpenAI-Compatible") {
+      val ctx = appContext
+      if (ctx == null) {
+        onError("Application context is not set.")
+        return
+      }
+      val entryPoint = entryPoint(ctx)
+      val endpoint = entryPoint.dataStoreRepository().readSecret("CLOUD_API_ENDPOINT")?.trim() ?: ""
+      val apiKey = entryPoint.dataStoreRepository().readSecret("CLOUD_API_KEY")?.trim() ?: ""
+      val modelId = entryPoint.dataStoreRepository().readSecret("CLOUD_MODEL_ID")?.trim() ?: ""
+
+      if (endpoint.isEmpty()) {
+        onError("Cloud API Endpoint is not configured. Go to the Models view and tap 'Configure Cloud Provider'.")
+        return
+      }
+
+      val historyJson = extraContext?.get("history")
+      val chatMessages = mutableListOf<ChatMessage>()
+      if (!historyJson.isNullOrEmpty()) {
+        try {
+          val array = org.json.JSONArray(historyJson)
+          for (i in 0 until array.length()) {
+            val obj = array.getJSONObject(i)
+            val roleStr = obj.getString("role")
+            val content = obj.getString("content")
+            val role = when (roleStr) {
+              "user" -> ChatRole.User
+              "assistant" -> ChatRole.Assistant
+              "system" -> ChatRole.System
+              else -> ChatRole.User
+            }
+            chatMessages.add(ChatMessage(role = role, content = content))
+          }
+        } catch (e: Exception) {
+          chatMessages.add(ChatMessage(role = ChatRole.User, content = input))
+        }
+      } else {
+        chatMessages.add(ChatMessage(role = ChatRole.User, content = input))
+      }
+
+      coroutineScope?.launch(Dispatchers.IO) {
+        try {
+          val config = OpenAIConfig(
+            token = apiKey,
+            host = OpenAIHost(endpoint.removeSuffix("/") + "/"),
+            timeout = Timeout(socket = 30.seconds, connect = 15.seconds)
+          )
+          val openAI = OpenAI(config)
+          
+          val request = ChatCompletionRequest(
+            model = ModelId(if (modelId.isNotEmpty()) modelId else "gemma-4-2b-it"),
+            messages = chatMessages
+          )
+
+          openAI.chatCompletions(request)
+            .onEach { chunk ->
+              val contentChunk = chunk.choices.firstOrNull()?.delta?.content ?: ""
+              if (contentChunk.isNotEmpty()) {
+                withContext(Dispatchers.Main) {
+                  resultListener(contentChunk, false, null)
+                }
+              }
+            }
+            .onCompletion { throwable ->
+              withContext(Dispatchers.Main) {
+                if (throwable == null) {
+                  resultListener("", true, null)
+                } else {
+                  onError("Error: ${throwable.message}")
+                }
+                cleanUpListener()
+              }
+            }
+            .collect()
+        } catch (e: Exception) {
+          Log.e(TAG, "Cloud API call failed", e)
+          withContext(Dispatchers.Main) {
+            onError("Cloud API Call failed: ${e.message}")
+            cleanUpListener()
+          }
+        }
+      }
+      return
+    }
     val instance = model.instance as? LlmModelInstance
     if (instance == null) {
       onError("LlmModelInstance is not initialized.")

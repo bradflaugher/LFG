@@ -27,8 +27,10 @@ Two screens, that's it: the agent chat, and a model manager behind a gear icon.
 | `translator` | Translate between languages. |
 
 Add your own by dropping a `SKILL.md` directory under
-`android/src/app/src/main/assets/skills/` — the [agentskills.io](https://agentskills.io/specification)
-spec is the schema.
+`android/src/app/src/main/assets/skills/`. See **[docs/SKILLS.md](docs/SKILLS.md)**
+for the how-to — text personas, JavaScript skills, native intents, and
+hosting tips. The in-app **Skills → + → How to write skills** menu opens
+the same guide on your phone.
 
 ## Models
 

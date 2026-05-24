@@ -243,8 +243,8 @@
   <string name="add_script" translatable="false">Add script</string>
   <string name="add_default_script" translatable="false">Add default script</string>
   <string name="add_skill" translatable="false">Add skill</string>
-  <string name="add_skill_option_view_community_skills_title" translatable="false">View Community Skills</string>
-  <string name="add_skill_option_view_community_skills_description" translatable="false">Explore community contributed skills on GitHub discussions</string>
+  <string name="add_skill_option_view_community_skills_title" translatable="false">How to write skills</string>
+  <string name="add_skill_option_view_community_skills_description" translatable="false">Open the LFE skills guide — text, JavaScript, and native-intent recipes</string>
   <string name="add_skill_option_featured_list_title" translatable="false">Add skill from featured list</string>
   <string name="add_skill_option_featured_list_description" translatable="false">Add a skill from a curated list of community contributed skills</string>
   <string name="add_skill_option_url_title" translatable="false">Load skill from URL</string>

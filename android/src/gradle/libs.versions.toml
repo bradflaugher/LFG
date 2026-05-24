@@ -18,7 +18,7 @@ gson = "2.14.0"
 lifecycleProcess = "2.10.0"
 webkit = "1.14.0"
 documentfile = "1.0.1"
-protobuf = "0.9.5"
+protobuf = "0.10.0"
 protobufJavaLite = "4.35.0"
 #noinspection GradleDependency
 litertlm = "0.11.0"

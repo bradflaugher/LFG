@@ -11,6 +11,15 @@ name: CI
 #
 # Runs on PRs (so merge is gated on a real device run) and on push to main
 # (so release.yml downstream can trust the gate).
+#
+# Every gradle invocation is wrapped in a small bash retry loop because
+# Maven Central occasionally serves a 403 mid-resolve (see e.g. the merge
+# of #4: same artifact resolved fine in three sibling jobs in the same
+# run, 403'd in this one) and the emulator runner has historically
+# reported "no compatible devices connected" on the first boot of a
+# cold-cached AVD. Two attempts with a 30s gap clears both classes of
+# flake without masking a real failure (real test failures still fail
+# both attempts and surface in ~the same wall time as a single run).
 
 on:
   pull_request:
@@ -33,7 +42,19 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup-android
-      - run: ./gradlew :app:lint
+      - name: Lint (with retry on transient Maven errors)
+        run: |
+          for attempt in 1 2; do
+            echo "::group::Lint (attempt $attempt)"
+            if ./gradlew :app:lint; then
+              echo "::endgroup::"
+              exit 0
+            fi
+            echo "::endgroup::"
+            echo "Attempt $attempt failed; retrying in 30s..."
+            sleep 30
+          done
+          exit 1
 
   unit-test:
     name: Unit tests
@@ -44,7 +65,19 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup-android
-      - run: ./gradlew :app:testDebugUnitTest
+      - name: Unit tests (with retry on transient Maven errors)
+        run: |
+          for attempt in 1 2; do
+            echo "::group::Unit tests (attempt $attempt)"
+            if ./gradlew :app:testDebugUnitTest; then
+              echo "::endgroup::"
+              exit 0
+            fi
+            echo "::endgroup::"
+            echo "Attempt $attempt failed; retrying in 30s..."
+            sleep 30
+          done
+          exit 1
       - name: Upload test report on failure
         if: failure()
         uses: actions/upload-artifact@v4
@@ -62,7 +95,19 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup-android
-      - run: ./gradlew :app:assembleDebug
+      - name: Assemble debug APK (with retry on transient Maven errors)
+        run: |
+          for attempt in 1 2; do
+            echo "::group::Assemble (attempt $attempt)"
+            if ./gradlew :app:assembleDebug; then
+              echo "::endgroup::"
+              exit 0
+            fi
+            echo "::endgroup::"
+            echo "Attempt $attempt failed; retrying in 30s..."
+            sleep 30
+          done
+          exit 1
       - name: Upload debug APK
         uses: actions/upload-artifact@v4
         with:
@@ -111,7 +156,25 @@ jobs:
           working-directory: android/src
           script: echo "AVD cache warmed."
 
+      # First attempt. If the emulator boots cleanly and ADB sees a device the
+      # tests run as normal; if the runner reports "no compatible devices
+      # connected" (or any other infra error) we fall through to the retry below.
       - name: Run instrumented tests
+        id: instrumented-1
+        continue-on-error: true
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 36
+          target: google_apis
+          arch: x86_64
+          force-avd-creation: false
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim
+          disable-animations: true
+          working-directory: android/src
+          script: ./gradlew connectedDebugAndroidTest --info
+
+      - name: Run instrumented tests (retry)
+        if: steps.instrumented-1.outcome == 'failure'
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 36

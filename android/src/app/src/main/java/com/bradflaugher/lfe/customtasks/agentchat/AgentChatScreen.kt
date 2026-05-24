@@ -10,6 +10,7 @@
  */
 package com.bradflaugher.lfe.customtasks.agentchat
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.util.Log
 import android.webkit.ConsoleMessage
@@ -78,6 +79,7 @@ import org.json.JSONObject
 
 private const val TAG = "AGAgentChatScreen"
 
+@SuppressLint("JavascriptInterface")
 @Composable
 fun AgentChatScreen(
   task: Task,
@@ -91,7 +93,7 @@ fun AgentChatScreen(
 ) {
   val context = LocalContext.current
   val scope = rememberCoroutineScope()
-  val chatViewJavascriptInterface = remember { ChatWebViewJavascriptInterface() }
+  val chatViewJavascriptInterface: ChatWebViewJavascriptInterface = remember { ChatWebViewJavascriptInterface() }
   agentTools.context = context
   agentTools.skillManagerViewModel = skillManagerViewModel
   agentTools.taskId = task.id

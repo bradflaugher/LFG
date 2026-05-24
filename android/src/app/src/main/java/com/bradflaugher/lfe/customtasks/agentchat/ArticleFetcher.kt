@@ -203,9 +203,9 @@ object ArticleFetcher {
 
       override fun onPageFinished(view: WebView, finishedUrl: String) {
         // Some pages fire onPageFinished multiple times (e.g. iframes, soft-nav). Only
-        // attempt extraction once per fetch when the page reaches 100% progress.
+        // attempt extraction once per fetch. We don't check for progress == 100 as heavy
+        // pages with background ads/trackers might never reach 100% progress or might time out.
         if (ran) return
-        if (view.progress < 100) return
         ran = true
 
         // Give client-side rendered articles a moment to populate the DOM before we try to

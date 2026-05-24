@@ -141,6 +141,7 @@ fun ChatHistorySideSheetContent(
               maxLines = 1,
               overflow = TextOverflow.Ellipsis,
             )
+            @Suppress("NonObservableLocale")
             val formatter = SimpleDateFormat("MMM dd, yyyy", Locale.getDefault())
             val dateStr = formatter.format(Date(session.timestampMs))
             Text(

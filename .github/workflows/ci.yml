@@ -83,7 +83,7 @@ jobs:
           exit 1
       - name: Upload test report on failure
         if: failure()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: unit-test-report
           path: android/src/app/build/reports/tests/testDebugUnitTest/
@@ -112,7 +112,7 @@ jobs:
           done
           exit 1
       - name: Upload debug APK
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: lfe-debug-apk-${{ github.sha }}
           path: android/src/app/build/outputs/apk/debug/*.apk
@@ -191,7 +191,7 @@ jobs:
 
       - name: Upload instrumented report on failure
         if: failure()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: instrumented-test-report
           path: android/src/app/build/reports/androidTests/

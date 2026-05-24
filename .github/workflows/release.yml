@@ -100,26 +100,27 @@ jobs:
           echo "apk=${PWD}/${out}" >> "$GITHUB_OUTPUT"
 
       - name: Publish GitHub Release
-        uses: softprops/action-gh-release@v2
-        continue-on-error: true
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          tag_name: ${{ steps.ident.outputs.tag }}
-          name: ${{ steps.ident.outputs.tag }}
-          target_commitish: ${{ steps.ident.outputs.sha }}
-          generate_release_notes: true
-          fail_on_unmatched_files: true
-          files: ${{ steps.rename.outputs.apk }}
-          body: |
-            Sideload APK from commit `${{ steps.ident.outputs.sha }}`
-            (built ${{ steps.ident.outputs.stamp }} UTC, gated by
-            [Instrumented](../../actions/workflows/instrumented.yml) success).
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          cat << 'EOF' > release_notes.md
+          Sideload APK from commit `${{ steps.ident.outputs.sha }}`
+          (built ${{ steps.ident.outputs.stamp }} UTC, gated by
+          [Instrumented](../../actions/workflows/instrumented.yml) success).
 
-            Install:
-            ```
-            adb install -r lfe-${{ steps.ident.outputs.tag }}.apk
-            ```
+          Install:
+          ```
+          adb install -r lfe-${{ steps.ident.outputs.tag }}.apk
+          ```
 
-            **First-time sideloaders on Android 12+:** enable
-            *Settings → Apps → Special access → Install unknown apps* for
-            your file manager, then tap the APK.
+          **First-time sideloaders on Android 12+:** enable
+          *Settings → Apps → Special access → Install unknown apps* for
+          your file manager, then tap the APK.
+          EOF
+
+          gh release create "${{ steps.ident.outputs.tag }}" \
+            --title "${{ steps.ident.outputs.tag }}" \
+            --target "${{ steps.ident.outputs.sha }}" \
+            --generate-notes \
+            --notes-file release_notes.md \
+            "${{ steps.rename.outputs.apk }}"

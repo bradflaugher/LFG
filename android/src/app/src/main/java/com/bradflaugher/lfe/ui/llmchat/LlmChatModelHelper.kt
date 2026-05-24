@@ -346,9 +346,16 @@ object LlmChatModelHelper : LlmModelHelper {
         return
       }
       val entryPoint = entryPoint(ctx)
-      val endpoint = entryPoint.dataStoreRepository().readSecret("CLOUD_API_ENDPOINT")?.trim() ?: ""
+      val endpointRaw = entryPoint.dataStoreRepository().readSecret("CLOUD_API_ENDPOINT")?.trim()
+      val endpoint = if (endpointRaw.isNullOrEmpty()) "https://hyper.charm.land/v1/" else endpointRaw
       val apiKey = entryPoint.dataStoreRepository().readSecret("CLOUD_API_KEY")?.trim() ?: ""
-      val modelId = entryPoint.dataStoreRepository().readSecret("CLOUD_MODEL_ID")?.trim() ?: ""
+      val modelIdRaw = entryPoint.dataStoreRepository().readSecret("CLOUD_MODEL_ID")?.trim()
+      val modelId = if (modelIdRaw.isNullOrEmpty()) "gemma-4-26b-a4b-it" else modelIdRaw
+
+      if (apiKey.isEmpty()) {
+        onError("Cloud API Key is not configured. Go to the Models view and tap 'Configure Cloud Provider' to enter your API key.")
+        return
+      }
 
       if (endpoint.isEmpty()) {
         onError("Cloud API Endpoint is not configured. Go to the Models view and tap 'Configure Cloud Provider'.")
@@ -379,6 +386,10 @@ object LlmChatModelHelper : LlmModelHelper {
         chatMessages.add(ChatMessage(role = ChatRole.User, content = input))
       }
 
+      val maxTokens = model.getIntConfigValue(key = ConfigKeys.MAX_TOKENS, defaultValue = DEFAULT_MAX_TOKEN)
+      val topP = model.getFloatConfigValue(key = ConfigKeys.TOPP, defaultValue = DEFAULT_TOPP)
+      val temperature = model.getFloatConfigValue(key = ConfigKeys.TEMPERATURE, defaultValue = DEFAULT_TEMPERATURE)
+
       coroutineScope?.launch(Dispatchers.IO) {
         try {
           val config = OpenAIConfig(
@@ -390,7 +401,10 @@ object LlmChatModelHelper : LlmModelHelper {
           
           val request = ChatCompletionRequest(
             model = ModelId(if (modelId.isNotEmpty()) modelId else "gemma-4-2b-it"),
-            messages = chatMessages
+            messages = chatMessages,
+            temperature = temperature.toDouble(),
+            topP = topP.toDouble(),
+            maxTokens = maxTokens
           )
 
           openAI.chatCompletions(request)

@@ -59,13 +59,15 @@ fun CloudProviderDialog(
   onDismiss: () -> Unit,
 ) {
   var endpoint by remember {
-    mutableStateOf(dataStoreRepository.readSecret("CLOUD_API_ENDPOINT") ?: "")
+    val saved = dataStoreRepository.readSecret("CLOUD_API_ENDPOINT")
+    mutableStateOf(if (saved.isNullOrEmpty()) "https://hyper.charm.land/v1/" else saved)
   }
   var apiKey by remember {
     mutableStateOf(dataStoreRepository.readSecret("CLOUD_API_KEY") ?: "")
   }
   var modelId by remember {
-    mutableStateOf(dataStoreRepository.readSecret("CLOUD_MODEL_ID") ?: "")
+    val saved = dataStoreRepository.readSecret("CLOUD_MODEL_ID")
+    mutableStateOf(if (saved.isNullOrEmpty()) "gemma-4-26b-a4b-it" else saved)
   }
   var isApiKeyVisible by remember { mutableStateOf(false) }
 
@@ -127,7 +129,7 @@ fun CloudProviderDialog(
           value = endpoint,
           onValueChange = { endpoint = it },
           label = { Text("API Endpoint URL") },
-          placeholder = { Text("https://api.hyper.com/v1") },
+          placeholder = { Text("https://hyper.charm.land/v1/") },
           singleLine = true,
           modifier = Modifier.fillMaxWidth(),
           keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Uri)
@@ -158,7 +160,7 @@ fun CloudProviderDialog(
           value = modelId,
           onValueChange = { modelId = it },
           label = { Text("Model ID") },
-          placeholder = { Text("gemma-4-2b-it") },
+          placeholder = { Text("gemma-4-26b-a4b-it") },
           singleLine = true,
           modifier = Modifier.fillMaxWidth()
         )

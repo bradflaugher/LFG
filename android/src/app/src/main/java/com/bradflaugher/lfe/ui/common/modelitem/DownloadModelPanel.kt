@@ -14,24 +14,40 @@ import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.TextAutoSize
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.rounded.ArrowForward
 import androidx.compose.material.icons.outlined.Update
+import androidx.compose.material.icons.rounded.CheckCircle
+import androidx.compose.material.icons.rounded.Warning
+import androidx.compose.material.icons.rounded.Cloud
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
@@ -43,6 +59,8 @@ import com.bradflaugher.lfe.data.Task
 import com.bradflaugher.lfe.ui.common.DownloadAndTryButton
 import com.bradflaugher.lfe.ui.common.tos.TosViewModel
 import com.bradflaugher.lfe.ui.modelmanager.ModelManagerViewModel
+import com.bradflaugher.lfe.ui.modelmanager.CloudProviderDialog
+
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
@@ -61,89 +79,210 @@ fun DownloadModelPanel(
   downloadButtonBackgroundColor: Color = MaterialTheme.colorScheme.surfaceContainer,
 ) {
   with(sharedTransitionScope) {
-    Row(
-      modifier = modifier,
-      horizontalArrangement = Arrangement.End,
-      verticalAlignment = Alignment.CenterVertically,
-    ) {
-      fun isDownloadButtonEnabled(
-        downloadStatus: ModelDownloadStatusType?,
-        model: Model,
-      ): Boolean {
-        val downloadFailed = downloadStatus == ModelDownloadStatusType.FAILED
-        val isLitertLm = model.runtimeType == RuntimeType.LITERT_LM
-        return !downloadFailed || isLitertLm
+    if (model.name == "Cloud-Model-OpenAI-Compatible") {
+      var showCloudProviderDialog by remember { mutableStateOf(false) }
+      val dataStoreRepository = modelManagerViewModel.dataStoreRepository
+      var endpoint by remember { mutableStateOf(dataStoreRepository.readSecret("CLOUD_API_ENDPOINT") ?: "") }
+      var apiKey by remember { mutableStateOf(dataStoreRepository.readSecret("CLOUD_API_KEY") ?: "") }
+      val isConfigured = endpoint.isNotEmpty() && apiKey.isNotEmpty()
+
+      if (showCloudProviderDialog) {
+        CloudProviderDialog(
+          dataStoreRepository = dataStoreRepository,
+          onDismiss = {
+            showCloudProviderDialog = false
+            endpoint = dataStoreRepository.readSecret("CLOUD_API_ENDPOINT") ?: ""
+            apiKey = dataStoreRepository.readSecret("CLOUD_API_KEY") ?: ""
+          }
+        )
       }
 
-      // Display an update button if the model is updatable.
-      if (model.updatable) {
-        var buttonModifier: Modifier = Modifier.height(42.dp)
+      Column(
+        modifier = modifier.fillMaxWidth(),
+        verticalArrangement = Arrangement.spacedBy(12.dp)
+      ) {
         if (isExpanded) {
-          buttonModifier = buttonModifier.weight(1f)
-        }
-        Button(
-          modifier =
-            Modifier.sharedElement(
-              sharedContentState =
-                rememberSharedContentState(key = "update_button_${model.name}"),
-              animatedVisibilityScope = animatedVisibilityScope,
-            )
-              .then(buttonModifier),
-          colors =
-            ButtonDefaults.buttonColors(
-              containerColor = MaterialTheme.colorScheme.secondaryContainer,
+          Card(
+            colors = CardDefaults.cardColors(
+              containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
             ),
-          contentPadding = PaddingValues(horizontal = 12.dp),
-          onClick = {
-            model.latestModelFile?.let {
-              model.version = it.commitHash
-              model.downloadFileName = it.fileName
-            }
-            model.updatable = false
-            modelManagerViewModel.downloadModel(task, model)
-          },
-        ) {
-          val textColor = MaterialTheme.colorScheme.onSecondaryContainer
-          Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            modifier = Modifier.fillMaxWidth()
           ) {
-            Icon(Icons.Outlined.Update, contentDescription = null, tint = textColor)
-
-            if (isExpanded) {
+            Column(modifier = Modifier.padding(12.dp)) {
               Text(
-                stringResource(R.string.update),
-                color = textColor,
-                style = MaterialTheme.typography.titleMedium,
-                maxLines = 1,
-                autoSize =
-                  TextAutoSize.StepBased(minFontSize = 8.sp, maxFontSize = 16.sp, stepSize = 1.sp),
+                text = "Cloud Model Integration",
+                style = MaterialTheme.typography.titleSmall,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.primary
               )
+              Spacer(modifier = Modifier.height(4.dp))
+              Text(
+                text = "This model connects directly to any OpenAI-compatible API endpoint (such as Hyper, Groq, or OpenAI). Since it runs entirely in the cloud, it requires no local storage or device resources, but does require an active internet connection.",
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+              )
+              
+              Spacer(modifier = Modifier.height(8.dp))
+              
+              if (isConfigured) {
+                Row(
+                  verticalAlignment = Alignment.CenterVertically,
+                  horizontalArrangement = Arrangement.spacedBy(6.dp)
+                ) {
+                  Icon(
+                    imageVector = Icons.Rounded.CheckCircle,
+                    contentDescription = null,
+                    tint = Color(0xFF4CAF50),
+                    modifier = Modifier.size(16.dp)
+                  )
+                  Text(
+                    text = "Configured: ${endpoint.take(30)}${if (endpoint.length > 30) "..." else ""}",
+                    style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                  )
+                }
+              } else {
+                Row(
+                  verticalAlignment = Alignment.CenterVertically,
+                  horizontalArrangement = Arrangement.spacedBy(6.dp)
+                ) {
+                  Icon(
+                    imageVector = Icons.Rounded.Warning,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.error,
+                    modifier = Modifier.size(16.dp)
+                  )
+                  Text(
+                    text = "Not Configured. Endpoint and API key are required.",
+                    style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.error
+                  )
+                }
+              }
             }
           }
         }
 
-        Spacer(modifier = Modifier.width(8.dp))
-      }
+        Row(
+          modifier = Modifier.fillMaxWidth(),
+          horizontalArrangement = Arrangement.End,
+          verticalAlignment = Alignment.CenterVertically
+        ) {
+          OutlinedButton(
+            onClick = { showCloudProviderDialog = true },
+            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
+          ) {
+            Icon(
+              imageVector = Icons.Rounded.Cloud,
+              contentDescription = null,
+              modifier = Modifier.size(18.dp)
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            Text("Configure API")
+          }
 
-      DownloadAndTryButton(
-        task = task,
-        model = model,
-        downloadStatus = downloadStatus,
-        downloadProgress = downloadProgress,
-        enabled = isDownloadButtonEnabled(downloadStatus, model),
-        modelManagerViewModel = modelManagerViewModel,
-        onClicked = onTryItClicked,
-        compact = !isExpanded,
-        modifier =
-          Modifier.sharedElement(
-            sharedContentState = rememberSharedContentState(key = "download_button_${model.name}"),
-            animatedVisibilityScope = animatedVisibilityScope,
-          ),
-        modifierWhenExpanded = Modifier.weight(1f),
-        tosViewModel = tosViewModel ?: hiltViewModel(),
-        downloadButtonBackgroundColor = downloadButtonBackgroundColor,
-      )
+          if (isConfigured) {
+            Spacer(modifier = Modifier.width(8.dp))
+            Button(
+              onClick = onTryItClicked,
+              contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
+            ) {
+              Icon(
+                imageVector = Icons.AutoMirrored.Rounded.ArrowForward,
+                contentDescription = null,
+                modifier = Modifier.size(18.dp)
+              )
+              Spacer(modifier = Modifier.width(8.dp))
+              Text("Try it")
+            }
+          }
+        }
+      }
+    } else {
+      Row(
+        modifier = modifier,
+        horizontalArrangement = Arrangement.End,
+        verticalAlignment = Alignment.CenterVertically,
+      ) {
+        fun isDownloadButtonEnabled(
+          downloadStatus: ModelDownloadStatusType?,
+          model: Model,
+        ): Boolean {
+          val downloadFailed = downloadStatus == ModelDownloadStatusType.FAILED
+          val isLitertLm = model.runtimeType == RuntimeType.LITERT_LM
+          return !downloadFailed || isLitertLm
+        }
+
+        // Display an update button if the model is updatable.
+        if (model.updatable) {
+          var buttonModifier: Modifier = Modifier.height(42.dp)
+          if (isExpanded) {
+            buttonModifier = buttonModifier.weight(1f)
+          }
+          Button(
+            modifier =
+              Modifier.sharedElement(
+                sharedContentState =
+                  rememberSharedContentState(key = "update_button_${model.name}"),
+                animatedVisibilityScope = animatedVisibilityScope,
+              )
+                .then(buttonModifier),
+            colors =
+              ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.secondaryContainer,
+              ),
+            contentPadding = PaddingValues(horizontal = 12.dp),
+            onClick = {
+              model.latestModelFile?.let {
+                model.version = it.commitHash
+                model.downloadFileName = it.fileName
+              }
+              model.updatable = false
+              modelManagerViewModel.downloadModel(task, model)
+            },
+          ) {
+            val textColor = MaterialTheme.colorScheme.onSecondaryContainer
+            Row(
+              verticalAlignment = Alignment.CenterVertically,
+              horizontalArrangement = Arrangement.spacedBy(8.dp),
+            ) {
+              Icon(Icons.Outlined.Update, contentDescription = null, tint = textColor)
+
+              if (isExpanded) {
+                Text(
+                  stringResource(R.string.update),
+                  color = textColor,
+                  style = MaterialTheme.typography.titleMedium,
+                  maxLines = 1,
+                  autoSize =
+                    TextAutoSize.StepBased(minFontSize = 8.sp, maxFontSize = 16.sp, stepSize = 1.sp),
+                )
+              }
+            }
+          }
+
+          Spacer(modifier = Modifier.width(8.dp))
+        }
+
+        DownloadAndTryButton(
+          task = task,
+          model = model,
+          downloadStatus = downloadStatus,
+          downloadProgress = downloadProgress,
+          enabled = isDownloadButtonEnabled(downloadStatus, model),
+          modelManagerViewModel = modelManagerViewModel,
+          onClicked = onTryItClicked,
+          compact = !isExpanded,
+          modifier =
+            Modifier.sharedElement(
+              sharedContentState = rememberSharedContentState(key = "download_button_${model.name}"),
+              animatedVisibilityScope = animatedVisibilityScope,
+            ),
+          modifierWhenExpanded = Modifier.weight(1f),
+          tosViewModel = tosViewModel ?: hiltViewModel(),
+          downloadButtonBackgroundColor = downloadButtonBackgroundColor,
+        )
+      }
     }
   }
 }

@@ -201,11 +201,16 @@ fun ModelPageAppBar(
     ) {
       modelConfigs.removeIf { it.key == ConfigKeys.ENABLE_SPECULATIVE_DECODING }
     }
+    if (model.name == "Cloud-Model-OpenAI-Compatible") {
+      modelConfigs.removeIf { it.key == ConfigKeys.ACCELERATOR }
+    }
     ConfigDialog(
       title = "Configurations",
       configs = modelConfigs,
       initialValues = model.configValues,
       onDismissed = { showConfigDialog = false },
+      isCloudModel = model.name == "Cloud-Model-OpenAI-Compatible",
+      dataStoreRepository = modelManagerViewModel.dataStoreRepository,
       onOk = { curConfigValues, oldSystemPrompt, newSystemPrompt ->
         // Hide config dialog.
         showConfigDialog = false

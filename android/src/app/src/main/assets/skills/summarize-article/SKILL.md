@@ -1,15 +1,12 @@
 ---
 name: summarize-article
-description: Fetch an article from a URL (including paywalled sites like WSJ or NYT, if the user has signed in via Settings → Browser Session beforehand) and summarize it. Use this whenever the user provides a news article URL or asks "summarize this article".
+description: Fetch an article from a URL and summarize it. Works on any publicly readable page. Use this whenever the user provides a news article URL or asks "summarize this article".
 ---
 
 # Summarize article
 
 This skill uses the `fetchArticle` **tool** (not `run_js`) to retrieve an
-article's title and main text via a hidden WebView. Cookies persisted from
-prior in-app sign-ins are attached automatically, so paywalled URLs work as
-long as the user has signed in to that publisher at least once via the app's
-Browser Session screen.
+article's title and main text via a hidden WebView, then summarizes it.
 
 ## Workflow for every article summarization request
 
@@ -27,8 +24,8 @@ Browser Session screen.
 
 3. **Handle errors:**
    - If the result contains `"error"`, tell the user what failed in one
-     sentence and suggest going to Settings → Browser Session to sign in to
-     the publisher if it looks like a paywall.
+     sentence. If it looks like a paywall or login wall, say so plainly — the
+     skill can only read pages the device can reach without signing in.
    - Otherwise proceed to step 4.
 
 4. **Summarize:** produce
@@ -41,12 +38,12 @@ Browser Session screen.
 
 ## Examples
 
-- "Summarize this for me: https://www.wsj.com/articles/some-story-here"
-- "What does this NYT piece say about XYZ? https://nytimes.com/2026/05/…"
+- "Summarize this for me: https://en.wikipedia.org/wiki/Foo_Bar"
+- "What does this piece say about XYZ? https://example.com/2026/05/…"
 - "tl;dr https://example.com/news/long-piece"
 
 ## Privacy note
 
 The fetch happens entirely on-device: a hidden WebView in the LFE process
 loads the URL, runs Mozilla Readability.js on the DOM, and returns text. No
-intermediate server sees the URL or the cookies.
+intermediate server sees the URL.

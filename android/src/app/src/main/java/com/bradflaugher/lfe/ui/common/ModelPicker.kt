@@ -39,10 +39,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.bradflaugher.lfe.R
@@ -64,25 +62,12 @@ fun ModelPicker(
   val context = LocalContext.current
 
   Column(modifier = Modifier.padding(bottom = 8.dp)) {
-    // Title
-    Row(
-      modifier = Modifier.padding(horizontal = 16.dp).padding(top = 4.dp, bottom = 4.dp),
-      verticalAlignment = Alignment.CenterVertically,
-      horizontalArrangement = Arrangement.spacedBy(8.dp),
-    ) {
-      Icon(
-        task.icon ?: ImageVector.vectorResource(task.iconVectorResourceId!!),
-        tint = getTaskIconColor(task = task),
-        modifier = Modifier.size(16.dp),
-        contentDescription = null,
-      )
-      Text(
-        "${task.label} models",
-        modifier = Modifier.fillMaxWidth(),
-        style = MaterialTheme.typography.titleMedium,
-        color = getTaskIconColor(task = task),
-      )
-    }
+    Text(
+      "Models",
+      modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 4.dp),
+      style = MaterialTheme.typography.titleMedium,
+      color = MaterialTheme.colorScheme.onSurface,
+    )
 
     // Model list.
     for (model in task.models) {

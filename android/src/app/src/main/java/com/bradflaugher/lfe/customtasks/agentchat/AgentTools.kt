@@ -293,9 +293,9 @@ open class AgentTools() : ToolSet {
 
   @Tool(
     description =
-      "Fetch the title and main text of an article from a URL. Uses the app's persistent " +
-        "cookies, so if the user signed in to a publisher (WSJ, NYT, etc.) via " +
-        "Settings → Browser Session beforehand, paywalled articles are accessible.",
+      "Fetch the title and main text of an article from a URL via a hidden WebView. " +
+        "Works on any publicly readable page. Pages behind a sign-in or paywall will " +
+        "fail — surface that to the user in plain language.",
   )
   fun fetchArticle(
     @ToolParam(description = "The full https:// URL of the article to fetch.") url: String,

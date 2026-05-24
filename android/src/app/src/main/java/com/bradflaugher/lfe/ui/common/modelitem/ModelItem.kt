@@ -410,15 +410,15 @@ fun ModelItemActionMenu(
   var showConfirmDeleteDialog by remember { mutableStateOf(false) }
 
   Box(modifier = modifier) {
-    IconButton(onClick = { showMenu = true }) {
-      Icon(
-        Icons.Default.MoreVert,
-        contentDescription = stringResource(R.string.cd_more_options),
-        tint = MaterialTheme.colorScheme.onSurfaceVariant,
-      )
-    }
-    DropdownMenu(expanded = showMenu, onDismissRequest = { showMenu = false }) {
-      if (showBenchmarkButton) {
+    if (showBenchmarkButton) {
+      IconButton(onClick = { showMenu = true }) {
+        Icon(
+          Icons.Default.MoreVert,
+          contentDescription = stringResource(R.string.cd_more_options),
+          tint = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
+      }
+      DropdownMenu(expanded = showMenu, onDismissRequest = { showMenu = false }) {
         DropdownMenuItem(
           text = {
             Row(
@@ -434,22 +434,30 @@ fun ModelItemActionMenu(
             showMenu = false
           },
         )
+        if (showDeleteButton) {
+          DropdownMenuItem(
+            text = {
+              Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+              ) {
+                Icon(Icons.Outlined.Delete, contentDescription = null)
+                Text(stringResource(R.string.delete))
+              }
+            },
+            onClick = {
+              showMenu = false
+              showConfirmDeleteDialog = true
+            },
+          )
+        }
       }
-      if (showDeleteButton) {
-        DropdownMenuItem(
-          text = {
-            Row(
-              verticalAlignment = Alignment.CenterVertically,
-              horizontalArrangement = Arrangement.spacedBy(8.dp),
-            ) {
-              Icon(Icons.Outlined.Delete, contentDescription = null)
-              Text(stringResource(R.string.delete))
-            }
-          },
-          onClick = {
-            showMenu = false
-            showConfirmDeleteDialog = true
-          },
+    } else if (showDeleteButton) {
+      IconButton(onClick = { showConfirmDeleteDialog = true }) {
+        Icon(
+          Icons.Outlined.Delete,
+          contentDescription = stringResource(R.string.delete),
+          tint = MaterialTheme.colorScheme.onSurfaceVariant,
         )
       }
     }

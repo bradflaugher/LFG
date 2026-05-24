@@ -100,20 +100,9 @@ fun ModelPickerChip(
             .padding(vertical = 4.dp)
             .graphicsLayer { alpha = if (enabled) 1f else 0.6f }
             .semantics { contentDescription = cdChangeModel },
-      ) Inner@{
-        Box(contentAlignment = Alignment.Center, modifier = Modifier.size(21.dp)) {
-          StatusIcon(
-            task = task,
-            model = initialModel,
-            downloadStatus = modelManagerUiState.modelDownloadStatus[initialModel.name],
-          )
-          this@Inner.AnimatedVisibility(
-            visible =
-              modelInitializationStatus?.status == ModelInitializationStatusType.INITIALIZING,
-            enter = scaleIn() + fadeIn(),
-            exit = scaleOut() + fadeOut(),
-          ) {
-            // Circular progress indicator.
+      ) {
+        if (modelInitializationStatus?.status == ModelInitializationStatusType.INITIALIZING) {
+          Box(contentAlignment = Alignment.Center, modifier = Modifier.size(21.dp)) {
             CircularProgressIndicator(
               modifier = Modifier.size(24.dp).alpha(0.5f),
               strokeWidth = 2.dp,

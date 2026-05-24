@@ -154,7 +154,11 @@ data class AllowedModel(
           .toMutableList()
     }
 
-    val learnMoreUrl = "https://huggingface.co/$modelId"
+    val learnMoreUrl = if (name == "Cloud-Model-OpenAI-Compatible") {
+      "https://github.com/aallam/openai-kotlin"
+    } else {
+      "https://huggingface.co/$modelId"
+    }
 
     return Model(
       name = name,

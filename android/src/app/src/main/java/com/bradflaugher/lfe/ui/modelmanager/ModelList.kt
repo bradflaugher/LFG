@@ -22,6 +22,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -60,6 +61,8 @@ import com.bradflaugher.lfe.ui.common.ClickableLink
 import com.bradflaugher.lfe.ui.common.getTaskBgColor
 import com.bradflaugher.lfe.ui.common.modelitem.ModelItem
 import com.bradflaugher.lfe.ui.common.rememberDelayedAnimationProgress
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 
 private const val TAG = "AGModelList"
 private val CONTENT_ANIMATION_OFFSET = 16.dp
@@ -162,19 +165,52 @@ fun ModelList(
         Spacer(modifier = Modifier.height(8.dp))
       }
 
-      // Title for recommended models.
-      if (!models.isEmpty()) {
-        item(key = "recommendedModelsTitle") {
-          Text(
-            stringResource(R.string.model_list_recommended_models_title),
-            color = MaterialTheme.colorScheme.onSurface,
-            style = MaterialTheme.typography.labelLarge,
-            modifier =
-              Modifier.padding(horizontal = 16.dp, vertical = 8.dp).graphicsLayer {
-                alpha = modelListProgress
-                translationY = (CONTENT_ANIMATION_OFFSET * (1 - modelListProgress)).toPx()
-              },
-          )
+      item(key = "modelEducationInfo") {
+        androidx.compose.material3.Card(
+          colors = androidx.compose.material3.CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f)
+          ),
+          modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 4.dp)
+            .graphicsLayer {
+              alpha = modelListProgress
+              translationY = (CONTENT_ANIMATION_OFFSET * (1 - modelListProgress)).toPx()
+            }
+        ) {
+          Column(
+            modifier = Modifier.padding(12.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+          ) {
+            Text(
+              text = "Understanding the Models",
+              style = MaterialTheme.typography.titleSmall,
+              fontWeight = FontWeight.Bold,
+              color = MaterialTheme.colorScheme.primary
+            )
+            Text(
+              text = "• E2B vs E4B: Gemma 4 Edge model sizes. E2B (2 Billion parameters) is lighter and faster, running on 8GB RAM devices. E4B (4 Billion parameters) offers stronger conversational accuracy and reasoning but requires 12GB RAM.",
+              style = MaterialTheme.typography.bodySmall,
+              color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+            Text(
+              text = "• \"-it\" (Instruction Tuned): Tuned specifically to follow chat prompts and instructions naturally, rather than just completing raw text.",
+              style = MaterialTheme.typography.bodySmall,
+              color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+            Row(
+              modifier = Modifier.fillMaxWidth(),
+              horizontalArrangement = Arrangement.Start,
+              verticalAlignment = Alignment.CenterVertically
+            ) {
+              ClickableLink(
+                url = "https://huggingface.co/google/gemma-2-2b-it",
+                linkText = "Learn more on Hugging Face",
+                textAlign = TextAlign.Start,
+                modifier = Modifier.padding(top = 4.dp)
+              )
+            }
+          }
         }
       }
 

@@ -97,8 +97,5 @@ Trigger phrases: "what's interesting today?", "find me articles",
 
 ## Privacy
 
-Homepage fetches use the same hidden WebView as `summarize-article`,
-which means any persisted publisher cookies are attached. NYT delivers a
-different (more relevant) homepage to signed-in users than to anonymous
-ones, so signing in via Settings → Browser Session generally gives better
-recommendations.
+Homepage fetches happen entirely on-device through a hidden WebView. Only
+publicly visible pages work — pages behind a sign-in or paywall won't load.

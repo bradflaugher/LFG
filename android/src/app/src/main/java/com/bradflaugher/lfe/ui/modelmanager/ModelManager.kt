@@ -15,15 +15,9 @@ import android.content.Intent
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Language
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SmallFloatingActionButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
@@ -32,8 +26,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.unit.dp
 import com.bradflaugher.lfe.GalleryTopAppBar
 import com.bradflaugher.lfe.data.AppBarAction
 import com.bradflaugher.lfe.data.AppBarActionType
@@ -51,9 +43,7 @@ fun ModelManager(
   onModelClicked: (Model) -> Unit,
   modifier: Modifier = Modifier,
   onBenchmarkClicked: (Model) -> Unit = {},
-  onBrowserSession: (() -> Unit)? = null,
 ) {
-  val context = LocalContext.current
   // Model count.
   val modelCount by remember {
     derivedStateOf {
@@ -111,15 +101,6 @@ fun ModelManager(
         title = "Models",
         leftAction = AppBarAction(actionType = AppBarActionType.NAVIGATE_UP, actionFn = navigateUp),
       )
-    },
-    floatingActionButton = {
-      Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-        if (onBrowserSession != null) {
-          SmallFloatingActionButton(onClick = onBrowserSession) {
-            Icon(Icons.Rounded.Language, contentDescription = "Open browser session")
-          }
-        }
-      }
     },
   ) { innerPadding ->
     ModelList(

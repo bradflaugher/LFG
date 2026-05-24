@@ -10,10 +10,7 @@
  */
 package com.bradflaugher.lfe.ui.common
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
@@ -26,7 +23,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -36,10 +32,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import com.bradflaugher.lfe.R
 import com.bradflaugher.lfe.data.ConfigKeys
@@ -63,7 +57,6 @@ fun ModelPageAppBar(
   modelPreparing: Boolean,
   modifier: Modifier = Modifier,
   hideModelSelector: Boolean = false,
-  useThemeColor: Boolean = false,
   onConfigChanged: (oldConfigValues: Map<String, Any>, newConfigValues: Map<String, Any>) -> Unit =
     { _, _ ->
     },
@@ -87,45 +80,23 @@ fun ModelPageAppBar(
 
   CenterAlignedTopAppBar(
     title = {
-      Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(4.dp),
-      ) {
-        // Task type.
-        Row(
-          verticalAlignment = Alignment.CenterVertically,
-          horizontalArrangement = Arrangement.spacedBy(10.dp),
-        ) {
-          val tintColor =
-            if (useThemeColor) {
-              MaterialTheme.colorScheme.onSurface
-            } else {
-              getTaskIconColor(task = task)
-            }
-          Icon(
-            task.icon ?: ImageVector.vectorResource(task.iconVectorResourceId!!),
-            tint = tintColor,
-            modifier = Modifier.size(24.dp),
-            contentDescription = null,
-          )
-          Text(task.label, style = MaterialTheme.typography.titleMedium, color = tintColor)
-        }
-
-        // Model chips pager.
-        if (!hideModelSelector) {
-          val enableModelPickerChip = !isModelInitializing && !inProgress
-          ModelPickerChip(
-            enabled = enableModelPickerChip,
-            task = task,
-            initialModel = model,
-            modelManagerViewModel = modelManagerViewModel,
-            onModelSelected = onModelSelected,
-          )
-        }
+      // Model chips pager — the task name/icon was removed (it just said "Agent Skills"
+      // for the single chat task and was leftover gallery chrome).
+      if (!hideModelSelector) {
+        val enableModelPickerChip = !isModelInitializing && !inProgress
+        ModelPickerChip(
+          enabled = enableModelPickerChip,
+          task = task,
+          initialModel = model,
+          modelManagerViewModel = modelManagerViewModel,
+          onModelSelected = onModelSelected,
+        )
       }
     },
     modifier = modifier,
-    // The back button.
+    // Left side: back arrow on subscreens, gear (settings) on the chat home screen.
+    // Putting the gear here keeps it from overlapping the model-config and history
+    // buttons on the right once a chat has started.
     navigationIcon = {
       if (!hideBackButton) {
         val enableBackButton = !isModelInitializing && !inProgress
@@ -135,20 +106,21 @@ fun ModelPageAppBar(
             contentDescription = stringResource(R.string.cd_navigate_back_icon),
           )
         }
+      } else {
+        IconButton(onClick = onSettingsClicked) {
+          Icon(
+            imageVector = Icons.Rounded.Settings,
+            contentDescription = stringResource(R.string.cd_app_settings_icon),
+            tint = MaterialTheme.colorScheme.onSurface,
+            modifier = Modifier.size(20.dp),
+          )
+        }
       }
     },
     // The config button for the model (if existed).
     actions = {
       val downloadSucceeded = curDownloadStatus?.status == ModelDownloadStatusType.SUCCEEDED
       val showConfigButton = model.configs.isNotEmpty() && downloadSucceeded
-      IconButton(onClick = onSettingsClicked) {
-        Icon(
-          imageVector = Icons.Rounded.Settings,
-          contentDescription = stringResource(R.string.cd_app_settings_icon),
-          tint = MaterialTheme.colorScheme.onSurface,
-          modifier = Modifier.size(20.dp),
-        )
-      }
       Box(modifier = Modifier.size(42.dp), contentAlignment = Alignment.Center) {
         var configButtonOffset = 0.dp
         if (showConfigButton && shouldShowHistoryButton) {

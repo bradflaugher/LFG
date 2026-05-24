@@ -73,12 +73,12 @@
       "name": "Gemma-4-E2B-Abliterated",
       "modelId": "DuoNeural/Gemma-4-Abliterated-LiteRT",
       "modelFile": "Gemma-4-E2B-Abliterated.litertlm",
-      "description": "An uncensored / [abliterated](https://huggingface.co/blog/mlabonne/abliteration) variant of Gemma 4 E2B from [DuoNeural](https://huggingface.co/DuoNeural/Gemma-4-Abliterated-LiteRT), packaged for LiteRT-LM. Multi-modal (text + image + audio), 32K context.",
+      "description": "An uncensored / [abliterated](https://huggingface.co/blog/mlabonne/abliteration) variant of Gemma 4 E2B from [DuoNeural](https://huggingface.co/DuoNeural/Gemma-4-Abliterated-LiteRT), packaged for LiteRT-LM. Text-only, 32K context.",
       "sizeInBytes": 2556215296,
       "minDeviceMemoryInGb": 8,
       "commitHash": "1c6b2a8b6866c5c6afad718ddec0dbacb6ad5eb8",
-      "llmSupportImage": true,
-      "llmSupportAudio": true,
+      "llmSupportImage": false,
+      "llmSupportAudio": false,
       "capabilities": ["llm_thinking", "speculative_decoding"],
       "defaultConfig": {
         "topK": 64,
@@ -86,8 +86,7 @@
         "temperature": 1.0,
         "maxContextLength": 32000,
         "maxTokens": 4000,
-        "accelerators": "gpu,cpu",
-        "visionAccelerator": "gpu"
+        "accelerators": "gpu,cpu"
       },
       "taskTypes": ["llm_agent_chat"],
       "capabilityToTaskTypes": {
@@ -99,12 +98,12 @@
       "name": "Gemma-4-E4B-Abliterated",
       "modelId": "DuoNeural/Gemma-4-Abliterated-LiteRT",
       "modelFile": "Gemma-4-E4B-Abliterated.litertlm",
-      "description": "An uncensored / [abliterated](https://huggingface.co/blog/mlabonne/abliteration) variant of Gemma 4 E4B from [DuoNeural](https://huggingface.co/DuoNeural/Gemma-4-Abliterated-LiteRT), packaged for LiteRT-LM. Multi-modal, 32K context.",
+      "description": "An uncensored / [abliterated](https://huggingface.co/blog/mlabonne/abliteration) variant of Gemma 4 E4B from [DuoNeural](https://huggingface.co/DuoNeural/Gemma-4-Abliterated-LiteRT), packaged for LiteRT-LM. Text-only, 32K context.",
       "sizeInBytes": 4120150016,
       "minDeviceMemoryInGb": 12,
       "commitHash": "1c6b2a8b6866c5c6afad718ddec0dbacb6ad5eb8",
-      "llmSupportImage": true,
-      "llmSupportAudio": true,
+      "llmSupportImage": false,
+      "llmSupportAudio": false,
       "capabilities": ["llm_thinking", "speculative_decoding"],
       "defaultConfig": {
         "topK": 64,
@@ -112,8 +111,7 @@
         "temperature": 1.0,
         "maxContextLength": 32000,
         "maxTokens": 4000,
-        "accelerators": "gpu,cpu",
-        "visionAccelerator": "gpu"
+        "accelerators": "gpu,cpu"
       },
       "taskTypes": ["llm_agent_chat"],
       "capabilityToTaskTypes": {

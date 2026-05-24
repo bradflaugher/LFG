@@ -23,7 +23,7 @@ Two screens, that's it: the agent chat, and a model manager behind a gear icon.
 | `query-wikipedia` | Pull a summary on any topic. |
 | `recommend-articles` | Scan a news homepage and pick stories that match your stored interests. Defaults to NYT; configurable. |
 | `send-email` | Hand off a draft to your mail app. |
-| `summarize-article` | Fetch and summarize a news article. Works on paywalled sites once you've signed in via *Browser Session*. |
+| `summarize-article` | Fetch and summarize a news article. Works on any publicly readable page. |
 | `translator` | Translate between languages. |
 
 Add your own by dropping a `SKILL.md` directory under
@@ -35,9 +35,10 @@ the same guide on your phone.
 ## Models
 
 Four Gemma 4 variants ship in the recommended list: **E2B** / **E4B** (stock, from
-litert-community) and **E2B-Abliterated** / **E4B-Abliterated** (uncensored, from
-[DuoNeural](https://huggingface.co/DuoNeural/Gemma-4-Abliterated-LiteRT)) — all multi-modal
-(text + image + audio), 32K context. Tap the gear icon to download.
+litert-community — multi-modal text + image + audio) and **E2B-Abliterated** /
+**E4B-Abliterated** (uncensored, from
+[DuoNeural](https://huggingface.co/DuoNeural/Gemma-4-Abliterated-LiteRT) — text-only).
+All 32K context. Tap the gear icon to download.
 
 Want something else? Grab any LiteRT-LM-compatible `.litertlm` or `.task` file from
 HuggingFace (or convert one yourself with [LiteRT-LM](https://github.com/google-ai-edge/LiteRT-LM)),

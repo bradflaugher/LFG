@@ -39,7 +39,9 @@ private const val EXTRACT_TIMEOUT_MS = 10_000L
  * Hidden [WebView] helpers that share one piece of plumbing: load a URL with the app's
  * [CookieManager] attached, wait for `onPageFinished`, then run a JS snippet to extract data.
  *
- * - [fetch] runs Mozilla Readability.js to extract a full article body.
+ * - [fetch] runs Mozilla Readability.js to extract a full article body. The bundle is injected
+ *   as its own `evaluateJavascript` call so a single byte of stray syntax in the (huge) bundle
+ *   can't take down the extractor IIFE with it.
  * - [fetchLinks] extracts a deduped list of in-page anchor links (used to surface article
  *   candidates from a homepage like nytimes.com).
  *
@@ -57,14 +59,16 @@ object ArticleFetcher {
           return@withContext errorJson("Readability bundle missing: ${e.message}")
         }
 
-      val script = """
+      val extractor = """
         (function() {
           try {
-            $readabilityJs
+            if (typeof Readability !== 'function') {
+              return JSON.stringify({error: 'Readability bundle did not load'});
+            }
             var doc = document.cloneNode(true);
             var article = new Readability(doc).parse();
-            if (!article) {
-              return JSON.stringify({error: 'Readability returned no article'});
+            if (!article || !(article.textContent || '').trim()) {
+              return JSON.stringify({error: 'No readable article body found at ' + window.location.href});
             }
             return JSON.stringify({
               title: article.title || '',
@@ -77,7 +81,12 @@ object ArticleFetcher {
         })();
       """.trimIndent()
 
-      runWithWebView(context, url, script)
+      runWithWebView(
+        context = context,
+        url = url,
+        preScripts = listOf(readabilityJs),
+        script = extractor,
+      )
     }
 
   /**
@@ -120,17 +129,18 @@ object ArticleFetcher {
         })();
       """.trimIndent()
 
-      runWithWebView(context, url, script)
+      runWithWebView(context = context, url = url, preScripts = emptyList(), script = script)
     }
 
   private suspend fun runWithWebView(
     context: Context,
     url: String,
+    preScripts: List<String>,
     script: String,
   ): String =
     try {
       withTimeout(LOAD_TIMEOUT_MS + EXTRACT_TIMEOUT_MS + 2_000L) {
-        runWithWebViewInternal(context, url, script)
+        runWithWebViewInternal(context, url, preScripts, script)
       }
     } catch (e: TimeoutCancellationException) {
       errorJson("Timed out fetching $url")
@@ -139,16 +149,21 @@ object ArticleFetcher {
       errorJson(e.message ?: "fetch failed")
     }
 
+  @SuppressLint("SetJavaScriptEnabled")
   private suspend fun runWithWebViewInternal(
     context: Context,
     url: String,
+    preScripts: List<String>,
     script: String,
   ): String = suspendCancellableCoroutine { cont ->
+    // Many news articles need images enabled (Readability looks at <img> for caption text)
+    // and rely on a tiny amount of client-side rendering. We keep network image blocking off
+    // to avoid blank-body cases that previously surfaced to the user as "skill is broken".
     val webView = WebView(context).apply {
       settings.javaScriptEnabled = true
       settings.domStorageEnabled = true
-      settings.loadsImagesAutomatically = false
-      settings.blockNetworkImage = true
+      settings.loadsImagesAutomatically = true
+      settings.blockNetworkImage = false
       settings.userAgentString = DEFAULT_USER_AGENT
       settings.cacheMode = WebSettings.LOAD_DEFAULT
     }
@@ -184,14 +199,35 @@ object ArticleFetcher {
     }
 
     webView.webViewClient = object : WebViewClient() {
+      private var ran = false
+
       override fun onPageFinished(view: WebView, finishedUrl: String) {
-        try {
-          view.evaluateJavascript(script) { raw ->
-            safeResume(unwrapJsString(raw) ?: errorJson("Empty extractor result"))
+        // Some pages fire onPageFinished multiple times (e.g. iframes, soft-nav). Only
+        // attempt extraction once per fetch.
+        if (ran) return
+        ran = true
+
+        // Give client-side rendered articles a moment to populate the DOM before we try to
+        // extract. Hard-coded short wait — anything longer hurts the common case.
+        view.postDelayed({
+          try {
+            // 1) Inject every preScript in order. We discard their return values; their job
+            //    is only to define globals (e.g. Readability).
+            val preIter = preScripts.iterator()
+            fun runNext() {
+              if (preIter.hasNext()) {
+                view.evaluateJavascript(preIter.next()) { _ -> runNext() }
+              } else {
+                view.evaluateJavascript(script) { raw ->
+                  safeResume(unwrapJsString(raw) ?: errorJson("Empty extractor result"))
+                }
+              }
+            }
+            runNext()
+          } catch (e: Exception) {
+            safeFail(e)
           }
-        } catch (e: Exception) {
-          safeFail(e)
-        }
+        }, 1500L)
       }
 
       override fun onReceivedError(

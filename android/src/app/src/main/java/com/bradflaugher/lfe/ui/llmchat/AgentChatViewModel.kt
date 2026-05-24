@@ -106,8 +106,8 @@ open class AgentChatViewModelBase(
         task = task,
         model = model,
         systemInstruction = Contents.of(newPrompt),
-        supportImage = true,
-        supportAudio = true,
+        supportImage = model.llmSupportImage,
+        supportAudio = model.llmSupportAudio,
         onDone = { addMessage(model, ChatMessageInfo(content = systemPromptUpdatedMessage)) },
       )
     }
@@ -131,9 +131,23 @@ open class AgentChatViewModelBase(
       // Loading.
       addMessage(model = model, message = ChatMessageLoading(accelerator = accelerator))
 
-      // Wait for instance to be initialized.
-      while (model.instance == null) {
+      // Wait for instance to be initialized. Bail out if initialization finished
+      // without an instance (engine creation failed — e.g. wrong modality config
+      // for the chosen model).
+      while (model.instance == null && model.initializing) {
         delay(100)
+      }
+      if (model.instance == null) {
+        if (getLastMessage(model = model) is ChatMessageLoading) {
+          removeLastMessage(model = model)
+        }
+        setInProgress(false)
+        setPreparing(false)
+        onError(
+          "Model failed to initialize. Open the gear menu and pick a different model, " +
+            "or delete and re-download this one.",
+        )
+        return@launch
       }
       delay(500)
 
@@ -359,9 +373,16 @@ open class AgentChatViewModelBase(
     allowThinking: Boolean = false,
   ) {
     viewModelScope.launch(Dispatchers.Default) {
-      // Wait for model to be initialized.
-      while (model.instance == null) {
+      // Wait for model to be initialized. Bail if init finished without an instance.
+      while (model.instance == null && model.initializing) {
         delay(100)
+      }
+      if (model.instance == null) {
+        onError(
+          "Model failed to initialize. Open the gear menu and pick a different model, " +
+            "or delete and re-download this one.",
+        )
+        return@launch
       }
 
       // Clone the clicked message and add it.

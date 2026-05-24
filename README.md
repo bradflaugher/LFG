@@ -42,30 +42,18 @@ All 32K context. Tap the gear icon to download.
 
 Want something else? Grab any LiteRT-LM-compatible `.litertlm` or `.task` file from
 HuggingFace (or convert one yourself with [LiteRT-LM](https://github.com/google-ai-edge/LiteRT-LM)),
-adb-push it onto the device, and use **Import local model file** at the bottom of the
+copy or download it onto your device, and use **Import local model file** at the bottom of the
 model manager.
 
 ## Install
 
 Grab the latest APK from
-[**releases/latest**](https://github.com/bradflaugher/LFE/releases/latest) and sideload it.
+[**releases/latest**](https://github.com/bradflaugher/LFE/releases/latest) directly on your device.
 
-```sh
-adb install -r lfe-build-<date>-<sha>.apk
-```
+Open the downloaded APK file and follow your device's instructions to install it. If you need help, check out the official Google guide on [how to install apps from other sources on Android](https://support.google.com/googleplay/answer/14669046).
 
 Android 12+ required. On first launch you'll be in the agent chat — tap the gear (top
 right) to download a model.
-
-## Build it yourself
-
-JDK 21 is the only prereq.
-
-```sh
-cd android/src
-./gradlew assembleDebug    # debug APK
-./gradlew test             # unit tests
-```
 
 ## License
 

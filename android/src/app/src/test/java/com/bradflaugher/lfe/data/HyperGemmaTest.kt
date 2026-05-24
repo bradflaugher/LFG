@@ -24,7 +24,12 @@ class HyperGemmaTest {
       apiKey != null && apiKey.isNotEmpty()
     )
 
-    val endpoint = System.getenv("HYPER_API_ENDPOINT") ?: "https://api.hyper.space/v1/chat/completions"
+    val envEndpoint = System.getenv("HYPER_API_ENDPOINT")
+    val endpoint = if (envEndpoint.isNullOrEmpty()) {
+      "https://api.hyper.space/v1/chat/completions"
+    } else {
+      envEndpoint
+    }
     val modelId = "gemma-4-2b-it"
 
     val requestBody = """

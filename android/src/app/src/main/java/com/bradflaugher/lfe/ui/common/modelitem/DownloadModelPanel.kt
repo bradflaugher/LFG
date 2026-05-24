@@ -117,7 +117,7 @@ fun DownloadModelPanel(
               )
               Spacer(modifier = Modifier.height(4.dp))
               Text(
-                text = "This model connects directly to any OpenAI-compatible API endpoint (such as Hyper, Groq, or OpenAI). Since it runs entirely in the cloud, it requires no local storage or device resources, but does require an active internet connection.",
+                text = "This model connects directly to any OpenAI-compatible API endpoint (such as Hyper, OpenRouter, or OpenAI). Since it runs entirely in the cloud, it requires no local storage or device resources, but does require an active internet connection.",
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
               )

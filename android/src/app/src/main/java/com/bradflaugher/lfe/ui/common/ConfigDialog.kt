@@ -21,6 +21,7 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -28,6 +29,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -43,6 +45,7 @@ import androidx.compose.material.icons.rounded.ArrowDropDown
 import androidx.compose.material.icons.rounded.CheckCircle
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -81,6 +84,7 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -95,6 +99,11 @@ import com.bradflaugher.lfe.data.LabelConfig
 import com.bradflaugher.lfe.data.NumberSliderConfig
 import com.bradflaugher.lfe.data.SegmentedButtonConfig
 import com.bradflaugher.lfe.data.ValueType
+import com.bradflaugher.lfe.data.DataStoreRepository
+import com.bradflaugher.lfe.ui.modelmanager.CloudProviderDialog
+import androidx.compose.material.icons.rounded.Cloud
+import androidx.compose.material.icons.rounded.CheckCircle
+import androidx.compose.material.icons.rounded.Warning
 import com.bradflaugher.lfe.ui.theme.labelSmallNarrow
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -127,6 +136,8 @@ fun ConfigDialog(
   showSystemPromptEditorTab: Boolean = false,
   defaultSystemPrompt: String = "",
   curSystemPrompt: String = "",
+  isCloudModel: Boolean = false,
+  dataStoreRepository: DataStoreRepository? = null,
 ) {
   val values: SnapshotStateMap<String, Any> =
     remember {
@@ -205,6 +216,90 @@ fun ConfigDialog(
             modifier = Modifier.verticalScroll(rememberScrollState()).weight(1f, fill = false),
             verticalArrangement = Arrangement.spacedBy(16.dp),
           ) {
+            if (isCloudModel) {
+              var showCloudDialog by remember { mutableStateOf(false) }
+              var endpoint by remember {
+                mutableStateOf(dataStoreRepository?.readSecret("CLOUD_API_ENDPOINT") ?: "")
+              }
+              val isConfigured = endpoint.isNotEmpty()
+
+              if (showCloudDialog && dataStoreRepository != null) {
+                CloudProviderDialog(
+                  dataStoreRepository = dataStoreRepository,
+                  onDismiss = {
+                    showCloudDialog = false
+                    endpoint = dataStoreRepository.readSecret("CLOUD_API_ENDPOINT") ?: ""
+                  }
+                )
+              }
+
+              Card(
+                colors = CardDefaults.cardColors(
+                  containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
+                ),
+                modifier = Modifier.fillMaxWidth()
+              ) {
+                Column(modifier = Modifier.padding(12.dp)) {
+                  Text(
+                    text = "Cloud Inference Details",
+                    style = MaterialTheme.typography.titleSmall,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.primary
+                  )
+                  Spacer(modifier = Modifier.height(4.dp))
+                  Text(
+                    text = "This is a cloud model executing via an external OpenAI-compatible host. Temperature and Token limits apply, but physical accelerators (CPU/GPU/TPU) do not affect cloud execution.",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                  )
+                  
+                  Spacer(modifier = Modifier.height(8.dp))
+                  
+                  Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    modifier = Modifier.fillMaxWidth()
+                  ) {
+                    Row(
+                      verticalAlignment = Alignment.CenterVertically,
+                      horizontalArrangement = Arrangement.spacedBy(6.dp)
+                    ) {
+                      Icon(
+                        imageVector = if (isConfigured) Icons.Rounded.CheckCircle else Icons.Rounded.Warning,
+                        contentDescription = null,
+                        tint = if (isConfigured) Color(0xFF4CAF50) else MaterialTheme.colorScheme.error,
+                        modifier = Modifier.size(16.dp)
+                      )
+                      Text(
+                        text = if (isConfigured) {
+                          "Host: ${endpoint.take(24)}${if (endpoint.length > 24) "..." else ""}"
+                        } else {
+                          "API not configured"
+                        },
+                        style = MaterialTheme.typography.labelMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                      )
+                    }
+
+                    if (dataStoreRepository != null) {
+                      TextButton(
+                        onClick = { showCloudDialog = true },
+                        contentPadding = PaddingValues(horizontal = 8.dp)
+                      ) {
+                        Icon(
+                          Icons.Rounded.Cloud,
+                          contentDescription = null,
+                          modifier = Modifier.size(14.dp)
+                        )
+                        Spacer(modifier = Modifier.width(4.dp))
+                        Text("Configure", style = MaterialTheme.typography.labelMedium)
+                      }
+                    }
+                  }
+                }
+              }
+            }
+
             ConfigEditorsPanel(configs = configs, values = values)
           }
         } else if (selectedTabIndex == 1) {

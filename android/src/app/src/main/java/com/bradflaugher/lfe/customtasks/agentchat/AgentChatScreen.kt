@@ -10,6 +10,7 @@
  */
 package com.bradflaugher.lfe.customtasks.agentchat
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.util.Log
 import android.webkit.ConsoleMessage
@@ -77,8 +78,8 @@ import kotlinx.coroutines.suspendCancellableCoroutine
 import org.json.JSONObject
 
 private const val TAG = "AGAgentChatScreen"
-private val chatViewJavascriptInterface = ChatWebViewJavascriptInterface()
 
+@SuppressLint("JavascriptInterface")
 @Composable
 fun AgentChatScreen(
   task: Task,
@@ -92,6 +93,7 @@ fun AgentChatScreen(
 ) {
   val context = LocalContext.current
   val scope = rememberCoroutineScope()
+  val chatViewJavascriptInterface: ChatWebViewJavascriptInterface = remember { ChatWebViewJavascriptInterface() }
   agentTools.context = context
   agentTools.skillManagerViewModel = skillManagerViewModel
   agentTools.taskId = task.id
@@ -261,7 +263,7 @@ fun AgentChatScreen(
                 }
               try {
                 // Safety net timeout — never hang the chat or tool execution.
-                launch {
+                val timeoutJob = launch {
                   delay(60_000L)
                   if (!action.result.isCompleted) {
                     Log.e(TAG, "JS execution timed out for skill " + skillName)
@@ -269,6 +271,11 @@ fun AgentChatScreen(
                       "{\"error\": \"Skill execution timed out. Check network connection.\"}",
                     )
                   }
+                }
+
+                action.result.invokeOnCompletion {
+                  timeoutJob.cancel()
+                  chatViewJavascriptInterface.onResultListener = null
                 }
 
                 suspendCancellableCoroutine<Unit> { continuation ->
@@ -302,8 +309,12 @@ fun AgentChatScreen(
                           break;
                         }
                       }
-                      var result = await ai_edge_gallery_get_result($safeData, $safeSecret);
-                      AiEdgeGallery.onResultReady(result);
+                      if (typeof ai_edge_gallery_get_result === 'function') {
+                        var result = await ai_edge_gallery_get_result($safeData, $safeSecret);
+                        AiEdgeGallery.onResultReady(result);
+                      } else {
+                        AiEdgeGallery.onResultReady(JSON.stringify({error: "Skill interface 'ai_edge_gallery_get_result' not defined in script."}));
+                      }
                   })()
                   """
                     .trimIndent()

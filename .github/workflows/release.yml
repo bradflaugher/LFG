@@ -41,12 +41,18 @@ jobs:
 
       - name: Decode Keystore
         id: decode_keystore
-        if: secrets.LFE_RELEASE_KEYSTORE_BASE64 != '' && secrets.LFE_RELEASE_STORE_PASSWORD != '' && secrets.LFE_RELEASE_KEY_ALIAS != '' && secrets.LFE_RELEASE_KEY_PASSWORD != ''
         env:
           LFE_RELEASE_KEYSTORE_BASE64: ${{ secrets.LFE_RELEASE_KEYSTORE_BASE64 }}
+          LFE_RELEASE_STORE_PASSWORD: ${{ secrets.LFE_RELEASE_STORE_PASSWORD }}
+          LFE_RELEASE_KEY_ALIAS: ${{ secrets.LFE_RELEASE_KEY_ALIAS }}
+          LFE_RELEASE_KEY_PASSWORD: ${{ secrets.LFE_RELEASE_KEY_PASSWORD }}
         run: |
-          echo "$LFE_RELEASE_KEYSTORE_BASE64" | base64 --decode > release.keystore
-          echo "path=${{ github.workspace }}/android/src/release.keystore" >> "$GITHUB_OUTPUT"
+          if [ -n "$LFE_RELEASE_KEYSTORE_BASE64" ] && [ -n "$LFE_RELEASE_STORE_PASSWORD" ] && [ -n "$LFE_RELEASE_KEY_ALIAS" ] && [ -n "$LFE_RELEASE_KEY_PASSWORD" ]; then
+            echo "$LFE_RELEASE_KEYSTORE_BASE64" | base64 --decode > release.keystore
+            echo "path=${{ github.workspace }}/android/src/release.keystore" >> "$GITHUB_OUTPUT"
+          else
+            echo "Signing keys are missing or incomplete. Skipping release signing and falling back to debug signing."
+          fi
 
       - name: Assemble release APK
         env:

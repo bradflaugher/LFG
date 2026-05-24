@@ -28,6 +28,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.bradflaugher.lfe.customtasks.common.CustomTaskDataForBuiltinTask
 import com.bradflaugher.lfe.data.BuiltInTaskId
+import com.bradflaugher.lfe.ui.modelmanager.BrowserSessionScreen
 import com.bradflaugher.lfe.ui.modelmanager.HfBrowseScreen
 import com.bradflaugher.lfe.ui.modelmanager.ModelManager
 import com.bradflaugher.lfe.ui.modelmanager.ModelManagerViewModel
@@ -35,6 +36,7 @@ import com.bradflaugher.lfe.ui.modelmanager.ModelManagerViewModel
 private const val ROUTE_AGENT = "agent"
 private const val ROUTE_MODEL_MANAGER = "model_manager"
 private const val ROUTE_HF_BROWSE = "hf_browse"
+private const val ROUTE_BROWSER_SESSION = "browser_session"
 
 @Composable
 fun LfeNavHost(
@@ -111,6 +113,7 @@ fun LfeNavHost(
             navController.popBackStack()
           },
           onBrowseHuggingFace = { navController.navigate(ROUTE_HF_BROWSE) },
+          onBrowserSession = { navController.navigate(ROUTE_BROWSER_SESSION) },
         )
       }
     }
@@ -120,6 +123,10 @@ fun LfeNavHost(
         modelManagerViewModel = modelManagerViewModel,
         navigateUp = { navController.popBackStack() },
       )
+    }
+
+    composable(route = ROUTE_BROWSER_SESSION) {
+      BrowserSessionScreen(navigateUp = { navController.popBackStack() })
     }
   }
 }

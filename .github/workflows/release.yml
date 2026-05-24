@@ -1,15 +1,15 @@
 name: Release
 
-# Publishes a dated APK to GitHub Releases. Fires only after `Instrumented`
-# passes on the corresponding commit — so /releases/latest is always backed
-# by a green emulator run.
+# Publishes a dated APK to GitHub Releases. Fires only after `CI` passes on
+# the corresponding commit — and `CI` includes the Android 16 emulator gate.
+# So /releases/latest is always backed by a green device run.
 #
 # Release tag format: build-YYYY-MM-DD-HHMM-<sha7>. All historical builds
 # stay on the Releases page.
 
 on:
   workflow_run:
-    workflows: ["Instrumented"]
+    workflows: ["CI"]
     branches: [main]
     types: [completed]
   workflow_dispatch:

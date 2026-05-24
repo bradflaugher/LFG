@@ -21,12 +21,12 @@ plugins {
 
 android {
   namespace = "com.bradflaugher.lfe"
-  compileSdk = 35
+  compileSdk = 36
 
   defaultConfig {
     applicationId = "com.bradflaugher.lfe"
     minSdk = 31
-    targetSdk = 35
+    targetSdk = 36
     versionCode = 1
     versionName = "0.1.0"
 
@@ -62,9 +62,11 @@ android {
     sourceCompatibility = JavaVersion.VERSION_11
     targetCompatibility = JavaVersion.VERSION_11
   }
-  kotlinOptions {
-    jvmTarget = "11"
-    freeCompilerArgs += "-Xcontext-receivers"
+  tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
+    compilerOptions {
+      jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_11)
+      freeCompilerArgs.add("-Xcontext-receivers")
+    }
   }
   buildFeatures {
     compose = true

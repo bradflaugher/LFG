@@ -29,6 +29,7 @@ class BundledSkillsTest {
       "send-email",
       "summarize-article",
       "translator",
+      "unit-converter",
     )
 
   private val skillsRoot = File("src/main/assets/skills")

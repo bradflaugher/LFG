@@ -39,8 +39,24 @@ jobs:
 
       - uses: ./.github/actions/setup-android
 
-      - name: Assemble release APK (debug-signed)
-        run: ./gradlew assembleRelease
+      - name: Decode Keystore
+        id: decode_keystore
+        if: ${{ secrets.LFE_RELEASE_KEYSTORE_BASE64 != '' }}
+        run: |
+          echo "${{ secrets.LFE_RELEASE_KEYSTORE_BASE64 }}" | base64 --decode > release.keystore
+          echo "path=${{ github.workspace }}/android/src/release.keystore" >> "$GITHUB_OUTPUT"
+
+      - name: Assemble release APK
+        run: |
+          if [ -n "${{ secrets.LFE_RELEASE_KEYSTORE_BASE64 }}" ]; then
+            ./gradlew assembleRelease \
+              -PLFE_RELEASE_STORE_FILE="${{ steps.decode_keystore.outputs.path }}" \
+              -PLFE_RELEASE_STORE_PASSWORD="${{ secrets.LFE_RELEASE_STORE_PASSWORD }}" \
+              -PLFE_RELEASE_KEY_ALIAS="${{ secrets.LFE_RELEASE_KEY_ALIAS }}" \
+              -PLFE_RELEASE_KEY_PASSWORD="${{ secrets.LFE_RELEASE_KEY_PASSWORD }}"
+          else
+            ./gradlew assembleRelease
+          fi
 
       - name: Compute build identifier
         id: ident
@@ -78,7 +94,7 @@ jobs:
           fail_on_unmatched_files: true
           files: ${{ steps.rename.outputs.apk }}
           body: |
-            Debug-signed sideload APK from commit `${{ steps.ident.outputs.sha }}`
+            Sideload APK from commit `${{ steps.ident.outputs.sha }}`
             (built ${{ steps.ident.outputs.stamp }} UTC, gated by
             [Instrumented](../../actions/workflows/instrumented.yml) success).
 

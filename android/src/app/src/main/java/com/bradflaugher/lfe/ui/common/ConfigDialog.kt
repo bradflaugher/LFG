@@ -89,6 +89,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import com.bradflaugher.lfe.R
 import com.bradflaugher.lfe.data.BooleanSwitchConfig
 import com.bradflaugher.lfe.data.BottomSheetSelectorConfig
@@ -148,7 +149,13 @@ fun ConfigDialog(
   val savedSystemPrompt = remember { curSystemPrompt }
   var systemPrompt by remember { mutableStateOf(curSystemPrompt) }
 
-  Dialog(onDismissRequest = onDismissed) {
+  Dialog(
+    onDismissRequest = onDismissed,
+    properties = DialogProperties(
+      usePlatformDefaultWidth = true,
+      decorFitsSystemWindows = false,
+    ),
+  ) {
     val focusManager = LocalFocusManager.current
     Card(
       modifier =
@@ -319,27 +326,27 @@ fun ConfigDialog(
           )
         }
 
-        // Button row.
-        Row(
-          horizontalArrangement =
-            if (showSystemPromptEditorTab && selectedTabIndex == 1) {
-              Arrangement.SpaceBetween
-            } else {
-              Arrangement.End
-            },
-          verticalAlignment = Alignment.CenterVertically,
-          modifier = Modifier.padding(top = 8.dp),
+        // Button rows.
+        Column(
+          modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
+          verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-          // Restore default button to restore system prompt.
+          // Restore default button row to restore system prompt.
           if (showSystemPromptEditorTab && selectedTabIndex == 1) {
-            OutlinedButton(
-              onClick = { systemPrompt = defaultSystemPrompt },
-              contentPadding = SMALL_BUTTON_CONTENT_PADDING,
+            Row(
+              modifier = Modifier.fillMaxWidth(),
+              horizontalArrangement = Arrangement.Start
             ) {
-              Text(stringResource(R.string.restore_default))
+              OutlinedButton(
+                onClick = { systemPrompt = defaultSystemPrompt },
+                contentPadding = SMALL_BUTTON_CONTENT_PADDING,
+              ) {
+                Text(stringResource(R.string.restore_default))
+              }
             }
           }
 
+          // Action buttons row (Cancel and OK).
           Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.End,
@@ -348,6 +355,7 @@ fun ConfigDialog(
             // Cancel button.
             if (showCancel) {
               TextButton(onClick = { onDismissed() }) { Text("Cancel") }
+              Spacer(modifier = Modifier.width(8.dp))
             }
 
             // Ok button

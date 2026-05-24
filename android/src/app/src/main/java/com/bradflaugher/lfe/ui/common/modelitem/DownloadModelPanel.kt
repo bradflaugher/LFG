@@ -38,6 +38,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -168,6 +169,22 @@ fun DownloadModelPanel(
           horizontalArrangement = Arrangement.End,
           verticalAlignment = Alignment.CenterVertically
         ) {
+          if (isConfigured) {
+            TextButton(
+              onClick = {
+                dataStoreRepository.deleteSecret("CLOUD_API_ENDPOINT")
+                dataStoreRepository.deleteSecret("CLOUD_API_KEY")
+                dataStoreRepository.deleteSecret("CLOUD_MODEL_ID")
+                endpoint = ""
+                apiKey = ""
+              },
+              contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
+            ) {
+              Text("Clear Configuration")
+            }
+            Spacer(modifier = Modifier.width(8.dp))
+          }
+
           OutlinedButton(
             onClick = { showCloudProviderDialog = true },
             contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)

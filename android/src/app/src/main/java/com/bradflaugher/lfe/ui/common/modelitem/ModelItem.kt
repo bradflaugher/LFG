@@ -146,7 +146,7 @@ fun ModelItem(
               modelManagerViewModel = modelManagerViewModel,
               showBenchmarkButton = false,
               showDeleteButton =
-                showDeleteButton && model.localFileRelativeDirPathOverride.isEmpty(),
+                showDeleteButton && model.localFileRelativeDirPathOverride.isEmpty() && model.name != "Cloud-Model-OpenAI-Compatible",
               onBenchmarkClicked = { onBenchmarkClicked(model) },
               modifier = Modifier.offset(y = (-12).dp),
             )

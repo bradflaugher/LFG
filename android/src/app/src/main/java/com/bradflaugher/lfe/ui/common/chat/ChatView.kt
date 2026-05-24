@@ -251,7 +251,7 @@ fun ChatView(
                 viewModel.currentSessionId = UUID.randomUUID().toString()
                 scope.launch { drawerState.close() }
               },
-              onDismissed = { scope.launch { drawerState.close() } },
+              onCloseClicked = { scope.launch { drawerState.close() } },
             )
           }
         }

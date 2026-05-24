@@ -56,6 +56,9 @@ import android.widget.Toast
 import android.util.Log
 import androidx.compose.material.icons.outlined.FileDownload
 import androidx.compose.ui.platform.LocalContext
+import java.text.SimpleDateFormat
+import java.util.Locale
+import java.util.Date
 
 @Composable
 fun ChatHistorySideSheetContent(

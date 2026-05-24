@@ -355,8 +355,6 @@ fun DownloadAndTryButton(
               model.localFileRelativeDirPathOverride.isEmpty()
             ) {
               downloadButtonBackgroundColor
-            } else if (task != null) {
-              getTaskBgGradientColors(task = task)[1]
             } else {
               MaterialTheme.colorScheme.primary
             },
@@ -460,12 +458,7 @@ fun DownloadAndTryButton(
           modifier = Modifier.padding(start = 12.dp).width(if (compact) 32.dp else 44.dp),
         )
         if (!compact) {
-          val color =
-            if (task != null) {
-              getTaskBgGradientColors(task = task)[1]
-            } else {
-              MaterialTheme.colorScheme.primary
-            }
+          val color = MaterialTheme.colorScheme.primary
           LinearProgressIndicator(
             modifier = Modifier.weight(1f).padding(horizontal = 4.dp),
             progress = { animatedProgress.value },

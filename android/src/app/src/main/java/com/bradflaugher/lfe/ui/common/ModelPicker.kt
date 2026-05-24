@@ -107,15 +107,17 @@ fun ModelPicker(
                 model = model,
                 downloadStatus = modelManagerUiState.modelDownloadStatus[model.name],
               )
-              Text(
-                if (model.localFileRelativeDirPathOverride.isEmpty()) {
-                  model.sizeInBytes.humanReadableSize()
-                } else {
-                  "{ext_file_dir}/${model.localFileRelativeDirPathOverride}"
-                },
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                style = labelSmallNarrow.copy(lineHeight = 10.sp),
-              )
+              if (model.name != "Cloud-Model-OpenAI-Compatible") {
+                Text(
+                  if (model.localFileRelativeDirPathOverride.isEmpty()) {
+                    model.sizeInBytes.humanReadableSize()
+                  } else {
+                    "{ext_file_dir}/${model.localFileRelativeDirPathOverride}"
+                  },
+                  color = MaterialTheme.colorScheme.onSurfaceVariant,
+                  style = labelSmallNarrow.copy(lineHeight = 10.sp),
+                )
+              }
             }
           }
         }

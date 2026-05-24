@@ -20,6 +20,7 @@ import androidx.compose.material.icons.automirrored.outlined.HelpOutline
 import androidx.compose.material.icons.filled.DownloadForOffline
 import androidx.compose.material.icons.rounded.Downloading
 import androidx.compose.material.icons.rounded.Error
+import androidx.compose.material.icons.rounded.Cloud
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -49,20 +50,27 @@ fun StatusIcon(
     horizontalArrangement = Arrangement.Center,
     modifier = modifier,
   ) {
-    val color =
-      if (task != null) {
-        getTaskBgGradientColors(task = task)[1]
-      } else {
-        MaterialTheme.colorScheme.primary
-      }
-    if (model.localFileRelativeDirPathOverride.isNotEmpty()) {
+    if (model.name == "Cloud-Model-OpenAI-Compatible") {
+      Icon(
+        Icons.Rounded.Cloud,
+        tint = Color(0xFF2196F3),
+        contentDescription = "Cloud Model",
+        modifier = Modifier.size(MODEL_INFO_ICON_SIZE),
+      )
+    } else if (model.localFileRelativeDirPathOverride.isNotEmpty()) {
       Icon(
         Icons.Filled.DownloadForOffline,
-        tint = color,
+        tint = Color(0xFF4CAF50),
         contentDescription = stringResource(R.string.cd_downloaded_icon),
         modifier = Modifier.size(MODEL_INFO_ICON_SIZE),
       )
     } else {
+      val color =
+        if (task != null) {
+          getTaskBgGradientColors(task = task)[1]
+        } else {
+          MaterialTheme.colorScheme.primary
+        }
       when (downloadStatus?.status) {
         ModelDownloadStatusType.NOT_DOWNLOADED ->
           Icon(
@@ -75,7 +83,7 @@ fun StatusIcon(
         ModelDownloadStatusType.SUCCEEDED -> {
           Icon(
             Icons.Filled.DownloadForOffline,
-            tint = color,
+            tint = Color(0xFF4CAF50),
             contentDescription = stringResource(R.string.cd_downloaded_icon),
             modifier = Modifier.size(MODEL_INFO_ICON_SIZE),
           )

@@ -211,7 +211,11 @@ fun ModelStatusDetails(
     }
     // Status label
     else {
-      var sizeLabel = model.totalBytes.humanReadableSize()
+      var sizeLabel = if (model.name == "Cloud-Model-OpenAI-Compatible") {
+        ""
+      } else {
+        model.totalBytes.humanReadableSize()
+      }
       if (model.localFileRelativeDirPathOverride.isNotEmpty()) {
         sizeLabel = "{ext_files_dir}/${model.localFileRelativeDirPathOverride}"
       }
@@ -252,18 +256,20 @@ fun ModelStatusDetails(
         horizontalAlignment = if (isExpanded) Alignment.CenterHorizontally else Alignment.Start,
       ) {
         for ((index, line) in sizeLabel.split("\n").withIndex()) {
-          Text(
-            line,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-            maxLines = 1,
-            style =
-              MaterialTheme.typography.bodyMedium.copy(
-                // This stops numbers from "jumping around" when being updated.
-                fontFeatureSettings = "tnum",
-              ),
-            overflow = TextOverflow.Visible,
-            modifier = Modifier.offset(y = if (index == 0) 0.dp else (-1).dp),
-          )
+          if (line.isNotEmpty()) {
+            Text(
+              line,
+              color = MaterialTheme.colorScheme.onSurfaceVariant,
+              maxLines = 1,
+              style =
+                MaterialTheme.typography.bodyMedium.copy(
+                  // This stops numbers from "jumping around" when being updated.
+                  fontFeatureSettings = "tnum",
+                ),
+              overflow = TextOverflow.Visible,
+              modifier = Modifier.offset(y = if (index == 0) 0.dp else (-1).dp),
+            )
+          }
         }
       }
     }

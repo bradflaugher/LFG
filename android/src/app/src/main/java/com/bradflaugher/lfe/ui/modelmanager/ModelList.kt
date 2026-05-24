@@ -162,22 +162,6 @@ fun ModelList(
         Spacer(modifier = Modifier.height(8.dp))
       }
 
-      // Title for recommended models.
-      if (!models.isEmpty()) {
-        item(key = "recommendedModelsTitle") {
-          Text(
-            stringResource(R.string.model_list_recommended_models_title),
-            color = MaterialTheme.colorScheme.onSurface,
-            style = MaterialTheme.typography.labelLarge,
-            modifier =
-              Modifier.padding(horizontal = 16.dp, vertical = 8.dp).graphicsLayer {
-                alpha = modelListProgress
-                translationY = (CONTENT_ANIMATION_OFFSET * (1 - modelListProgress)).toPx()
-              },
-          )
-        }
-      }
-
       // List of models within a task.
       items(items = models) { model ->
         if (model.parentModelName.isNullOrEmpty()) {

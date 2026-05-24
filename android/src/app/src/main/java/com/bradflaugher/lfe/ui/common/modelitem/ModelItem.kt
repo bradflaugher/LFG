@@ -144,7 +144,7 @@ fun ModelItem(
             ModelItemActionMenu(
               model = model,
               modelManagerViewModel = modelManagerViewModel,
-              showBenchmarkButton = showBenchmarkButton,
+              showBenchmarkButton = false,
               showDeleteButton =
                 showDeleteButton && model.localFileRelativeDirPathOverride.isEmpty(),
               onBenchmarkClicked = { onBenchmarkClicked(model) },
@@ -215,7 +215,7 @@ fun ModelItem(
 
               val isDownloaded = variantDownloadStatus?.status == ModelDownloadStatusType.SUCCEEDED
 
-              val showColumnLayout = (!isNotDownloaded && !isDownloaded) || isExpanded
+              val showColumnLayout = true
 
               // Combine the state variables that affect the layout into a single object
               // to be used as the targetState for AnimatedContent below.
@@ -294,6 +294,14 @@ fun ModelItem(
                 if (targetShowColumnLayout) {
                   Column(modifier = containerModifier) {
                     VariantHeader(modifier = Modifier.fillMaxWidth())
+                    if (targetIsExpanded && variantModel.info.isNotEmpty()) {
+                      MarkdownText(
+                        variantModel.info,
+                        smallFontSize = true,
+                        textColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.padding(top = 8.dp),
+                      )
+                    }
                     VariantDownloadPanel(
                       modifier =
                         Modifier.fillMaxWidth()
@@ -378,7 +386,7 @@ fun ModelVariantHeader(
       ModelItemActionMenu(
         model = variantModel,
         modelManagerViewModel = modelManagerViewModel,
-        showBenchmarkButton = showBenchmarkButton,
+        showBenchmarkButton = false,
         showDeleteButton =
           showDeleteButton && variantModel.localFileRelativeDirPathOverride.isEmpty(),
         onBenchmarkClicked = { onBenchmarkClicked(variantModel) },

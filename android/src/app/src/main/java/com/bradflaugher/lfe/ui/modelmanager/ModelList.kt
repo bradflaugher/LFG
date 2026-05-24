@@ -157,60 +157,7 @@ fun ModelList(
       // — both were Gallery-app leftovers and are intentionally gone. We keep just
       // the model-count caption + any task-level reference links the task carries.
       item(key = "taskHeader") {
-        Spacer(modifier = Modifier.height(32.dp))
-        Column(
-          verticalArrangement = Arrangement.spacedBy(8.dp),
-          horizontalAlignment = Alignment.CenterHorizontally,
-          modifier = Modifier.fillMaxWidth().padding(bottom = 24.dp),
-        ) {
-          // Urls.
-          if (task.docUrl.isNotEmpty() || task.sourceCodeUrl.isNotEmpty()) {
-            Box(
-              modifier =
-                Modifier.padding(vertical = 8.dp).graphicsLayer {
-                  alpha = descriptionProgress
-                  translationY = (CONTENT_ANIMATION_OFFSET * (1 - descriptionProgress)).toPx()
-                },
-            ) {
-              Column(
-                horizontalAlignment = Alignment.Start,
-                verticalArrangement = Arrangement.spacedBy(4.dp),
-              ) {
-                if (task.docUrl.isNotEmpty()) {
-                  ClickableLink(
-                    url = task.docUrl,
-                    linkText = "API Documentation",
-                    icon = Icons.Outlined.Description,
-                  )
-                }
-                if (task.sourceCodeUrl.isNotEmpty()) {
-                  ClickableLink(
-                    url = task.sourceCodeUrl,
-                    linkText = "Example code",
-                    icon = Icons.Outlined.Code,
-                  )
-                }
-              }
-            }
-          }
-
-          // Models available.
-          val resources = LocalContext.current.resources
-          Text(
-            resources.getQuantityString(
-              R.plurals.model_list_number_of_models_available,
-              models.size + importedModels.size,
-              models.size + importedModels.size,
-            ),
-            color = MaterialTheme.colorScheme.onSurface,
-            style = MaterialTheme.typography.bodyMedium,
-            modifier =
-              Modifier.alpha(0.6f).graphicsLayer {
-                alpha = descriptionProgress * 0.6f
-                translationY = (CONTENT_ANIMATION_OFFSET * (1 - descriptionProgress)).toPx()
-              },
-          )
-        }
+        Spacer(modifier = Modifier.height(8.dp))
       }
 
       // Title for recommended models.

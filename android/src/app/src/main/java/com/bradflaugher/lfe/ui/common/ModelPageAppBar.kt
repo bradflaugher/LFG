@@ -36,6 +36,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.bradflaugher.lfe.R
@@ -75,6 +77,8 @@ fun ModelPageAppBar(
   var showConfigDialog by remember { mutableStateOf(false) }
   val modelManagerUiState by modelManagerViewModel.uiState.collectAsState()
   val context = LocalContext.current
+  val keyboardController = LocalSoftwareKeyboardController.current
+  val focusManager = LocalFocusManager.current
   val curDownloadStatus = modelManagerUiState.modelDownloadStatus[model.name]
   val modelInitializationStatus = modelManagerUiState.modelInitializationStatus[model.name]
   val isModelInitializing =
@@ -132,7 +136,11 @@ fun ModelPageAppBar(
         if (downloadSucceeded) {
           val enableWebLoginButton = !isModelInitializing && !inProgress
           IconButton(
-            onClick = onWebLoginClicked,
+            onClick = {
+              keyboardController?.hide()
+              focusManager.clearFocus()
+              onWebLoginClicked()
+            },
             enabled = enableWebLoginButton,
             modifier = Modifier.alpha(if (!enableWebLoginButton) 0.5f else 1f),
           ) {
@@ -147,7 +155,11 @@ fun ModelPageAppBar(
         if (showConfigButton) {
           val enableConfigButton = !isModelInitializing && !inProgress && isModelInitialized
           IconButton(
-            onClick = { showConfigDialog = true },
+            onClick = {
+              keyboardController?.hide()
+              focusManager.clearFocus()
+              showConfigDialog = true
+            },
             enabled = enableConfigButton,
             modifier = Modifier.alpha(if (!enableConfigButton) 0.5f else 1f),
           ) {

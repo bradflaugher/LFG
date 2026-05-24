@@ -153,7 +153,6 @@ fun ConfigDialog(
     onDismissRequest = onDismissed,
     properties = DialogProperties(
       usePlatformDefaultWidth = true,
-      decorFitsSystemWindows = false,
     ),
   ) {
     val focusManager = LocalFocusManager.current
@@ -165,8 +164,7 @@ fun ConfigDialog(
             indication = null, // Disable the ripple effect
           ) {
             focusManager.clearFocus()
-          }
-          .imePadding(),
+          },
       shape = RoundedCornerShape(16.dp),
     ) {
       Column(

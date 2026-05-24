@@ -69,8 +69,8 @@ fun WebLoginDialog(
   onDismiss: () -> Unit
 ) {
   val context = LocalContext.current
-  var urlInput by remember { mutableStateOf("https://www.nytimes.com") }
-  var currentUrl by remember { mutableStateOf("https://www.nytimes.com") }
+  var urlInput by remember { mutableStateOf("https://www.google.com") }
+  var currentUrl by remember { mutableStateOf("https://www.google.com") }
   var webViewRef by remember { mutableStateOf<WebView?>(null) }
 
   androidx.compose.ui.window.Dialog(
@@ -100,7 +100,7 @@ fun WebLoginDialog(
           verticalAlignment = Alignment.CenterVertically
         ) {
           Text(
-            text = "Web Session Login",
+            text = "Web Browser",
             style = MaterialTheme.typography.titleLarge
           )
           Row(
@@ -111,7 +111,7 @@ fun WebLoginDialog(
               onClick = {
                 CookieManager.getInstance().removeAllCookies { success ->
                   CookieManager.getInstance().flush()
-                  webViewRef?.loadUrl("https://www.nytimes.com")
+                  webViewRef?.reload()
                   Toast.makeText(context, "Cookies cleared successfully", Toast.LENGTH_SHORT).show()
                 }
               },
@@ -128,7 +128,7 @@ fun WebLoginDialog(
         }
 
         Text(
-          text = "Sign in to any subscription or paywalled website below. The agent will share your browser cookies to fetch full articles.",
+          text = "Browse and sign in to any website. The agent will share your browser session and cookies to retrieve full web content.",
           style = MaterialTheme.typography.bodySmall,
           color = MaterialTheme.colorScheme.onSurfaceVariant
         )
@@ -157,35 +157,7 @@ fun WebLoginDialog(
           }
         }
 
-        // Quick Shortcuts Row
-        Row(
-          modifier = Modifier.fillMaxWidth(),
-          horizontalArrangement = Arrangement.spacedBy(4.dp)
-        ) {
-          val sites = listOf(
-            "NYT" to "https://www.nytimes.com",
-            "WSJ" to "https://www.wsj.com",
-            "Bloomberg" to "https://www.bloomberg.com",
-            "FT" to "https://www.ft.com"
-          )
-          for ((name, targetUrl) in sites) {
-            Button(
-              onClick = {
-                urlInput = targetUrl
-                currentUrl = targetUrl
-                webViewRef?.loadUrl(targetUrl)
-              },
-              contentPadding = PaddingValues(horizontal = 8.dp, vertical = 2.dp),
-              modifier = Modifier.height(32.dp),
-              colors = ButtonDefaults.buttonColors(
-                containerColor = MaterialTheme.colorScheme.secondaryContainer,
-                contentColor = MaterialTheme.colorScheme.onSecondaryContainer
-              )
-            ) {
-              Text(name, style = MaterialTheme.typography.labelSmall)
-            }
-          }
-        }
+
 
         // WebView rendering
         Box(

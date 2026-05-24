@@ -42,9 +42,49 @@
     }
   }
 
+  function parseJson(str) {
+    if (!str) return {};
+    str = str.trim();
+    if (!str) return {};
+    try {
+      return JSON.parse(str);
+    } catch (_) {}
+    if (str.startsWith('"') && str.endsWith('"') && str.length > 1) {
+      try {
+        return JSON.parse(JSON.parse(str));
+      } catch (_) {}
+    }
+    if (str.startsWith("'") && str.endsWith("'") && str.length > 1) {
+      try {
+        return JSON.parse(str.slice(1, -1));
+      } catch (_) {}
+    }
+    try {
+      let cleaned = str.replace(/'/g, '"');
+      cleaned = cleaned.replace(/([{,]\s*)([a-zA-Z0-9_$]+)\s*:/g, '$1"$2":');
+      return JSON.parse(cleaned);
+    } catch (_) {}
+    const params = {};
+    const actionMatch = str.match(/(?:action)\s*[:=]\s*["']?([a-zA-Z0-9_$]+)["']?/i);
+    if (actionMatch) {
+      params.action = actionMatch[1];
+    } else if (/^[a-zA-Z0-9_$]+$/.test(str)) {
+      params.action = str;
+    }
+    const personaMatch = str.match(/(?:persona)\s*[:=]\s*["']?([^"'}]+)["']?/i);
+    if (personaMatch) {
+      params.persona = personaMatch[1].trim();
+    }
+    const urlMatch = str.match(/(?:url)\s*[:=]\s*["']?([^"'}]+)["']?/i);
+    if (urlMatch) {
+      params.url = urlMatch[1].trim();
+    }
+    return params;
+  }
+
   window['ai_edge_gallery_get_result'] = async (dataStr) => {
     try {
-      const params = JSON.parse(dataStr || '{}');
+      const params = parseJson(dataStr);
       const action = (params.action || '').toLowerCase();
       const state = readState();
 

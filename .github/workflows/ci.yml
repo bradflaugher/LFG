@@ -66,6 +66,8 @@ jobs:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup-android
       - name: Unit tests (with retry on transient Maven errors)
+        env:
+          HYPER_API_KEY: ${{ secrets.HYPER_API_KEY }}
         run: |
           for attempt in 1 2; do
             echo "::group::Unit tests (attempt $attempt)"

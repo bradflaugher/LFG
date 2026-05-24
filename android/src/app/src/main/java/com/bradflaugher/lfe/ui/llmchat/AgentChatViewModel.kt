@@ -293,7 +293,28 @@ open class AgentChatViewModelBase(
         val enableThinking =
           allowThinking &&
             model.getBooleanConfigValue(key = ConfigKeys.ENABLE_THINKING, defaultValue = false)
-        val extraContext = if (enableThinking) mapOf("enable_thinking" to "true") else null
+        val extraContext = mutableMapOf<String, String>()
+        if (enableThinking) {
+          extraContext["enable_thinking"] = "true"
+        }
+        if (model.name == "Cloud-Model-OpenAI-Compatible") {
+          // Serialize history
+          val messagesSnapshot = (uiState.value.messagesByModel[model.name] ?: listOf()).toList()
+          val historyList = messagesSnapshot.filter { it is ChatMessageText || it is ChatMessageThinking }.map { msg ->
+            val role = when (msg.side) {
+              ChatSide.USER -> "user"
+              ChatSide.AGENT -> "assistant"
+              ChatSide.SYSTEM -> "system"
+            }
+            val content = when (msg) {
+              is ChatMessageText -> msg.content
+              is ChatMessageThinking -> msg.content
+              else -> ""
+            }
+            "{\"role\":\"$role\",\"content\":${org.json.JSONObject.quote(content)}}"
+          }
+          extraContext["history"] = "[" + historyList.joinToString(",") + "]"
+        }
 
         model.runtimeHelper.runInference(
           model = model,

@@ -138,7 +138,7 @@ fun ModelPageAppBar(
           ) {
             Icon(
               imageVector = Icons.Rounded.Language,
-              contentDescription = "Web Session Login",
+              contentDescription = "Web Browser",
               tint = MaterialTheme.colorScheme.onSurface,
               modifier = Modifier.size(20.dp),
             )

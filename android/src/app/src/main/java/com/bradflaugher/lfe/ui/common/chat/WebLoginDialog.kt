@@ -41,6 +41,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.compose.ui.platform.LocalContext
+import android.widget.Toast
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.webkit.CookieManager
@@ -66,6 +68,7 @@ object WebLoginHelper {
 fun WebLoginDialog(
   onDismiss: () -> Unit
 ) {
+  val context = LocalContext.current
   var urlInput by remember { mutableStateOf("https://www.nytimes.com") }
   var currentUrl by remember { mutableStateOf("https://www.nytimes.com") }
   var webViewRef by remember { mutableStateOf<WebView?>(null) }
@@ -90,7 +93,7 @@ fun WebLoginDialog(
           .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
       ) {
-        // Top row: Title and Done button
+        // Top row: Title, Clear Cookies, and Done buttons
         Row(
           modifier = Modifier.fillMaxWidth(),
           horizontalArrangement = Arrangement.SpaceBetween,
@@ -100,8 +103,27 @@ fun WebLoginDialog(
             text = "Web Session Login",
             style = MaterialTheme.typography.titleLarge
           )
-          TextButton(onClick = onDismiss) {
-            Text("Done")
+          Row(
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalAlignment = Alignment.CenterVertically
+          ) {
+            TextButton(
+              onClick = {
+                CookieManager.getInstance().removeAllCookies { success ->
+                  CookieManager.getInstance().flush()
+                  webViewRef?.loadUrl("https://www.nytimes.com")
+                  Toast.makeText(context, "Cookies cleared successfully", Toast.LENGTH_SHORT).show()
+                }
+              },
+              colors = androidx.compose.material3.ButtonDefaults.textButtonColors(
+                contentColor = MaterialTheme.colorScheme.error
+              )
+            ) {
+              Text("Clear Cookies")
+            }
+            TextButton(onClick = onDismiss) {
+              Text("Done")
+            }
           }
         }
 

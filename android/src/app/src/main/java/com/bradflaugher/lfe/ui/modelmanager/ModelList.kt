@@ -82,7 +82,6 @@ fun ModelList(
   onBenchmarkClicked: (Model) -> Unit,
   modifier: Modifier = Modifier,
   onImportLocalModelClicked: (() -> Unit)? = null,
-  onConfigureCloudProviderClicked: (() -> Unit)? = null,
 ) {
   // This is just to update "models" list when task.updateTrigger is updated so that the UI can
   // be properly updated.
@@ -165,59 +164,10 @@ fun ModelList(
         Spacer(modifier = Modifier.height(8.dp))
       }
 
-      item(key = "modelEducationInfo") {
-        androidx.compose.material3.Card(
-          colors = androidx.compose.material3.CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f)
-          ),
-          modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 4.dp)
-            .graphicsLayer {
-              alpha = modelListProgress
-              translationY = (CONTENT_ANIMATION_OFFSET * (1 - modelListProgress)).toPx()
-            }
-        ) {
-          Column(
-            modifier = Modifier.padding(12.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
-          ) {
-            Text(
-              text = "Understanding the Models",
-              style = MaterialTheme.typography.titleSmall,
-              fontWeight = FontWeight.Bold,
-              color = MaterialTheme.colorScheme.primary
-            )
-            Text(
-              text = "• E2B vs E4B: Gemma 4 Edge model sizes. E2B (2 Billion parameters) is lighter and faster, running on 8GB RAM devices. E4B (4 Billion parameters) offers stronger conversational accuracy and reasoning but requires 12GB RAM.",
-              style = MaterialTheme.typography.bodySmall,
-              color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-            Text(
-              text = "• \"-it\" (Instruction Tuned): Tuned specifically to follow chat prompts and instructions naturally, rather than just completing raw text.",
-              style = MaterialTheme.typography.bodySmall,
-              color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-            Row(
-              modifier = Modifier.fillMaxWidth(),
-              horizontalArrangement = Arrangement.Start,
-              verticalAlignment = Alignment.CenterVertically
-            ) {
-              ClickableLink(
-                url = "https://huggingface.co/google/gemma-2-2b-it",
-                linkText = "Learn more on Hugging Face",
-                textAlign = TextAlign.Start,
-                modifier = Modifier.padding(top = 4.dp)
-              )
-            }
-          }
-        }
-      }
-
       // List of models within a task.
       items(items = models) { model ->
         if (model.parentModelName.isNullOrEmpty()) {
-          val expanded = modelItemExpandedStates.getOrDefault(model.name, null)
+          val expanded = modelItemExpandedStates.get(model.name) ?: if (model.name == "Cloud-Model-OpenAI-Compatible") true else null
           ModelItem(
             model = model,
             modelVariants = modelVariants.getOrDefault(model.name, listOf()),
@@ -275,36 +225,25 @@ fun ModelList(
       }
 
       // Actions: lives at the bottom of the list so it doesn't compete with model selection above.
-      if (onConfigureCloudProviderClicked != null || onImportLocalModelClicked != null) {
+      if (onImportLocalModelClicked != null) {
         item(key = "modelActions") {
           Column(
             modifier = Modifier.fillMaxWidth().padding(top = 24.dp, bottom = 8.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(12.dp)
           ) {
-            if (onConfigureCloudProviderClicked != null) {
-              OutlinedButton(onClick = onConfigureCloudProviderClicked) {
-                Icon(
-                  Icons.Rounded.Cloud,
-                  contentDescription = null,
-                  modifier = Modifier.padding(end = 8.dp),
-                )
-                Text("Configure cloud provider")
-              }
-            }
-            if (onImportLocalModelClicked != null) {
-              OutlinedButton(onClick = onImportLocalModelClicked) {
-                Icon(
-                  Icons.AutoMirrored.Outlined.NoteAdd,
-                  contentDescription = null,
-                  modifier = Modifier.padding(end = 8.dp),
-                )
-                Text("Import local model file")
-              }
+            OutlinedButton(onClick = onImportLocalModelClicked) {
+              Icon(
+                Icons.AutoMirrored.Outlined.NoteAdd,
+                contentDescription = null,
+                modifier = Modifier.padding(end = 8.dp),
+              )
+              Text("Import local model file")
             }
           }
         }
       }
+
     }
 
     // Gradient overlay at the bottom.

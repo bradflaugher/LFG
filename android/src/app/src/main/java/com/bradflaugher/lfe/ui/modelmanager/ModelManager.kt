@@ -112,7 +112,6 @@ fun ModelManager(
       onModelClicked = onModelClicked,
       onBenchmarkClicked = onBenchmarkClicked,
       onImportLocalModelClicked = launchPicker,
-      onConfigureCloudProviderClicked = { showCloudProviderDialog = true },
       modifier = Modifier.fillMaxSize(),
     )
   }

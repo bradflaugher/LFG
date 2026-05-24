@@ -38,6 +38,7 @@ data class CustomTaskData(
 data class CustomTaskDataForBuiltinTask(
   val modelManagerViewModel: ModelManagerViewModel,
   val onNavUp: () -> Unit,
+  val onSettingsClicked: () -> Unit = {},
   // The initial query to be sent to the model when the screen is first loaded.
   val initialQuery: String? = null,
 )

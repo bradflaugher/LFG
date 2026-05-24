@@ -32,9 +32,12 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.NoteAdd
 import androidx.compose.material.icons.outlined.Code
 import androidx.compose.material.icons.outlined.Description
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -86,6 +89,7 @@ fun ModelList(
   onModelClicked: (Model) -> Unit,
   onBenchmarkClicked: (Model) -> Unit,
   modifier: Modifier = Modifier,
+  onImportLocalModelClicked: (() -> Unit)? = null,
 ) {
   // This is just to update "models" list when task.updateTrigger is updated so that the UI can
   // be properly updated.
@@ -374,6 +378,26 @@ fun ModelList(
                 translationY = (CONTENT_ANIMATION_OFFSET * (1 - modelListProgress)).toPx()
               },
           )
+        }
+      }
+
+      // Import-from-local-file action: lives at the bottom of the list so it doesn't compete with
+      // model selection above. Same role as Gallery's "Import model from local file" sheet.
+      if (onImportLocalModelClicked != null) {
+        item(key = "importLocalModelButton") {
+          Box(
+            modifier = Modifier.fillMaxWidth().padding(top = 24.dp, bottom = 8.dp),
+            contentAlignment = Alignment.Center,
+          ) {
+            OutlinedButton(onClick = onImportLocalModelClicked) {
+              Icon(
+                Icons.AutoMirrored.Outlined.NoteAdd,
+                contentDescription = null,
+                modifier = Modifier.padding(end = 8.dp),
+              )
+              Text("Import local model file")
+            }
+          }
         }
       }
     }

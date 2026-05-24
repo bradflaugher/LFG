@@ -73,6 +73,10 @@ val SOC =
 
 // URLs for Agent Skills.
 object AgentSkillsURLs {
-  const val REPOSITORY = "https://github.com/google-ai-edge/gallery/tree/main/skills"
-  const val DISCUSSIONS = "https://github.com/google-ai-edge/gallery/discussions/categories/skills"
+  // How-to guide for writing your own skills (text / JS / native intents).
+  const val HOW_TO_WRITE_SKILLS = "https://github.com/bradflaugher/LFE/blob/main/docs/SKILLS.md"
+  // Folder of bundled, working skill examples in the repo.
+  const val REPOSITORY = "https://github.com/bradflaugher/LFE/tree/main/android/src/app/src/main/assets/skills"
+  // Aliased so older call sites that opened a community discussions URL now land on the docs.
+  const val DISCUSSIONS = HOW_TO_WRITE_SKILLS
 }

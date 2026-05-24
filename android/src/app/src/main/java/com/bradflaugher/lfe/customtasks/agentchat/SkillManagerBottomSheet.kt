@@ -823,7 +823,7 @@ fun ViewCommunitySkillsBottomSheet(onDismiss: () -> Unit) {
 
       GalleryWebView(
         modifier = Modifier.fillMaxWidth().weight(1f),
-        initialUrl = AgentSkillsURLs.DISCUSSIONS,
+        initialUrl = AgentSkillsURLs.HOW_TO_WRITE_SKILLS,
         preventParentScrolling = true,
       )
     }

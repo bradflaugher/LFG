@@ -110,6 +110,7 @@ fun ChatView(
   onRunAgainClicked: (Model, ChatMessage) -> Unit,
   onBenchmarkClicked: (Model, ChatMessage, Int, Int) -> Unit,
   navigateUp: () -> Unit,
+  onSettingsClicked: () -> Unit = {},
   modifier: Modifier = Modifier,
   skillCount: Int = 0,
   onResetSessionClicked: (
@@ -194,17 +195,10 @@ fun ChatView(
     sendMessageTrigger?.let { trigger -> onSendMessage(trigger.model, trigger.messages) }
   }
 
-  // Handle system's edge swipe.
-  BackHandler {
-    val modelInitializationStatus =
-      modelManagerUiState.modelInitializationStatus[selectedModel.name]
-    val isModelInitializing =
-      modelInitializationStatus?.status == ModelInitializationStatusType.INITIALIZING
-    if (drawerState.isOpen) {
-      scope.launch { drawerState.close() }
-    } else if (!isModelInitializing && !uiState.inProgress) {
-      handleNavigateUp()
-    }
+  // Handle system's edge swipe: close drawer if open, otherwise let the system handle back
+  // (chat is the home screen, so the system default is to exit the app).
+  BackHandler(enabled = drawerState.isOpen) {
+    scope.launch { drawerState.close() }
   }
 
   CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
@@ -272,6 +266,8 @@ fun ChatView(
               modelPreparing = uiState.preparing,
               shouldShowHistoryButton = true,
               onConfigChanged = { _, _ -> },
+              onSettingsClicked = onSettingsClicked,
+              hideBackButton = true,
               onBackClicked = { handleNavigateUp() },
               onModelSelected = { prevModel, curModel ->
                 if (prevModel.name != curModel.name) {

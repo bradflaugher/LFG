@@ -24,6 +24,8 @@ permissions:
 jobs:
   release:
     name: Publish APK
+    permissions:
+      contents: write
     # Only run if Instrumented succeeded; dispatch always runs.
     if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
@@ -99,6 +101,7 @@ jobs:
 
       - name: Publish GitHub Release
         uses: softprops/action-gh-release@v3
+        continue-on-error: true
         with:
           tag_name: ${{ steps.ident.outputs.tag }}
           name: ${{ steps.ident.outputs.tag }}

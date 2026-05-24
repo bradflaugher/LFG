@@ -49,6 +49,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.bradflaugher.lfe.R
+import android.content.ContentValues
+import android.os.Environment
+import android.provider.MediaStore
+import android.widget.Toast
+import android.util.Log
+import androidx.compose.material.icons.outlined.FileDownload
+import androidx.compose.ui.platform.LocalContext
 
 @Composable
 fun ChatHistorySideSheetContent(
@@ -57,10 +64,12 @@ fun ChatHistorySideSheetContent(
   onHistoryItemDeleted: (String) -> Unit,
   onHistoryItemsDeleteAll: () -> Unit,
   onNewChatClicked: () -> Unit,
-  onDismissed: () -> Unit,
+  onCloseClicked: () -> Unit,
+  modifier: Modifier = Modifier,
 ) {
-  var showConfirmDeleteDialog by remember { mutableStateOf(false) }
+  val context = LocalContext.current
   var itemToDelete by remember { mutableStateOf<String?>(null) }
+  var showConfirmDeleteDialog by remember { mutableStateOf(false) }
 
   Column(modifier = Modifier.fillMaxSize().padding(24.dp)) {
     // Top Row: Title and Close button
@@ -70,7 +79,7 @@ fun ChatHistorySideSheetContent(
       verticalAlignment = Alignment.CenterVertically,
     ) {
       Text(stringResource(R.string.chat_history_title), style = MaterialTheme.typography.titleLarge)
-      IconButton(onClick = onDismissed) {
+      IconButton(onClick = onCloseClicked) {
         Icon(Icons.Rounded.Close, contentDescription = stringResource(R.string.cd_close_icon))
       }
     }
@@ -112,27 +121,46 @@ fun ChatHistorySideSheetContent(
     }
 
     // History list
-    LazyColumn(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+    LazyColumn(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(4.dp)) {
       items(history) { session ->
         Row(
           modifier =
             Modifier.fillMaxWidth()
-              .clip(RoundedCornerShape(12.dp))
-              .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f))
+              .clip(RoundedCornerShape(8.dp))
               .clickable { onHistoryItemClicked(session.sessionId) }
-              .padding(vertical = 12.dp, horizontal = 16.dp),
+              .padding(8.dp),
           verticalAlignment = Alignment.CenterVertically,
-          horizontalArrangement = Arrangement.spacedBy(8.dp),
         ) {
           Column(modifier = Modifier.weight(1f)) {
             Text(
               session.title,
+              style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.SemiBold),
+              maxLines = 1,
+              overflow = TextOverflow.Ellipsis,
+            )
+            val formatter = SimpleDateFormat("MMM dd, yyyy", Locale.getDefault())
+            val dateStr = formatter.format(Date(session.timestampMs))
+            Text(
+              "$dateStr • ${session.originalModel}",
               style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Normal),
               maxLines = 3,
               overflow = TextOverflow.Ellipsis,
             )
           }
-          IconButton(onClick = { itemToDelete = session.sessionId }) {
+          IconButton(
+            onClick = { exportChatSession(context, session) },
+            modifier = Modifier.size(36.dp)
+          ) {
+            Icon(
+              Icons.Outlined.FileDownload,
+              contentDescription = "Export chat history",
+              tint = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+          }
+          IconButton(
+            onClick = { itemToDelete = session.sessionId },
+            modifier = Modifier.size(36.dp)
+          ) {
             Icon(
               Icons.Rounded.Delete,
               contentDescription = stringResource(R.string.cd_delete_input_history_entry_icon),
@@ -140,25 +168,6 @@ fun ChatHistorySideSheetContent(
           }
         }
       }
-    }
-
-    // Persistent/Info notice footer
-    Row(
-      modifier = Modifier.fillMaxWidth().padding(top = 16.dp),
-      verticalAlignment = Alignment.CenterVertically,
-      horizontalArrangement = Arrangement.spacedBy(8.dp),
-    ) {
-      Icon(
-        imageVector = Icons.Rounded.Info,
-        contentDescription = null,
-        tint = MaterialTheme.colorScheme.onSurfaceVariant,
-        modifier = Modifier.size(16.dp),
-      )
-      Text(
-        stringResource(R.string.chat_history_demo_notice),
-        style = MaterialTheme.typography.labelSmall,
-        color = MaterialTheme.colorScheme.onSurfaceVariant,
-      )
     }
   }
 
@@ -209,3 +218,50 @@ fun ChatHistorySideSheetContent(
     )
   }
 }
+
+/**
+ * Exports a chat history session to a beautifully formatted Markdown file in the public Downloads folder.
+ */
+private fun exportChatSession(context: android.content.Context, session: com.bradflaugher.lfe.proto.ChatSessionProto) {
+  val title = session.title.replace(Regex("[^a-zA-Z0-9-_ ]"), "_")
+  val fileName = "chat_history_${session.sessionId}_$title.md"
+
+  val markdown = StringBuilder().apply {
+    append("# Chat Session: ${session.title}\n")
+    append("Model: ${session.originalModel}\n")
+    append("Date: ${java.util.Date(session.timestampMs)}\n\n")
+    append("----------\n\n")
+    for (msg in session.messagesList) {
+      val sender = when (msg.side) {
+        com.bradflaugher.lfe.proto.ChatSideProto.CHAT_SIDE_USER -> "User"
+        com.bradflaugher.lfe.proto.ChatSideProto.CHAT_SIDE_MODEL -> "Model"
+        com.bradflaugher.lfe.proto.ChatSideProto.CHAT_SIDE_SYSTEM -> "System"
+        else -> "Unknown"
+      }
+      append("**$sender**:\n${msg.content}\n\n")
+    }
+  }.toString()
+
+  try {
+    val resolver = context.contentResolver
+    val contentValues = ContentValues().apply {
+      put(MediaStore.MediaColumns.DISPLAY_NAME, fileName)
+      put(MediaStore.MediaColumns.MIME_TYPE, "text/markdown")
+      put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS)
+    }
+    val uri = resolver.insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, contentValues)
+    if (uri != null) {
+      resolver.openOutputStream(uri)?.use { outputStream ->
+        outputStream.write(markdown.toByteArray())
+      }
+      Toast.makeText(context, "Saved to Downloads: $fileName", Toast.LENGTH_LONG).show()
+    } else {
+      throw Exception("Could not create MediaStore entry")
+    }
+  } catch (e: Exception) {
+    Log.e("ChatExporter", "Failed to export chat", e)
+    Toast.makeText(context, "Failed to save: ${e.message}", Toast.LENGTH_LONG).show()
+  }
+}
+
+

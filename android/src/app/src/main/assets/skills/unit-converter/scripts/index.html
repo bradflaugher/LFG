@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Unit Converter</title>
+</head>
+<body>
+  <script>
+    const conversionRates = {
+      length: {
+        m: 1,
+        cm: 0.01,
+        mm: 0.001,
+        km: 1000,
+        inch: 0.0254,
+        feet: 0.3048,
+        yard: 0.9144,
+        mile: 1609.344
+      },
+      weight: {
+        kg: 1,
+        g: 0.001,
+        mg: 0.000001,
+        lb: 0.45359237,
+        oz: 0.028349523125
+      },
+      volume: {
+        l: 1,
+        ml: 0.001,
+        gal: 3.785411784,
+        qt: 0.946352946,
+        pt: 0.473176473,
+        cup: 0.236588236
+      }
+    };
+
+    const aliases = {
+      // Length
+      m: 'm', meter: 'm', meters: 'm',
+      cm: 'cm', centimeter: 'cm', centimeters: 'cm',
+      mm: 'mm', millimeter: 'mm', millimeters: 'mm',
+      km: 'km', kilometer: 'km', kilometers: 'km',
+      inch: 'inch', inches: 'inch', in: 'inch',
+      feet: 'feet', foot: 'feet', ft: 'feet',
+      yard: 'yard', yards: 'yard', yd: 'yard',
+      mile: 'mile', miles: 'mile', mi: 'mile',
+      // Weight
+      kg: 'kg', kilogram: 'kg', kilograms: 'kg',
+      g: 'g', gram: 'g', grams: 'g',
+      mg: 'mg', milligram: 'mg', milligrams: 'mg',
+      lb: 'lb', lbs: 'lb', pound: 'lb', pounds: 'lb',
+      oz: 'oz', ounce: 'oz', ounces: 'oz',
+      // Volume
+      l: 'l', liter: 'l', liters: 'l',
+      ml: 'ml', milliliter: 'ml', milliliters: 'ml',
+      gal: 'gal', gallon: 'gal', gallons: 'gal',
+      qt: 'qt', quart: 'qt', quarts: 'qt',
+      pt: 'pt', pint: 'pt', pints: 'pt',
+      cup: 'cup', cups: 'cup',
+      // Temp
+      c: 'C', C: 'C', celsius: 'C', Celsius: 'C',
+      f: 'F', F: 'F', fahrenheit: 'F', Fahrenheit: 'F',
+      k: 'K', K: 'K', kelvin: 'K', Kelvin: 'K'
+    };
+
+    window['ai_edge_gallery_get_result'] = async (data) => {
+      try {
+        const { value, fromUnit, toUnit } = JSON.parse(data);
+        
+        const fromNormalized = aliases[fromUnit.toLowerCase().trim()];
+        const toNormalized = aliases[toUnit.toLowerCase().trim()];
+
+        if (!fromNormalized) {
+          return JSON.stringify({ error: `Unsupported source unit: "${fromUnit}"` });
+        }
+        if (!toNormalized) {
+          return JSON.stringify({ error: `Unsupported target unit: "${toUnit}"` });
+        }
+
+        // Temp conversions
+        if (['C', 'F', 'K'].includes(fromNormalized) || ['C', 'F', 'K'].includes(toNormalized)) {
+          if (!['C', 'F', 'K'].includes(fromNormalized) || !['C', 'F', 'K'].includes(toNormalized)) {
+            return JSON.stringify({ error: `Cannot convert between temperature and other dimensions.` });
+          }
+          let resultValue;
+          if (fromNormalized === toNormalized) {
+            resultValue = value;
+          } else if (fromNormalized === 'C' && toNormalized === 'F') {
+            resultValue = value * 9 / 5 + 32;
+          } else if (fromNormalized === 'F' && toNormalized === 'C') {
+            resultValue = (value - 32) * 5 / 9;
+          } else if (fromNormalized === 'C' && toNormalized === 'K') {
+            resultValue = value + 273.15;
+          } else if (fromNormalized === 'K' && toNormalized === 'C') {
+            resultValue = value - 273.15;
+          } else if (fromNormalized === 'F' && toNormalized === 'K') {
+            resultValue = (value - 32) * 5 / 9 + 273.15;
+          } else if (fromNormalized === 'K' && toNormalized === 'F') {
+            resultValue = (value - 273.15) * 9 / 5 + 32;
+          }
+          return JSON.stringify({
+            result: `${value}°${fromNormalized} is equal to ${resultValue.toFixed(2)}°${toNormalized}.`
+          });
+        }
+
+        // Find dimension
+        let dimension = null;
+        for (const dim of ['length', 'weight', 'volume']) {
+          if (conversionRates[dim][fromNormalized] !== undefined) {
+            dimension = dim;
+            break;
+          }
+        }
+
+        if (!dimension) {
+          return JSON.stringify({ error: `Could not identify dimension for unit "${fromUnit}"` });
+        }
+
+        if (conversionRates[dimension][toNormalized] === undefined) {
+          return JSON.stringify({ error: `Cannot convert unit "${fromUnit}" to different dimension unit "${toUnit}"` });
+        }
+
+        const valueInBase = value * conversionRates[dimension][fromNormalized];
+        const convertedValue = valueInBase / conversionRates[dimension][toNormalized];
+
+        return JSON.stringify({
+          result: `${value} ${fromUnit} is equal to ${convertedValue.toFixed(4)} ${toUnit}.`
+        });
+      } catch (e) {
+        console.error(e);
+        return JSON.stringify({ error: `Conversion failed: ${e.message}` });
+      }
+    };
+  </script>
+</body>
+</html>

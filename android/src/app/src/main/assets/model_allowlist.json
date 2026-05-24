@@ -3,6 +3,7 @@
   "models": [
     {
       "name": "Gemma-4-E2B-it",
+      "variantLabel": "Stock",
       "modelId": "litert-community/gemma-4-E2B-it-litert-lm",
       "modelFile": "gemma-4-E2B-it.litertlm",
       "description": "A variant of Gemma 4 E2B ready for deployment on Android using [LiteRT-LM](https://github.com/google-ai-edge/LiteRT-LM/blob/main/docs/api/kotlin/getting_started.md). Multi-modal (text + image + audio), 32K context.",
@@ -37,6 +38,7 @@
     },
     {
       "name": "Gemma-4-E4B-it",
+      "variantLabel": "Stock",
       "modelId": "litert-community/gemma-4-E4B-it-litert-lm",
       "modelFile": "gemma-4-E4B-it.litertlm",
       "description": "A variant of Gemma 4 E4B ready for deployment on Android using [LiteRT-LM](https://github.com/google-ai-edge/LiteRT-LM/blob/main/docs/api/kotlin/getting_started.md). Multi-modal, 32K context.",
@@ -71,6 +73,8 @@
     },
     {
       "name": "Gemma-4-E2B-Abliterated",
+      "parentModelName": "Gemma-4-E2B-it",
+      "variantLabel": "Abliterated",
       "modelId": "DuoNeural/Gemma-4-Abliterated-LiteRT",
       "modelFile": "Gemma-4-E2B-Abliterated.litertlm",
       "description": "An uncensored / [abliterated](https://huggingface.co/blog/mlabonne/abliteration) variant of Gemma 4 E2B from [DuoNeural](https://huggingface.co/DuoNeural/Gemma-4-Abliterated-LiteRT), packaged for LiteRT-LM. Text-only, 32K context.",
@@ -96,6 +100,8 @@
     },
     {
       "name": "Gemma-4-E4B-Abliterated",
+      "parentModelName": "Gemma-4-E4B-it",
+      "variantLabel": "Abliterated",
       "modelId": "DuoNeural/Gemma-4-Abliterated-LiteRT",
       "modelFile": "Gemma-4-E4B-Abliterated.litertlm",
       "description": "An uncensored / [abliterated](https://huggingface.co/blog/mlabonne/abliteration) variant of Gemma 4 E4B from [DuoNeural](https://huggingface.co/DuoNeural/Gemma-4-Abliterated-LiteRT), packaged for LiteRT-LM. Text-only, 32K context.",

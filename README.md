@@ -10,21 +10,9 @@ mood, or translating text. The model never talks to a server.
 
 Two screens, that's it: the agent chat, and a model manager behind a gear icon.
 
-## Skills bundled today
+## Skills
 
-| Skill | What it does |
-|---|---|
-| `budget-tracker` | Log expenses and income, see a running summary. |
-| `calculate-hash` | SHA-1 / 256 / 384 / 512 of any text. |
-| `interactive-map` | Drop a location pin on a Leaflet map. |
-| `mood-tracker` | Daily mood log with history. |
-| `password-generator` | Secure random passwords. |
-| `qr-code` | Make a QR code from any URL (works offline). |
-| `query-wikipedia` | Pull a summary on any topic. |
-| `recommend-articles` | Scan a news homepage and pick stories that match your stored interests. Defaults to NYT; configurable. |
-| `send-email` | Hand off a draft to your mail app. |
-| `summarize-article` | Fetch and summarize a news article. Works on any publicly readable page. |
-| `translator` | Translate between languages. |
+You can find the complete list of bundled skills in the [skills directory](android/src/app/src/main/assets/skills).
 
 Add your own by dropping a `SKILL.md` directory under
 `android/src/app/src/main/assets/skills/`. See **[docs/SKILLS.md](docs/SKILLS.md)**

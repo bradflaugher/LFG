@@ -51,10 +51,18 @@ import dagger.hilt.android.EntryPointAccessors
 import dagger.hilt.components.SingletonComponent
 import com.bradflaugher.lfe.data.DataStoreRepository
 import org.json.JSONObject
-import java.io.BufferedReader
-import java.io.InputStreamReader
-import java.net.HttpURLConnection
-import java.net.URL
+import com.aallam.openai.client.OpenAI
+import com.aallam.openai.client.OpenAIConfig
+import com.aallam.openai.client.OpenAIHost
+import com.aallam.openai.api.http.Timeout
+import com.aallam.openai.api.chat.ChatCompletionRequest
+import com.aallam.openai.api.chat.ChatMessage
+import com.aallam.openai.api.chat.ChatRole
+import com.aallam.openai.api.model.ModelId
+import kotlin.time.Duration.Companion.seconds
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.onCompletion
+import kotlinx.coroutines.flow.onEach
 
 private const val TAG = "AGLlmChatModelHelper"
 
@@ -348,88 +356,67 @@ object LlmChatModelHelper : LlmModelHelper {
       }
 
       val historyJson = extraContext?.get("history")
-      val messagesJson = if (!historyJson.isNullOrEmpty()) {
-        historyJson
+      val chatMessages = mutableListOf<ChatMessage>()
+      if (!historyJson.isNullOrEmpty()) {
+        try {
+          val array = org.json.JSONArray(historyJson)
+          for (i in 0 until array.length()) {
+            val obj = array.getJSONObject(i)
+            val roleStr = obj.getString("role")
+            val content = obj.getString("content")
+            val role = when (roleStr) {
+              "user" -> ChatRole.User
+              "assistant" -> ChatRole.Assistant
+              "system" -> ChatRole.System
+              else -> ChatRole.User
+            }
+            chatMessages.add(ChatMessage(role = role, content = content))
+          }
+        } catch (e: Exception) {
+          chatMessages.add(ChatMessage(role = ChatRole.User, content = input))
+        }
       } else {
-        "[{\"role\":\"user\",\"content\":${JSONObject.quote(input)}}]"
+        chatMessages.add(ChatMessage(role = ChatRole.User, content = input))
       }
 
-      val requestBody = """
-        {
-          "model": "${if (modelId.isNotEmpty()) modelId else "gemma-4-2b-it"}",
-          "messages": $messagesJson,
-          "stream": true
-        }
-      """.trimIndent()
-
       coroutineScope?.launch(Dispatchers.IO) {
-        var connection: HttpURLConnection? = null
         try {
-          val url = URL(endpoint.removeSuffix("/") + "/chat/completions")
-          connection = url.openConnection() as HttpURLConnection
-          connection.requestMethod = "POST"
-          connection.setRequestProperty("Content-Type", "application/json")
-          if (apiKey.isNotEmpty()) {
-            connection.setRequestProperty("Authorization", "Bearer $apiKey")
-          }
-          connection.doOutput = true
-          connection.doInput = true
-          connection.connectTimeout = 15000
-          connection.readTimeout = 30000
+          val config = OpenAIConfig(
+            token = apiKey,
+            host = OpenAIHost(endpoint.removeSuffix("/") + "/"),
+            timeout = Timeout(socket = 30.seconds, connect = 15.seconds)
+          )
+          val openAI = OpenAI(config)
+          
+          val request = ChatCompletionRequest(
+            model = ModelId(if (modelId.isNotEmpty()) modelId else "gemma-4-2b-it"),
+            messages = chatMessages
+          )
 
-          connection.outputStream.use { os ->
-            os.write(requestBody.toByteArray(Charsets.UTF_8))
-          }
-
-          val responseCode = connection.responseCode
-          if (responseCode !in 200..299) {
-            val errorMsg = connection.errorStream?.bufferedReader()?.use { it.readText() } ?: ""
-            withContext(Dispatchers.Main) {
-              onError("HTTP Error $responseCode: $errorMsg")
-            }
-            return@launch
-          }
-
-          val reader = BufferedReader(InputStreamReader(connection.inputStream))
-          var line: String?
-          while (reader.readLine().also { line = it } != null) {
-            val trimmed = line?.trim() ?: continue
-            if (trimmed.startsWith("data: ")) {
-              val dataContent = trimmed.substring(6).trim()
-              if (dataContent == "[DONE]") {
-                break
-              }
-              try {
-                val jsonObject = JSONObject(dataContent)
-                val choices = jsonObject.optJSONArray("choices")
-                if (choices != null && choices.length() > 0) {
-                  val firstChoice = choices.getJSONObject(0)
-                  val delta = firstChoice.optJSONObject("delta")
-                  if (delta != null) {
-                    val contentChunk = delta.optString("content", "")
-                    if (contentChunk.isNotEmpty()) {
-                      withContext(Dispatchers.Main) {
-                        resultListener(contentChunk, false, null)
-                      }
-                    }
-                  }
+          openAI.chatCompletions(request)
+            .onEach { chunk ->
+              val contentChunk = chunk.choices.firstOrNull()?.delta?.content ?: ""
+              if (contentChunk.isNotEmpty()) {
+                withContext(Dispatchers.Main) {
+                  resultListener(contentChunk, false, null)
                 }
-              } catch (e: Exception) {
-                // Ignore single malformed chunks
               }
             }
-          }
-          withContext(Dispatchers.Main) {
-            resultListener("", true, null)
-          }
+            .onCompletion { throwable ->
+              withContext(Dispatchers.Main) {
+                if (throwable == null) {
+                  resultListener("", true, null)
+                } else {
+                  onError("Error: ${throwable.message}")
+                }
+                cleanUpListener()
+              }
+            }
+            .collect()
         } catch (e: Exception) {
           Log.e(TAG, "Cloud API call failed", e)
           withContext(Dispatchers.Main) {
             onError("Cloud API Call failed: ${e.message}")
-          }
-        } finally {
-          connection?.disconnect()
-          withContext(Dispatchers.Main) {
             cleanUpListener()
           }
         }

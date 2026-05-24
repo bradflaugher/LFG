@@ -126,6 +126,8 @@ dependencies {
   implementation(libs.hilt.navigation.compose)
   implementation(libs.androidx.exifinterface)
   implementation(libs.moshi.kotlin)
+  implementation(libs.openai.client)
+  implementation(libs.ktor.client.okhttp)
   kapt(libs.hilt.android.compiler)
   testImplementation(libs.junit)
   testImplementation(libs.kotlinx.coroutines.test)

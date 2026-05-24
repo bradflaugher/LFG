@@ -100,9 +100,10 @@ jobs:
           echo "apk=${PWD}/${out}" >> "$GITHUB_OUTPUT"
 
       - name: Publish GitHub Release
-        uses: softprops/action-gh-release@v3
+        uses: softprops/action-gh-release@v2
         continue-on-error: true
         with:
+          token: ${{ secrets.GITHUB_TOKEN }}
           tag_name: ${{ steps.ident.outputs.tag }}
           name: ${{ steps.ident.outputs.tag }}
           target_commitish: ${{ steps.ident.outputs.sha }}

@@ -40,7 +40,7 @@ Grab the latest APK from
 
 Open the downloaded APK file and follow your device's instructions to install it. If you need help, check out the official Google guide on [how to install apps from other sources on Android](https://support.google.com/googleplay/answer/14669046).
 
-Latest Android APIs and build tooling required. We target the absolute latest Android 16+ versions and do not support legacy Android versions or older environments. On first launch you'll be in the agent chat — tap the gear (top right) to download a model.
+Latest Android APIs and build tooling required. LFE strictly targets the newest, bleeding-edge Android releases and does not support legacy Android versions or older environments. On first launch you'll be in the agent chat — tap the gear (top right) to download a model.
 
 ## License
 

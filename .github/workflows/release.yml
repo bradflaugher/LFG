@@ -32,7 +32,7 @@ jobs:
         working-directory: android/src
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
           ref: ${{ github.event.workflow_run.head_sha || github.event.inputs.sha || github.sha }}

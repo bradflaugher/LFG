@@ -40,7 +40,7 @@ jobs:
       run:
         working-directory: android/src
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: ./.github/actions/setup-android
       - name: Lint (with retry on transient Maven errors)
         run: |
@@ -63,7 +63,7 @@ jobs:
       run:
         working-directory: android/src
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: ./.github/actions/setup-android
       - name: Unit tests (with retry on transient Maven errors)
         env:
@@ -96,7 +96,7 @@ jobs:
       run:
         working-directory: android/src
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: ./.github/actions/setup-android
       - name: Assemble debug APK (with retry on transient Maven errors)
         run: |
@@ -127,7 +127,7 @@ jobs:
       run:
         working-directory: android/src
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: ./.github/actions/setup-android
 
       - name: Enable KVM

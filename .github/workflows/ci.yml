@@ -40,7 +40,7 @@ jobs:
       run:
         working-directory: android/src
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: ./.github/actions/setup-android
       - name: Lint (with retry on transient Maven errors)
         run: |
@@ -63,7 +63,7 @@ jobs:
       run:
         working-directory: android/src
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: ./.github/actions/setup-android
       - name: Unit tests (with retry on transient Maven errors)
         env:
@@ -83,7 +83,7 @@ jobs:
           exit 1
       - name: Upload test report on failure
         if: failure()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: unit-test-report
           path: android/src/app/build/reports/tests/testDebugUnitTest/
@@ -96,7 +96,7 @@ jobs:
       run:
         working-directory: android/src
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: ./.github/actions/setup-android
       - name: Assemble debug APK (with retry on transient Maven errors)
         run: |
@@ -112,7 +112,7 @@ jobs:
           done
           exit 1
       - name: Upload debug APK
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: lfe-debug-apk-${{ github.sha }}
           path: android/src/app/build/outputs/apk/debug/*.apk
@@ -127,7 +127,7 @@ jobs:
       run:
         working-directory: android/src
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: ./.github/actions/setup-android
 
       - name: Enable KVM
@@ -138,7 +138,7 @@ jobs:
           sudo udevadm trigger --name-match=kvm
 
       - name: AVD cache
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         id: avd-cache
         with:
           path: |
@@ -191,7 +191,7 @@ jobs:
 
       - name: Upload instrumented report on failure
         if: failure()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: instrumented-test-report
           path: android/src/app/build/reports/androidTests/

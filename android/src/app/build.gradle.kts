@@ -10,13 +10,11 @@
  */
 plugins {
   alias(libs.plugins.android.application)
-  alias(libs.plugins.kotlin.android)
   alias(libs.plugins.kotlin.compose)
   alias(libs.plugins.kotlin.serialization)
   alias(libs.plugins.protobuf)
   alias(libs.plugins.hilt.application)
   alias(libs.plugins.ksp)
-  kotlin("kapt")
 }
 
 android {
@@ -130,7 +128,7 @@ dependencies {
   implementation(libs.moshi.kotlin)
   implementation(libs.openai.client)
   implementation(libs.ktor.client.okhttp)
-  kapt(libs.hilt.android.compiler)
+  ksp(libs.hilt.android.compiler)
   testImplementation(libs.junit)
   testImplementation(libs.kotlinx.coroutines.test)
   androidTestImplementation(libs.androidx.junit)
@@ -138,7 +136,7 @@ dependencies {
   androidTestImplementation(platform(libs.androidx.compose.bom))
   androidTestImplementation(libs.androidx.ui.test.junit4)
   androidTestImplementation(libs.hilt.android.testing)
-  kaptAndroidTest(libs.hilt.android.compiler)
+  kspAndroidTest(libs.hilt.android.compiler)
   debugImplementation(libs.androidx.ui.tooling)
   debugImplementation(libs.androidx.ui.test.manifest)
   ksp(libs.moshi.kotlin.codegen)

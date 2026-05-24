@@ -42,13 +42,15 @@ jobs:
       - name: Decode Keystore
         id: decode_keystore
         if: ${{ secrets.LFE_RELEASE_KEYSTORE_BASE64 != '' }}
+        env:
+          LFE_RELEASE_KEYSTORE_BASE64: ${{ secrets.LFE_RELEASE_KEYSTORE_BASE64 }}
         run: |
-          echo "${{ secrets.LFE_RELEASE_KEYSTORE_BASE64 }}" | base64 --decode > release.keystore
+          echo "$LFE_RELEASE_KEYSTORE_BASE64" | base64 --decode > release.keystore
           echo "path=${{ github.workspace }}/android/src/release.keystore" >> "$GITHUB_OUTPUT"
 
       - name: Assemble release APK
         run: |
-          if [ -n "${{ secrets.LFE_RELEASE_KEYSTORE_BASE64 }}" ]; then
+          if [ -n "${{ steps.decode_keystore.outputs.path }}" ]; then
             ./gradlew assembleRelease \
               -PLFE_RELEASE_STORE_FILE="${{ steps.decode_keystore.outputs.path }}" \
               -PLFE_RELEASE_STORE_PASSWORD="${{ secrets.LFE_RELEASE_STORE_PASSWORD }}" \

@@ -113,9 +113,9 @@ jobs:
           adb install -r lfe-${{ steps.ident.outputs.tag }}.apk
           ```
 
-          **First-time sideloaders on Android 12+:** enable
-          *Settings → Apps → Special access → Install unknown apps* for
-          your file manager, then tap the APK.
+          **First-time sideloaders:** LFE strictly targets the latest
+          Android releases. If you need help, check out the official Google
+          guide on [how to install apps from other sources on Android](https://support.google.com/googleplay/answer/14669046).
           EOF
 
           gh release create "${{ steps.ident.outputs.tag }}" \

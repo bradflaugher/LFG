@@ -154,7 +154,15 @@ data class AllowedModel(
           .toMutableList()
     }
 
-    val learnMoreUrl = ""
+    val learnMoreUrl = if (name == "Cloud-Model-OpenAI-Compatible") {
+      ""
+    } else if (name == "Gemma-4-E2B-it") {
+      "https://huggingface.co/google/gemma-4-E2B-it"
+    } else if (name == "Gemma-4-E4B-it") {
+      "https://huggingface.co/google/gemma-4-E4B-it"
+    } else {
+      "https://huggingface.co/$modelId"
+    }
 
     return Model(
       name = name,

@@ -130,6 +130,7 @@ class AgentChatTask
         task = task,
         modelManagerViewModel = myData.modelManagerViewModel,
         navigateUp = myData.onNavUp,
+        onSettingsClicked = myData.onSettingsClicked,
         agentTools = agentTools,
         initialQuery = myData.initialQuery,
       )

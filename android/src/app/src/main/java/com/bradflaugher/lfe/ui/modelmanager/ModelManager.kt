@@ -10,30 +10,29 @@
  */
 package com.bradflaugher.lfe.ui.modelmanager
 
-// import androidx.compose.ui.tooling.preview.Preview
-// import com.bradflaugher.lfe.ui.preview.PreviewModelManagerViewModel
-// import com.bradflaugher.lfe.ui.preview.TASK_TEST1
-// import com.bradflaugher.lfe.ui.theme.LfeTheme
-
+import android.app.Activity
+import android.content.Intent
 import androidx.activity.compose.BackHandler
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Language
-import androidx.compose.material.icons.rounded.Search
-import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.SmallFloatingActionButton
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
+import androidx.compose.material3.SmallFloatingActionButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.bradflaugher.lfe.GalleryTopAppBar
 import com.bradflaugher.lfe.data.AppBarAction
@@ -52,11 +51,9 @@ fun ModelManager(
   onModelClicked: (Model) -> Unit,
   modifier: Modifier = Modifier,
   onBenchmarkClicked: (Model) -> Unit = {},
-  onBrowseHuggingFace: (() -> Unit)? = null,
   onBrowserSession: (() -> Unit)? = null,
 ) {
-  // Set title based on the task.
-  val title = task.label
+  val context = LocalContext.current
   // Model count.
   val modelCount by remember {
     derivedStateOf {
@@ -79,11 +76,39 @@ fun ModelManager(
   // Handle system's edge swipe.
   BackHandler { navigateUp() }
 
+  // State for the local-file model import flow.
+  var pickedFileUri by remember { mutableStateOf<android.net.Uri?>(null) }
+  var showImportDialog by remember { mutableStateOf(false) }
+  var importingInfo by remember { mutableStateOf<com.bradflaugher.lfe.proto.ImportedModel?>(null) }
+  var showImportingDialog by remember { mutableStateOf(false) }
+
+  val filePickerLauncher =
+    rememberLauncherForActivityResult(
+      contract = ActivityResultContracts.StartActivityForResult(),
+    ) { result ->
+      if (result.resultCode == Activity.RESULT_OK) {
+        result.data?.data?.let { uri ->
+          pickedFileUri = uri
+          showImportDialog = true
+        }
+      }
+    }
+
+  val launchPicker = {
+    val intent =
+      Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
+        addCategory(Intent.CATEGORY_OPENABLE)
+        type = "*/*"
+        putExtra(Intent.EXTRA_ALLOW_MULTIPLE, false)
+      }
+    filePickerLauncher.launch(intent)
+  }
+
   Scaffold(
     modifier = modifier,
     topBar = {
       GalleryTopAppBar(
-        title = title,
+        title = "Models",
         leftAction = AppBarAction(actionType = AppBarActionType.NAVIGATE_UP, actionFn = navigateUp),
       )
     },
@@ -93,13 +118,6 @@ fun ModelManager(
           SmallFloatingActionButton(onClick = onBrowserSession) {
             Icon(Icons.Rounded.Language, contentDescription = "Open browser session")
           }
-        }
-        if (onBrowseHuggingFace != null) {
-          ExtendedFloatingActionButton(
-            onClick = onBrowseHuggingFace,
-            icon = { Icon(Icons.Rounded.Search, contentDescription = null) },
-            text = { Text("Browse HF") },
-          )
         }
       }
     },
@@ -111,7 +129,38 @@ fun ModelManager(
       enableAnimation = enableAnimation,
       onModelClicked = onModelClicked,
       onBenchmarkClicked = onBenchmarkClicked,
+      onImportLocalModelClicked = launchPicker,
       modifier = Modifier.fillMaxSize(),
     )
+  }
+
+  if (showImportDialog) {
+    pickedFileUri?.let { uri ->
+      ModelImportDialog(
+        uri = uri,
+        onDismiss = { showImportDialog = false },
+        onDone = { info ->
+          importingInfo = info
+          showImportDialog = false
+          showImportingDialog = true
+        },
+      )
+    }
+  }
+
+  if (showImportingDialog) {
+    pickedFileUri?.let { uri ->
+      importingInfo?.let { info ->
+        ModelImportingDialog(
+          uri = uri,
+          info = info,
+          onDismiss = { showImportingDialog = false },
+          onDone = {
+            viewModel.addImportedLlmModel(info = it)
+            showImportingDialog = false
+          },
+        )
+      }
+    }
   }
 }

@@ -17,30 +17,9 @@ import android.webkit.JavascriptInterface
 import android.webkit.WebView
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.foundation.horizontalScroll
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.isImeVisible
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
-import androidx.compose.material3.FilledTonalButton
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -51,10 +30,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
@@ -62,11 +38,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
-import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.bradflaugher.lfe.R
 import com.bradflaugher.lfe.common.AskInfoAgentAction
@@ -76,13 +48,11 @@ import com.bradflaugher.lfe.common.FetchLinksAgentAction
 import com.bradflaugher.lfe.common.LOCAL_URL_BASE
 import com.bradflaugher.lfe.common.RequestPermissionAgentAction
 import com.bradflaugher.lfe.common.SkillProgressAgentAction
-import com.bradflaugher.lfe.data.AgentSkillsURLs
 import com.bradflaugher.lfe.data.BuiltInTaskId
 import com.bradflaugher.lfe.data.Model
 import com.bradflaugher.lfe.data.Task
 import com.bradflaugher.lfe.ui.common.BaseGalleryWebViewClient
 import com.bradflaugher.lfe.ui.common.GalleryWebView
-import com.bradflaugher.lfe.ui.common.buildTrackableUrlAnnotatedString
 import com.bradflaugher.lfe.ui.common.chat.ChatMessage
 import com.bradflaugher.lfe.ui.common.chat.ChatMessageCollapsableProgressPanel
 import com.bradflaugher.lfe.ui.common.chat.ChatMessageImage
@@ -109,13 +79,13 @@ import org.json.JSONObject
 private const val TAG = "AGAgentChatScreen"
 private val chatViewJavascriptInterface = ChatWebViewJavascriptInterface()
 
-@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun AgentChatScreen(
   task: Task,
   modelManagerViewModel: ModelManagerViewModel,
   navigateUp: () -> Unit,
   agentTools: AgentTools,
+  onSettingsClicked: () -> Unit = {},
   viewModel: AgentChatViewModel = hiltViewModel(),
   skillManagerViewModel: SkillManagerViewModel = hiltViewModel(),
   initialQuery: String? = null,
@@ -192,6 +162,7 @@ fun AgentChatScreen(
     modelManagerViewModel = modelManagerViewModel,
     taskId = BuiltInTaskId.LLM_AGENT_CHAT,
     navigateUp = navigateUp,
+    onSettingsClicked = onSettingsClicked,
     skillCount = skillCount,
     onFirstToken = { model ->
       scope.launch(Dispatchers.Main) {
@@ -266,7 +237,7 @@ fun AgentChatScreen(
       val currentModel by rememberUpdatedState(model)
       LaunchedEffect(actionChannel) {
         for (action in actionChannel) {
-          Log.d(TAG, "Handling action: $action")
+          Log.d(TAG, "Handling action: " + action.toString())
           when (action) {
             is SkillProgressAgentAction -> {
               viewModel.updateCollapsableProgressPanelMessage(
@@ -293,7 +264,7 @@ fun AgentChatScreen(
                 launch {
                   delay(60_000L)
                   if (!action.result.isCompleted) {
-                    Log.e(TAG, "JS execution timed out for skill $skillName")
+                    Log.e(TAG, "JS execution timed out for skill " + skillName)
                     action.result.complete(
                       "{\"error\": \"Skill execution timed out. Check network connection.\"}",
                     )
@@ -305,12 +276,12 @@ fun AgentChatScreen(
                     chatWebViewClient.setPageLoadListener(null)
                     continuation.resume(Unit)
                   }
-                  Log.d(TAG, "Loading url: ${action.url}")
+                  Log.d(TAG, "Loading url: " + action.url)
                   webViewRef?.loadUrl(action.url)
                 }
 
                 chatViewJavascriptInterface.onResultListener = { result ->
-                  Log.d(TAG, "Got result: $result")
+                  Log.d(TAG, "Got result: " + result)
                   action.result.complete(result)
                 }
 
@@ -338,7 +309,7 @@ fun AgentChatScreen(
                     .trimIndent()
                 webViewRef?.evaluateJavascript(script, null)
               } catch (e: Exception) {
-                Log.e(TAG, "Skill $skillName execution failed", e)
+                Log.e(TAG, "Skill " + skillName + " execution failed", e)
                 action.result.completeExceptionally(e)
               }
             }
@@ -399,8 +370,11 @@ fun AgentChatScreen(
             )
             Log.d(
               TAG,
-              "${curConsoleMessage.message()} " +
-                "-- From line ${curConsoleMessage.lineNumber()} of ${curConsoleMessage.sourceId()}",
+              curConsoleMessage.message() +
+                " -- From line " +
+                curConsoleMessage.lineNumber() +
+                " of " +
+                curConsoleMessage.sourceId(),
             )
           }
         },
@@ -417,101 +391,7 @@ fun AgentChatScreen(
         systemPromptUpdatedMessage = systemPromptUpdatedMessage,
       )
     },
-    emptyStateComposable = { model ->
-      val uiState by viewModel.uiState.collectAsState()
-      val mmState by modelManagerViewModel.uiState.collectAsState()
-      val modelInitializationStatus = mmState.modelInitializationStatus[model.name]
-      Box(modifier = Modifier.fillMaxSize()) {
-        AnimatedVisibility(
-          !WindowInsets.isImeVisible,
-          enter = fadeIn(animationSpec = tween(200)),
-          exit = fadeOut(animationSpec = tween(200)),
-        ) {
-          Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            Column(
-              modifier =
-                Modifier.align(Alignment.Center)
-                  .padding(horizontal = 48.dp)
-                  .padding(bottom = 48.dp),
-              horizontalAlignment = Alignment.CenterHorizontally,
-            ) {
-              Text(
-                stringResource(R.string.introducing),
-                style = MaterialTheme.typography.headlineSmall,
-              )
-              Text(
-                stringResource(R.string.agent_skills),
-                style =
-                  MaterialTheme.typography.headlineLarge.copy(
-                    fontWeight = FontWeight.Medium,
-                    brush =
-                      Brush.linearGradient(colors = listOf(Color(0xFF85B1F8), Color(0xFF3174F1))),
-                  ),
-                modifier = Modifier.padding(top = 12.dp, bottom = 16.dp),
-              )
-              Text(
-                buildAnnotatedString {
-                  append("Use specialized, high-order reasoning by loading different skills or ")
-                  append(
-                    buildTrackableUrlAnnotatedString(
-                      url = AgentSkillsURLs.REPOSITORY,
-                      linkText = "creating your own",
-                    ),
-                  )
-                  append(". Explore community contributed skills on ")
-                  append(
-                    buildTrackableUrlAnnotatedString(
-                      url = AgentSkillsURLs.DISCUSSIONS,
-                      linkText = "GitHub discussions",
-                    ),
-                  )
-                  append(".\n\nTry tapping a sample prompt below to see Agent Skills in action!")
-                },
-                style =
-                  MaterialTheme.typography.headlineSmall.copy(fontSize = 16.sp, lineHeight = 22.sp),
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                textAlign = TextAlign.Center,
-              )
-            }
-          }
-        }
-
-        Row(
-          modifier =
-            Modifier.align(Alignment.BottomCenter)
-              .horizontalScroll(rememberScrollState())
-              .padding(horizontal = 12.dp),
-          verticalAlignment = Alignment.CenterVertically,
-          horizontalArrangement = Arrangement.spacedBy(8.dp),
-        ) {
-          for (promptChip in TRYOUT_CHIPS) {
-            FilledTonalButton(
-              enabled =
-                modelInitializationStatus?.status == ModelInitializationStatusType.INITIALIZED &&
-                  !uiState.isResettingSession,
-              onClick = {
-                if (skillManagerViewModel.isSkillSelected(promptChip.skillName)) {
-                  sendMessageTrigger =
-                    SendMessageTrigger(
-                      model = model,
-                      messages =
-                        listOf(ChatMessageText(content = promptChip.prompt, side = ChatSide.USER)),
-                    )
-                } else {
-                  disabledSkillName = promptChip.skillName
-                  showAlertForDisabledSkill = true
-                }
-              },
-              contentPadding = PaddingValues(horizontal = 12.dp),
-            ) {
-              Icon(promptChip.icon, contentDescription = null, modifier = Modifier.size(20.dp))
-              Spacer(modifier = Modifier.width(4.dp))
-              Text(promptChip.label)
-            }
-          }
-        }
-      }
-    },
+    emptyStateComposable = { _ -> },
     sendMessageTrigger = sendMessageTrigger,
   )
 
@@ -559,7 +439,7 @@ fun AgentChatScreen(
   if (showAlertForDisabledSkill) {
     AlertDialog(
       onDismissRequest = { showAlertForDisabledSkill = false },
-      title = { Text("The \"$disabledSkillName\" skill is currently disabled") },
+      title = { Text("The \"" + disabledSkillName + "\" skill is currently disabled") },
       text = { Text(stringResource(R.string.enable_skill_dialog_content)) },
       confirmButton = {
         Button(onClick = { showAlertForDisabledSkill = false }) {

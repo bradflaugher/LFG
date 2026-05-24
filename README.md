@@ -32,15 +32,15 @@ spec is the schema.
 
 ## Models
 
-Every LiteRT-LM model from the Edge AI allowlist works out of the box: Gemma 4 E2B/E4B,
-Gemma 3n E2B/E4B, Gemma 3 1B, Qwen 2.5 1.5B, DeepSeek-R1-Distill-Qwen 1.5B. Tap the gear
-icon → "Browse HF" to search HuggingFace for more LiteRT-LM-compatible models and
-download directly to the phone.
+Four Gemma 4 variants ship in the recommended list: **E2B** / **E4B** (stock, from
+litert-community) and **E2B-Abliterated** / **E4B-Abliterated** (uncensored, from
+[DuoNeural](https://huggingface.co/DuoNeural/Gemma-4-Abliterated-LiteRT)) — all multi-modal
+(text + image + audio), 32K context. Tap the gear icon to download.
 
-For HuggingFace-gated models, set up an OAuth app at
-<https://huggingface.co/settings/applications/new> with redirect URL
-`com.bradflaugher.lfe://oauth`, then fill in `clientId` and `redirectUri` in
-`common/ProjectConfig.kt`.
+Want something else? Grab any LiteRT-LM-compatible `.litertlm` or `.task` file from
+HuggingFace (or convert one yourself with [LiteRT-LM](https://github.com/google-ai-edge/LiteRT-LM)),
+adb-push it onto the device, and use **Import local model file** at the bottom of the
+model manager.
 
 ## Install
 
@@ -51,8 +51,8 @@ Grab the latest APK from
 adb install -r lfe-build-<date>-<sha>.apk
 ```
 
-Android 12+ required. On first launch you'll be in the agent chat — tap the gear to
-download a model.
+Android 12+ required. On first launch you'll be in the agent chat — tap the gear (top
+right) to download a model.
 
 ## Build it yourself
 

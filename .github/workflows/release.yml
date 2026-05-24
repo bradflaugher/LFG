@@ -69,7 +69,7 @@ jobs:
           echo "apk=${PWD}/${out}" >> "$GITHUB_OUTPUT"
 
       - name: Publish GitHub Release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           tag_name: ${{ steps.ident.outputs.tag }}
           name: ${{ steps.ident.outputs.tag }}

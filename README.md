@@ -4,7 +4,7 @@ A minimal, privacy-first AI agent for Android. Skills-first and low-feature.
 
 ## What it does
 
-LFE runs large language models on your phone — both locally and via OpenAI-compatible APIs — and lets them call **skills** that execute actions directly on your device.
+LFE runs large language models on your phone (both locally and via OpenAI-compatible APIs) and lets them call **skills** that execute actions directly on your device.
 
 ## Skills
 
@@ -26,7 +26,7 @@ The app includes four recommended **Gemma 4** variants:
 
 ### Need a bigger model?
 
-LFE supports inference through any OpenAI-compatible API — perfect for models too large to run locally.
+LFE supports inference through any OpenAI-compatible API. This is perfect for models too large to run locally.
 
 ## Install
 

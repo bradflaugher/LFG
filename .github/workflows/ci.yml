@@ -154,7 +154,7 @@ jobs:
           target: google_apis
           arch: x86_64
           force-avd-creation: false
-          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none -camera-front none
           disable-animations: true
           working-directory: android/src
           script: echo "AVD cache warmed."
@@ -171,10 +171,10 @@ jobs:
           target: google_apis
           arch: x86_64
           force-avd-creation: false
-          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none -camera-front none
           disable-animations: true
           working-directory: android/src
-          script: ./gradlew connectedDebugAndroidTest --info
+          script: ADB_INSTALL_TIMEOUT=10 ./gradlew connectedDebugAndroidTest --info
 
       - name: Run instrumented tests (retry)
         if: steps.instrumented-1.outcome == 'failure'
@@ -184,10 +184,10 @@ jobs:
           target: google_apis
           arch: x86_64
           force-avd-creation: false
-          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none -camera-front none
           disable-animations: true
           working-directory: android/src
-          script: ./gradlew connectedDebugAndroidTest --info
+          script: ADB_INSTALL_TIMEOUT=10 ./gradlew connectedDebugAndroidTest --info
 
       - name: Upload instrumented report on failure
         if: failure()

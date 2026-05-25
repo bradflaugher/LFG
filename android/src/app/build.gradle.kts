@@ -101,6 +101,10 @@ android {
     xmlReport = true
     textReport = false
   }
+
+  installation {
+    timeOutInMs = 300000
+  }
 }
 
 dependencies {

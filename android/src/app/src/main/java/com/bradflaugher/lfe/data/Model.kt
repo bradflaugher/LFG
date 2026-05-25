@@ -67,7 +67,7 @@ data class Model(
    *
    * If this field is not set, the `name` field above will be used as the default display name.
    */
-  val displayName: String = "",
+  var displayName: String = "",
   /**
    * (optional)
    *

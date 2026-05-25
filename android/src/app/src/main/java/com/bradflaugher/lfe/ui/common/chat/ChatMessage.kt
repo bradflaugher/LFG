@@ -94,6 +94,7 @@ open class ChatMessageText(
   override val accelerator: String = "",
   override val hideSenderLabel: Boolean = false,
   var data: Any? = null,
+  var cacheHitPercentage: Float? = null,
 ) :
   ChatMessage(
       type = ChatMessageType.TEXT,
@@ -112,6 +113,7 @@ open class ChatMessageText(
         isMarkdown = isMarkdown,
         hideSenderLabel = hideSenderLabel,
         data = data,
+        cacheHitPercentage = cacheHitPercentage,
       )
     return cloned
   }

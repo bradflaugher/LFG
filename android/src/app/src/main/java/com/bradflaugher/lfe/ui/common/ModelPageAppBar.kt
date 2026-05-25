@@ -223,6 +223,9 @@ fun ModelPageAppBar(
       onDismissed = { showConfigDialog = false },
       isCloudModel = model.name == "Cloud-Model-OpenAI-Compatible",
       dataStoreRepository = modelManagerViewModel.dataStoreRepository,
+      onSettingsSaved = {
+        modelManagerViewModel.refreshCloudModelDisplayName()
+      },
       onOk = { curConfigValues, oldSystemPrompt, newSystemPrompt ->
         // Hide config dialog.
         showConfigDialog = false

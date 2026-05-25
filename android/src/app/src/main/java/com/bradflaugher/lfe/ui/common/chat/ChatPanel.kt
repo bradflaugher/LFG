@@ -397,9 +397,14 @@ fun ChatPanel(
               horizontalAlignment = hAlign,
             ) messageColumn@{
               // Sender row.
-              var agentName = stringResource(task.agentNameRes)
-              if (message.accelerator.isNotEmpty()) {
-                agentName = "$agentName on ${message.accelerator}"
+              var agentName = if (selectedModel.name == "Cloud-Model-OpenAI-Compatible") {
+                selectedModel.displayName.ifEmpty { "Cloud Model" }
+              } else {
+                var name = stringResource(task.agentNameRes)
+                if (message.accelerator.isNotEmpty()) {
+                  name = "$name on ${message.accelerator}"
+                }
+                name
               }
               if (!message.hideSenderLabel) {
                 MessageSender(

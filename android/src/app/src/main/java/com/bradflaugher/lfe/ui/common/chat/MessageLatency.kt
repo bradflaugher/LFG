@@ -24,9 +24,20 @@ import com.bradflaugher.lfe.ui.common.humanReadableDuration
 /** Composable function to display the latency of a chat message, if available. */
 @Composable
 fun LatencyText(message: ChatMessage) {
+  val cacheHitText = if (message is ChatMessageText && message.cacheHitPercentage != null) {
+    " • Cache Hit: ${(message.cacheHitPercentage!! * 100).toInt()}%"
+  } else {
+    ""
+  }
   if (message.latencyMs >= 0) {
     Text(
-      message.latencyMs.humanReadableDuration(),
+      message.latencyMs.humanReadableDuration() + cacheHitText,
+      modifier = Modifier.alpha(0.5f).testTag("latency_label"),
+      style = MaterialTheme.typography.labelSmall,
+    )
+  } else if (cacheHitText.isNotEmpty()) {
+    Text(
+      cacheHitText.removePrefix(" • "),
       modifier = Modifier.alpha(0.5f).testTag("latency_label"),
       style = MaterialTheme.typography.labelSmall,
     )

@@ -166,6 +166,7 @@ data class AllowedModel(
 
     return Model(
       name = name,
+      displayName = if (name == "Cloud-Model-OpenAI-Compatible") "Cloud Model" else "",
       version = version,
       info = finalDescription,
       url = downloadUrl,

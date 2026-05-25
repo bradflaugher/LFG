@@ -451,10 +451,12 @@ object LlmChatModelHelper : LlmModelHelper {
                   val usageObj = jsonObj.optJSONObject("usage")
                   if (usageObj != null) {
                     val promptDetails = usageObj.optJSONObject("prompt_tokens_details")
-                    val cached = promptDetails?.optInt("cached_tokens", 0) ?: 0
-                    val prompt = usageObj.optInt("prompt_tokens", 0)
-                    if (prompt > 0) {
-                      model.lastCacheHitPercentage = cached.toFloat() / prompt.toFloat()
+                    if (promptDetails != null) {
+                      val cached = promptDetails.optInt("cached_tokens", 0)
+                      val prompt = usageObj.optInt("prompt_tokens", 0)
+                      if (prompt > 0) {
+                        model.lastCacheHitPercentage = cached.toFloat() / prompt.toFloat()
+                      }
                     }
                   }
 

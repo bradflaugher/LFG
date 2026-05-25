@@ -103,7 +103,6 @@ fun LfeNavHost(
         ModelManager(
           task = agentTask,
           viewModel = modelManagerViewModel,
-          enableAnimation = true,
           navigateUp = { navController.popBackStack() },
           onModelClicked = { model ->
             modelManagerViewModel.selectModel(model)

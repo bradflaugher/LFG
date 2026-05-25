@@ -51,7 +51,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.graphicsLayer
+
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.bradflaugher.lfe.R
@@ -60,16 +60,10 @@ import com.bradflaugher.lfe.data.Task
 import com.bradflaugher.lfe.ui.common.ClickableLink
 import com.bradflaugher.lfe.ui.common.getTaskBgColor
 import com.bradflaugher.lfe.ui.common.modelitem.ModelItem
-import com.bradflaugher.lfe.ui.common.rememberDelayedAnimationProgress
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 
 private const val TAG = "AGModelList"
-private val CONTENT_ANIMATION_OFFSET = 16.dp
-private const val ANIMATION_INIT_DELAY = 80L
-private const val TASK_DESCRIPTION_SECTION_ANIMATION_START = 400
-private const val MODEL_LIST_ANIMATION_START = TASK_DESCRIPTION_SECTION_ANIMATION_START + 150
-private const val DEFAULT_ANIMATION_DURATION = 700
 
 /** The list of models in the model manager. */
 @Composable
@@ -77,7 +71,6 @@ fun ModelList(
   task: Task,
   modelManagerViewModel: ModelManagerViewModel,
   contentPadding: PaddingValues,
-  enableAnimation: Boolean,
   onModelClicked: (Model) -> Unit,
   onBenchmarkClicked: (Model) -> Unit,
   modifier: Modifier = Modifier,
@@ -123,28 +116,6 @@ fun ModelList(
     }
 
   val listState = rememberLazyListState()
-
-  val descriptionProgress =
-    if (!enableAnimation) {
-      1f
-    } else {
-      rememberDelayedAnimationProgress(
-        initialDelay = ANIMATION_INIT_DELAY + TASK_DESCRIPTION_SECTION_ANIMATION_START,
-        animationDurationMs = DEFAULT_ANIMATION_DURATION,
-        animationLabel = "description",
-      )
-    }
-
-  val modelListProgress =
-    if (!enableAnimation) {
-      1f
-    } else {
-      rememberDelayedAnimationProgress(
-        initialDelay = ANIMATION_INIT_DELAY + MODEL_LIST_ANIMATION_START,
-        animationDurationMs = DEFAULT_ANIMATION_DURATION,
-        animationLabel = "model_list",
-      )
-    }
   val modelItemExpandedStates = remember { mutableStateMapOf<String, Boolean>() }
 
   Box(
@@ -178,11 +149,6 @@ fun ModelList(
             expanded = expanded,
             onExpanded = { modelItemExpandedStates[model.name] = it },
             showBenchmarkButton = true,
-            modifier =
-              Modifier.graphicsLayer {
-                alpha = modelListProgress
-                translationY = (CONTENT_ANIMATION_OFFSET * (1 - modelListProgress)).toPx()
-              },
           )
         }
       }
@@ -194,13 +160,7 @@ fun ModelList(
             stringResource(R.string.model_list_imported_models_title),
             color = MaterialTheme.colorScheme.onSurface,
             style = MaterialTheme.typography.labelLarge,
-            modifier =
-              Modifier.padding(horizontal = 16.dp)
-                .padding(top = 32.dp, bottom = 8.dp)
-                .graphicsLayer {
-                  alpha = modelListProgress
-                  translationY = (CONTENT_ANIMATION_OFFSET * (1 - modelListProgress)).toPx()
-                },
+            modifier = Modifier.padding(horizontal = 16.dp, top = 32.dp, bottom = 8.dp),
           )
         }
       }
@@ -215,11 +175,6 @@ fun ModelList(
             onModelClicked = onModelClicked,
             onBenchmarkClicked = onBenchmarkClicked,
             showBenchmarkButton = true,
-            modifier =
-              Modifier.graphicsLayer {
-                alpha = modelListProgress
-                translationY = (CONTENT_ANIMATION_OFFSET * (1 - modelListProgress)).toPx()
-              },
           )
         }
       }

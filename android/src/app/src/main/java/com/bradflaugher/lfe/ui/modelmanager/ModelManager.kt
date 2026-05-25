@@ -38,7 +38,6 @@ import com.bradflaugher.lfe.data.Task
 fun ModelManager(
   task: Task,
   viewModel: ModelManagerViewModel,
-  enableAnimation: Boolean,
   navigateUp: () -> Unit,
   onModelClicked: (Model) -> Unit,
   modifier: Modifier = Modifier,
@@ -108,7 +107,6 @@ fun ModelManager(
       task = task,
       modelManagerViewModel = viewModel,
       contentPadding = innerPadding,
-      enableAnimation = enableAnimation,
       onModelClicked = onModelClicked,
       onBenchmarkClicked = onBenchmarkClicked,
       onImportLocalModelClicked = launchPicker,

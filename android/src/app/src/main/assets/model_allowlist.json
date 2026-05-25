@@ -130,7 +130,7 @@
       "variantLabel": "Cloud",
       "modelId": "cloud/openai-compatible",
       "modelFile": "cloud-model-openai-compatible.litertlm",
-      "description": "Connects directly to any OpenAI-compatible cloud API (such as Hyper or OpenRouter). Supports advanced model capabilities, including prompt caching and detailed cache hit rate reporting when supported by the provider.",
+      "description": "Connects directly to any OpenAI-compatible cloud API (such as Hyper, OpenRouter, or OpenAI). Runs entirely in the cloud with no local storage or device resources required (requires internet connection). Supports advanced capabilities like prompt caching and cache hit reporting.",
       "sizeInBytes": 0,
       "minDeviceMemoryInGb": 0,
       "commitHash": "none",

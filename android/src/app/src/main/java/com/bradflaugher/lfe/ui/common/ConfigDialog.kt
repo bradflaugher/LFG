@@ -264,43 +264,46 @@ fun ConfigDialog(
                   
                   Row(
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween,
+                    horizontalArrangement = Arrangement.spacedBy(6.dp),
                     modifier = Modifier.fillMaxWidth()
                   ) {
-                    Row(
-                      verticalAlignment = Alignment.CenterVertically,
-                      horizontalArrangement = Arrangement.spacedBy(6.dp)
+                    Icon(
+                      imageVector = if (isConfigured) Icons.Rounded.CheckCircle else Icons.Rounded.Warning,
+                      contentDescription = null,
+                      tint = if (isConfigured) Color(0xFF4CAF50) else MaterialTheme.colorScheme.error,
+                      modifier = Modifier.size(16.dp)
+                    )
+                    Text(
+                      text = if (isConfigured) {
+                        "Host: $endpoint"
+                      } else {
+                        "API not configured"
+                      },
+                      style = MaterialTheme.typography.labelMedium,
+                      color = MaterialTheme.colorScheme.onSurfaceVariant,
+                      maxLines = 1,
+                      overflow = TextOverflow.Ellipsis
+                    )
+                  }
+
+                  if (dataStoreRepository != null) {
+                    Spacer(modifier = Modifier.height(4.dp))
+                    TextButton(
+                      onClick = { showCloudDialog = true },
+                      contentPadding = PaddingValues(horizontal = 8.dp),
+                      modifier = Modifier.align(Alignment.End)
                     ) {
                       Icon(
-                        imageVector = if (isConfigured) Icons.Rounded.CheckCircle else Icons.Rounded.Warning,
+                        Icons.Rounded.Cloud,
                         contentDescription = null,
-                        tint = if (isConfigured) Color(0xFF4CAF50) else MaterialTheme.colorScheme.error,
-                        modifier = Modifier.size(16.dp)
+                        modifier = Modifier.size(14.dp)
                       )
+                      Spacer(modifier = Modifier.width(4.dp))
                       Text(
-                        text = if (isConfigured) {
-                          "Host: ${endpoint.take(24)}${if (endpoint.length > 24) "..." else ""}"
-                        } else {
-                          "API not configured"
-                        },
+                        text = "Configure",
                         style = MaterialTheme.typography.labelMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        maxLines = 1
                       )
-                    }
-
-                    if (dataStoreRepository != null) {
-                      TextButton(
-                        onClick = { showCloudDialog = true },
-                        contentPadding = PaddingValues(horizontal = 8.dp)
-                      ) {
-                        Icon(
-                          Icons.Rounded.Cloud,
-                          contentDescription = null,
-                          modifier = Modifier.size(14.dp)
-                        )
-                        Spacer(modifier = Modifier.width(4.dp))
-                        Text("Configure", style = MaterialTheme.typography.labelMedium)
-                      }
                     }
                   }
                 }

@@ -29,7 +29,7 @@ class OpenRouterCacheTest {
     )
 
     val endpoint = "https://openrouter.ai/api/v1/chat/completions"
-    val modelId = "anthropic/claude-3.5-haiku"
+    val modelId = "~openai/gpt-mini-latest"
 
     // Construct a large prompt prefix (~2500 words / ~3500 tokens)
     val prefixText = ("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et " +
@@ -39,7 +39,7 @@ class OpenRouterCacheTest {
         "deserunt mollit anim id est laborum. ").repeat(80)
 
     println("=" .repeat(60))
-    print("Testing Anthropic Caching on OpenRouter using raw HTTP connections\n")
+    print("Testing OpenAI Implicit Caching on OpenRouter using raw HTTP connections\n")
     println("=" .repeat(60))
 
     // Run Request 1: Write to cache
@@ -91,7 +91,7 @@ class OpenRouterCacheTest {
       connection.connectTimeout = 45000
       connection.readTimeout = 45000
 
-      // Create raw JSON payload with cache_control metadata without using android JSONObject
+      // Create raw JSON payload using standard OpenAI implicit prompt caching format
       val escapedPrefix = escapeJson(prefix)
       val escapedQuestion = escapeJson(question)
       val payload = """
@@ -101,17 +101,7 @@ class OpenRouterCacheTest {
         "messages": [
           {
             "role": "user",
-            "content": [
-              {
-                "type": "text",
-                "text": "$escapedPrefix",
-                "cache_control": {"type": "ephemeral"}
-              },
-              {
-                "type": "text",
-                "text": "$escapedQuestion"
-              }
-            ]
+            "content": "$escapedPrefix\n\n$escapedQuestion"
           }
         ]
       }

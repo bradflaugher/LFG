@@ -269,7 +269,8 @@ fun ConfigDialog(
                   ) {
                     Row(
                       verticalAlignment = Alignment.CenterVertically,
-                      horizontalArrangement = Arrangement.spacedBy(6.dp)
+                      horizontalArrangement = Arrangement.spacedBy(6.dp),
+                      modifier = Modifier.weight(1f)
                     ) {
                       Icon(
                         imageVector = if (isConfigured) Icons.Rounded.CheckCircle else Icons.Rounded.Warning,
@@ -284,7 +285,9 @@ fun ConfigDialog(
                           "API not configured"
                         },
                         style = MaterialTheme.typography.labelMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
                       )
                     }
 
@@ -299,7 +302,11 @@ fun ConfigDialog(
                           modifier = Modifier.size(14.dp)
                         )
                         Spacer(modifier = Modifier.width(4.dp))
-                        Text("Configure", style = MaterialTheme.typography.labelMedium)
+                        Text(
+                          text = "Configure",
+                          style = MaterialTheme.typography.labelMedium,
+                          maxLines = 1
+                        )
                       }
                     }
                   }

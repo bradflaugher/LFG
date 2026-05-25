@@ -160,7 +160,7 @@ fun ModelList(
             stringResource(R.string.model_list_imported_models_title),
             color = MaterialTheme.colorScheme.onSurface,
             style = MaterialTheme.typography.labelLarge,
-            modifier = Modifier.padding(horizontal = 16.dp, top = 32.dp, bottom = 8.dp),
+            modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 32.dp, bottom = 8.dp),
           )
         }
       }

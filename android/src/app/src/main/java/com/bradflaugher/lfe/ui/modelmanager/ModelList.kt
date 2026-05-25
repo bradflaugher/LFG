@@ -138,7 +138,6 @@ fun ModelList(
       // List of models within a task.
       items(items = models) { model ->
         if (model.parentModelName.isNullOrEmpty()) {
-          val expanded = modelItemExpandedStates.get(model.name) ?: if (model.name == "Cloud-Model-OpenAI-Compatible") true else null
           ModelItem(
             model = model,
             modelVariants = modelVariants.getOrDefault(model.name, listOf()),
@@ -146,8 +145,8 @@ fun ModelList(
             modelManagerViewModel = modelManagerViewModel,
             onModelClicked = onModelClicked,
             onBenchmarkClicked = onBenchmarkClicked,
-            expanded = expanded,
-            onExpanded = { modelItemExpandedStates[model.name] = it },
+            expanded = true,
+            onExpanded = {},
             showBenchmarkButton = true,
           )
         }

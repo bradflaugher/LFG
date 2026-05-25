@@ -353,12 +353,12 @@ object LlmChatModelHelper : LlmModelHelper {
       val modelId = if (modelIdRaw.isNullOrEmpty()) "gemma-4-26b-a4b-it" else modelIdRaw
 
       if (apiKey.isEmpty()) {
-        onError("Cloud API Key is not configured. Go to the Models view and tap 'Configure Cloud Provider' to enter your API key.")
+        onError("Cloud API Key is not configured. Go to the Models view and tap 'Configure API' to enter your API key.")
         return
       }
 
       if (endpoint.isEmpty()) {
-        onError("Cloud API Endpoint is not configured. Go to the Models view and tap 'Configure Cloud Provider'.")
+        onError("Cloud API Endpoint is not configured. Go to the Models view and tap 'Configure API'.")
         return
       }
 
@@ -392,41 +392,107 @@ object LlmChatModelHelper : LlmModelHelper {
 
       coroutineScope?.launch(Dispatchers.IO) {
         try {
-          val config = OpenAIConfig(
-            token = apiKey,
-            host = OpenAIHost(endpoint.removeSuffix("/") + "/"),
-            timeout = Timeout(socket = 30.seconds, connect = 15.seconds)
-          )
-          val openAI = OpenAI(config)
-          
-          val request = ChatCompletionRequest(
-            model = ModelId(if (modelId.isNotEmpty()) modelId else "gemma-4-2b-it"),
-            messages = chatMessages,
-            temperature = temperature.toDouble(),
-            topP = topP.toDouble(),
-            maxTokens = maxTokens
-          )
+          val url = java.net.URL(endpoint.removeSuffix("/") + "/chat/completions")
+          val connection = url.openConnection() as java.net.HttpURLConnection
+          connection.requestMethod = "POST"
+          connection.doOutput = true
+          connection.setRequestProperty("Content-Type", "application/json")
+          connection.setRequestProperty("Authorization", "Bearer $apiKey")
+          connection.setRequestProperty("Accept", "text/event-stream")
+          connection.connectTimeout = 30000
+          connection.readTimeout = 30000
 
-          openAI.chatCompletions(request)
-            .onEach { chunk ->
-              val contentChunk = chunk.choices.firstOrNull()?.delta?.content ?: ""
-              if (contentChunk.isNotEmpty()) {
-                withContext(Dispatchers.Main) {
-                  resultListener(contentChunk, false, null)
+          val messagesArray = org.json.JSONArray()
+          for (msg in chatMessages) {
+            val roleStr = when (msg.role) {
+              ChatRole.User -> "user"
+              ChatRole.Assistant -> "assistant"
+              ChatRole.System -> "system"
+              else -> "user"
+            }
+            messagesArray.put(org.json.JSONObject().apply {
+              put("role", roleStr)
+              put("content", msg.content)
+            })
+          }
+
+          val payload = org.json.JSONObject().apply {
+            put("model", if (modelId.isNotEmpty()) modelId else "gemma-4-2b-it")
+            put("messages", messagesArray)
+            put("temperature", temperature.toDouble())
+            put("top_p", topP.toDouble())
+            put("max_tokens", maxTokens)
+            put("stream", true)
+            put("stream_options", org.json.JSONObject().put("include_usage", true))
+          }
+
+          val writer = java.io.OutputStreamWriter(connection.outputStream)
+          writer.write(payload.toString())
+          writer.flush()
+          writer.close()
+
+          val responseCode = connection.responseCode
+          if (responseCode == java.net.HttpURLConnection.HTTP_OK) {
+            val reader = java.io.BufferedReader(java.io.InputStreamReader(connection.inputStream))
+            var line: String?
+            while (reader.readLine().also { line = it } != null) {
+              val lineStr = line?.trim() ?: ""
+              if (lineStr.startsWith("data:")) {
+                val data = lineStr.removePrefix("data:").trim()
+                if (data == "[DONE]") {
+                  break
+                }
+                if (data.isEmpty()) continue
+
+                try {
+                  val jsonObj = org.json.JSONObject(data)
+                  
+                  // Extract prompt caching usage info if present in chunk
+                  val usageObj = jsonObj.optJSONObject("usage")
+                  if (usageObj != null) {
+                    val promptDetails = usageObj.optJSONObject("prompt_tokens_details")
+                    val cached = promptDetails?.optInt("cached_tokens", 0) ?: 0
+                    val prompt = usageObj.optInt("prompt_tokens", 0)
+                    if (prompt > 0) {
+                      model.lastCacheHitPercentage = cached.toFloat() / prompt.toFloat()
+                    }
+                  }
+
+                  // Extract and stream content chunk
+                  val choices = jsonObj.optJSONArray("choices")
+                  if (choices != null && choices.length() > 0) {
+                    val choice = choices.getJSONObject(0)
+                    val delta = choice.optJSONObject("delta")
+                    val content = delta?.optString("content", "") ?: ""
+                    if (content.isNotEmpty()) {
+                      withContext(Dispatchers.Main) {
+                        resultListener(content, false, null)
+                      }
+                    }
+                  }
+                } catch (e: Exception) {
+                  // Ignore JSON parse errors for non-object/marker chunks
                 }
               }
             }
-            .onCompletion { throwable ->
-              withContext(Dispatchers.Main) {
-                if (throwable == null) {
-                  resultListener("", true, null)
-                } else {
-                  onError("Error: ${throwable.message}")
-                }
-                cleanUpListener()
-              }
+            reader.close()
+            withContext(Dispatchers.Main) {
+              resultListener("", true, null)
+              cleanUpListener()
             }
-            .collect()
+          } else {
+            val errorReader = java.io.BufferedReader(java.io.InputStreamReader(connection.errorStream ?: connection.inputStream))
+            val errorResponse = java.lang.StringBuilder()
+            var line: String?
+            while (errorReader.readLine().also { line = it } != null) {
+              errorResponse.append(line)
+            }
+            errorReader.close()
+            withContext(Dispatchers.Main) {
+              onError("Cloud API Error: $responseCode - $errorResponse")
+              cleanUpListener()
+            }
+          }
         } catch (e: Exception) {
           Log.e(TAG, "Cloud API call failed", e)
           withContext(Dispatchers.Main) {

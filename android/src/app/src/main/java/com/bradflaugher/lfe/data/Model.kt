@@ -252,6 +252,7 @@ data class Model(
   var prevConfigValues: Map<String, Any> = mapOf(),
   var totalBytes: Long = 0L,
   var accessToken: String? = null,
+  var lastCacheHitPercentage: Float? = null,
   /**
    * Indicates whether the model currently on the device is an older version that can be updated.
    *

@@ -97,7 +97,7 @@ fun ModelItem(
   }
 
   val isBestOverall = model.bestForTaskIds.contains(task?.id ?: "")
-  var isExpanded by remember { mutableStateOf(expanded ?: isBestOverall) }
+  val isExpanded = true
 
   var boxModifier =
     modifier
@@ -105,15 +105,10 @@ fun ModelItem(
       .clip(RoundedCornerShape(size = 12.dp))
       .background(color = MaterialTheme.customColors.taskCardBgColor)
   boxModifier =
-    if (canExpand) {
+    if (model.imported && !showBenchmarkButton) {
       boxModifier.clickable(
         onClick = {
-          if (!model.imported) {
-            isExpanded = !isExpanded
-            onExpanded(isExpanded)
-          } else if (!showBenchmarkButton) {
-            onModelClicked(model)
-          }
+          onModelClicked(model)
         },
         interactionSource = remember { MutableInteractionSource() },
         indication = ripple(bounded = true, radius = 1000.dp),
@@ -136,10 +131,10 @@ fun ModelItem(
           modifier = Modifier.fillMaxWidth(),
           showModelSizeAndDownloadProgressLabel = modelVariants.isEmpty(),
         )
-        // Model action menu (benchmark, delete), and button to expand/collapse button at the right.
+        // Model action menu (benchmark, delete) at the right.
         Row(verticalAlignment = Alignment.Top, modifier = Modifier.align(Alignment.TopEnd)) {
           if (
-            modelVariants.isEmpty() && downloadStatus?.status == ModelDownloadStatusType.SUCCEEDED
+            modelVariants.isEmpty() && (downloadStatus?.status == ModelDownloadStatusType.SUCCEEDED || model.imported)
           ) {
             ModelItemActionMenu(
               model = model,
@@ -149,17 +144,6 @@ fun ModelItem(
                 showDeleteButton && model.localFileRelativeDirPathOverride.isEmpty() && model.name != "Cloud-Model-OpenAI-Compatible",
               onBenchmarkClicked = { onBenchmarkClicked(model) },
               modifier = Modifier.offset(y = (-12).dp),
-            )
-          }
-          if (!model.imported) {
-            Icon(
-              if (isExpanded) Icons.Rounded.UnfoldLess else Icons.Rounded.UnfoldMore,
-              contentDescription =
-                stringResource(
-                  if (isExpanded) R.string.cd_collapse_icon else R.string.cd_expand_icon,
-                ),
-              tint = MaterialTheme.colorScheme.onSurfaceVariant,
-              modifier = Modifier.alpha(0.6f),
             )
           }
         }

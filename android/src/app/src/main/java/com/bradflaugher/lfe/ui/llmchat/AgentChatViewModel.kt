@@ -123,22 +123,8 @@ open class AgentChatViewModelBase(
     onError: (String) -> Unit,
     allowThinking: Boolean = false,
   ) {
+    model.lastCacheHitPercentage = null
     val accelerator = model.getStringConfigValue(key = ConfigKeys.ACCELERATOR, defaultValue = "")
-    val systemPrompt = uiSystemPrompt.value
-    val messagesSnapshot = (uiState.value.messagesByModel[model.name] ?: listOf()).toList()
-    val prevHistoryCharCount = systemPrompt.length + messagesSnapshot.filter { it is ChatMessageText || it is ChatMessageThinking }.sumOf {
-      when (it) {
-        is ChatMessageText -> it.content.length
-        is ChatMessageThinking -> it.content.length
-        else -> 0
-      }
-    }
-    val newQueryCharCount = input.length
-    val cacheHitPercentage = if (prevHistoryCharCount > 0) {
-      prevHistoryCharCount.toFloat() / (prevHistoryCharCount + newQueryCharCount)
-    } else {
-      0f
-    }
 
     viewModelScope.launch(Dispatchers.Default) {
       setInProgress(true)
@@ -259,7 +245,7 @@ open class AgentChatViewModelBase(
                     model = model,
                     partialContent = partialResult,
                     latencyMs = latencyMs.toFloat(),
-                    cacheHitPercentage = if (model.name == "Cloud-Model-OpenAI-Compatible") cacheHitPercentage else null
+                    cacheHitPercentage = if (model.name == "Cloud-Model-OpenAI-Compatible") model.lastCacheHitPercentage else null
                   )
                 }
               }

@@ -1,14 +1,11 @@
 # LFE
 
-A low-feature, on-device AI agent for Android. Skills-first, fully offline, minimalistic.
+A low-feature AI agent for Android. Skills-first, minimalistic, privacy-conscious.
 
 ## What it does
 
-LFE runs a small LLM on your phone and lets it call **skills** — bundled JavaScript
-helpers that do focused jobs like summarizing articles, generating QR codes, tracking
-mood, or translating text. The model never talks to a server.
+LFE runs LLMs (both on-device and cloud-based OpenAI-compatible APIs) on your phone and lets them call **skills** that execute locally.
 
-Two screens, that's it: the agent chat, and a model manager behind a gear icon.
 
 ## Skills
 

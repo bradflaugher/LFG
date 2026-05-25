@@ -278,13 +278,20 @@ fun ModelItem(
                 if (targetShowColumnLayout) {
                   Column(modifier = containerModifier) {
                     VariantHeader(modifier = Modifier.fillMaxWidth())
-                    if (targetIsExpanded && variantModel.info.isNotEmpty()) {
-                      MarkdownText(
-                        variantModel.info,
-                        smallFontSize = true,
-                        textColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                        modifier = Modifier.padding(top = 8.dp),
-                      )
+                    if (targetIsExpanded) {
+                      val variantDesc = if (variantModel.name == model.name) {
+                        "Features standard Google safety alignment and supports multi-modal (text, image, audio) inputs."
+                      } else {
+                        variantModel.info
+                      }
+                      if (variantDesc.isNotEmpty()) {
+                        MarkdownText(
+                          variantDesc,
+                          smallFontSize = true,
+                          textColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                          modifier = Modifier.padding(top = 8.dp),
+                        )
+                      }
                     }
                     VariantDownloadPanel(
                       modifier =

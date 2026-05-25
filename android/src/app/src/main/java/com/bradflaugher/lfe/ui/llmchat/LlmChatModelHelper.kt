@@ -353,12 +353,12 @@ object LlmChatModelHelper : LlmModelHelper {
       val modelId = if (modelIdRaw.isNullOrEmpty()) "gemma-4-26b-a4b-it" else modelIdRaw
 
       if (apiKey.isEmpty()) {
-        onError("Cloud API Key is not configured. Go to the Models view and tap 'Configure Cloud Provider' to enter your API key.")
+        onError("Cloud API Key is not configured. Go to the Models view and tap 'Configure API' to enter your API key.")
         return
       }
 
       if (endpoint.isEmpty()) {
-        onError("Cloud API Endpoint is not configured. Go to the Models view and tap 'Configure Cloud Provider'.")
+        onError("Cloud API Endpoint is not configured. Go to the Models view and tap 'Configure API'.")
         return
       }
 

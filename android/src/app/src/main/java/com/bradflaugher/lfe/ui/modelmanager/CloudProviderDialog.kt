@@ -57,7 +57,11 @@ import com.bradflaugher.lfe.data.DataStoreRepository
 fun CloudProviderDialog(
   dataStoreRepository: DataStoreRepository,
   onDismiss: () -> Unit,
+  onSettingsSaved: () -> Unit = {},
 ) {
+  var customDisplayName by remember {
+    mutableStateOf(dataStoreRepository.readSecret("CLOUD_DISPLAY_NAME") ?: "")
+  }
   var endpoint by remember {
     val saved = dataStoreRepository.readSecret("CLOUD_API_ENDPOINT")
     mutableStateOf(if (saved.isNullOrEmpty()) "https://hyper.charm.land/v1/" else saved)
@@ -124,6 +128,16 @@ fun CloudProviderDialog(
           }
         }
 
+        // Model Name (Display Name)
+        OutlinedTextField(
+          value = customDisplayName,
+          onValueChange = { customDisplayName = it },
+          label = { Text("Model Name (Display Name)") },
+          placeholder = { Text("Cloud Model") },
+          singleLine = true,
+          modifier = Modifier.fillMaxWidth()
+        )
+
         // Endpoint URL
         OutlinedTextField(
           value = endpoint,
@@ -179,9 +193,11 @@ fun CloudProviderDialog(
           Spacer(modifier = Modifier.width(8.dp))
           Button(
             onClick = {
+              dataStoreRepository.saveSecret("CLOUD_DISPLAY_NAME", customDisplayName.trim())
               dataStoreRepository.saveSecret("CLOUD_API_ENDPOINT", endpoint.trim())
               dataStoreRepository.saveSecret("CLOUD_API_KEY", apiKey.trim())
               dataStoreRepository.saveSecret("CLOUD_MODEL_ID", modelId.trim())
+              onSettingsSaved()
               onDismiss()
             }
           ) {

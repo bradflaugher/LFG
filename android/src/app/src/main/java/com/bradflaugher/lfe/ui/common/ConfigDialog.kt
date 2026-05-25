@@ -139,6 +139,7 @@ fun ConfigDialog(
   curSystemPrompt: String = "",
   isCloudModel: Boolean = false,
   dataStoreRepository: DataStoreRepository? = null,
+  onSettingsSaved: () -> Unit = {},
 ) {
   val values: SnapshotStateMap<String, Any> =
     remember {
@@ -234,7 +235,8 @@ fun ConfigDialog(
                   onDismiss = {
                     showCloudDialog = false
                     endpoint = dataStoreRepository.readSecret("CLOUD_API_ENDPOINT") ?: ""
-                  }
+                  },
+                  onSettingsSaved = onSettingsSaved
                 )
               }
 

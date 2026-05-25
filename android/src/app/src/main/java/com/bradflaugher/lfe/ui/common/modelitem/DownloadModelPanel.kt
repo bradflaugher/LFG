@@ -94,6 +94,9 @@ fun DownloadModelPanel(
             showCloudProviderDialog = false
             endpoint = dataStoreRepository.readSecret("CLOUD_API_ENDPOINT") ?: ""
             apiKey = dataStoreRepository.readSecret("CLOUD_API_KEY") ?: ""
+          },
+          onSettingsSaved = {
+            modelManagerViewModel.refreshCloudModelDisplayName()
           }
         )
       }
@@ -164,45 +167,49 @@ fun DownloadModelPanel(
           }
         }
 
-        Row(
-          modifier = Modifier.fillMaxWidth(),
-          horizontalArrangement = Arrangement.End,
-          verticalAlignment = Alignment.CenterVertically
-        ) {
-          if (isConfigured) {
-            TextButton(
-              onClick = {
-                dataStoreRepository.deleteSecret("CLOUD_API_ENDPOINT")
-                dataStoreRepository.deleteSecret("CLOUD_API_KEY")
-                dataStoreRepository.deleteSecret("CLOUD_MODEL_ID")
-                endpoint = ""
-                apiKey = ""
-              },
+        if (isExpanded) {
+          Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.End,
+            verticalAlignment = Alignment.CenterVertically
+          ) {
+            if (isConfigured) {
+              TextButton(
+                onClick = {
+                  dataStoreRepository.deleteSecret("CLOUD_API_ENDPOINT")
+                  dataStoreRepository.deleteSecret("CLOUD_API_KEY")
+                  dataStoreRepository.deleteSecret("CLOUD_MODEL_ID")
+                  dataStoreRepository.deleteSecret("CLOUD_DISPLAY_NAME")
+                  endpoint = ""
+                  apiKey = ""
+                  modelManagerViewModel.refreshCloudModelDisplayName()
+                },
+                contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
+              ) {
+                Text("Clear Configuration")
+              }
+              Spacer(modifier = Modifier.width(8.dp))
+            }
+
+            OutlinedButton(
+              onClick = { showCloudProviderDialog = true },
               contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
             ) {
-              Text("Clear Configuration")
+              Icon(
+                imageVector = Icons.Rounded.Cloud,
+                contentDescription = null,
+                modifier = Modifier.size(18.dp)
+              )
+              Spacer(modifier = Modifier.width(8.dp))
+              Text("Configure API")
             }
-            Spacer(modifier = Modifier.width(8.dp))
-          }
-
-          OutlinedButton(
-            onClick = { showCloudProviderDialog = true },
-            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
-          ) {
-            Icon(
-              imageVector = Icons.Rounded.Cloud,
-              contentDescription = null,
-              modifier = Modifier.size(18.dp)
-            )
-            Spacer(modifier = Modifier.width(8.dp))
-            Text("Configure API")
           }
 
           if (isConfigured) {
-            Spacer(modifier = Modifier.width(8.dp))
             Button(
               onClick = onTryItClicked,
-              contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
+              modifier = Modifier.fillMaxWidth(),
+              contentPadding = PaddingValues(horizontal = 16.dp, vertical = 10.dp)
             ) {
               Icon(
                 imageVector = Icons.AutoMirrored.Rounded.ArrowForward,
@@ -211,6 +218,40 @@ fun DownloadModelPanel(
               )
               Spacer(modifier = Modifier.width(8.dp))
               Text("Try it")
+            }
+          }
+        } else {
+          Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.End,
+            verticalAlignment = Alignment.CenterVertically
+          ) {
+            if (isConfigured) {
+              Button(
+                onClick = onTryItClicked,
+                contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
+              ) {
+                Icon(
+                  imageVector = Icons.AutoMirrored.Rounded.ArrowForward,
+                  contentDescription = null,
+                  modifier = Modifier.size(18.dp)
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text("Try it")
+              }
+            } else {
+              Button(
+                onClick = { showCloudProviderDialog = true },
+                contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
+              ) {
+                Icon(
+                  imageVector = Icons.Rounded.Cloud,
+                  contentDescription = null,
+                  modifier = Modifier.size(18.dp)
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text("Configure API")
+              }
             }
           }
         }

@@ -117,7 +117,10 @@ fun ModelManager(
   if (showCloudProviderDialog) {
     CloudProviderDialog(
       dataStoreRepository = viewModel.dataStoreRepository,
-      onDismiss = { showCloudProviderDialog = false }
+      onDismiss = { showCloudProviderDialog = false },
+      onSettingsSaved = {
+        viewModel.refreshCloudModelDisplayName()
+      }
     )
   }
 

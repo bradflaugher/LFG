@@ -613,6 +613,17 @@ open class ModelManagerViewModel
       dataStoreRepository.saveImportedModels(importedModels = importedModels)
     }
 
+    fun refreshCloudModelDisplayName() {
+      val cloudModel = getModelByName("Cloud-Model-OpenAI-Compatible")
+      if (cloudModel != null) {
+        val savedName = dataStoreRepository.readSecret("CLOUD_DISPLAY_NAME")
+        cloudModel.displayName = if (!savedName.isNullOrEmpty()) savedName else "Cloud Model"
+      }
+      _uiState.update {
+        createUiState()
+      }
+    }
+
     fun getTokenStatusAndData(): TokenStatusAndData {
       // Try to load token data from DataStore.
       var tokenStatus = TokenStatus.NOT_STORED
@@ -866,6 +877,10 @@ open class ModelManagerViewModel
             }
 
             val model = allowedModel.toModel()
+            if (model.name == "Cloud-Model-OpenAI-Compatible") {
+              val savedName = dataStoreRepository.readSecret("CLOUD_DISPLAY_NAME")
+              model.displayName = if (!savedName.isNullOrEmpty()) savedName else "Cloud Model"
+            }
             _allowlistModels.add(model)
             nameToModel.put(model.name, model)
             for (taskType in allowedModel.taskTypes) {

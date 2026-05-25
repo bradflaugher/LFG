@@ -124,6 +124,22 @@ open class AgentChatViewModelBase(
     allowThinking: Boolean = false,
   ) {
     val accelerator = model.getStringConfigValue(key = ConfigKeys.ACCELERATOR, defaultValue = "")
+    val systemPrompt = uiSystemPrompt.value
+    val messagesSnapshot = (uiState.value.messagesByModel[model.name] ?: listOf()).toList()
+    val prevHistoryCharCount = systemPrompt.length + messagesSnapshot.filter { it is ChatMessageText || it is ChatMessageThinking }.sumOf {
+      when (it) {
+        is ChatMessageText -> it.content.length
+        is ChatMessageThinking -> it.content.length
+        else -> 0
+      }
+    }
+    val newQueryCharCount = input.length
+    val cacheHitPercentage = if (prevHistoryCharCount > 0) {
+      prevHistoryCharCount.toFloat() / (prevHistoryCharCount + newQueryCharCount)
+    } else {
+      0f
+    }
+
     viewModelScope.launch(Dispatchers.Default) {
       setInProgress(true)
       setPreparing(true)
@@ -196,7 +212,7 @@ open class AgentChatViewModelBase(
                 }
                 updateLastThinkingMessageContentIncrementally(
                   model = model,
-                  partialContent = thinkingText!!,
+                  partialContent = thinkingText,
                 )
               } else {
                 if (currentLastMessage?.type == ChatMessageType.THINKING) {
@@ -243,6 +259,7 @@ open class AgentChatViewModelBase(
                     model = model,
                     partialContent = partialResult,
                     latencyMs = latencyMs.toFloat(),
+                    cacheHitPercentage = if (model.name == "Cloud-Model-OpenAI-Compatible") cacheHitPercentage else null
                   )
                 }
               }
@@ -300,19 +317,26 @@ open class AgentChatViewModelBase(
         if (model.name == "Cloud-Model-OpenAI-Compatible") {
           // Serialize history
           val messagesSnapshot = (uiState.value.messagesByModel[model.name] ?: listOf()).toList()
-          val historyList = messagesSnapshot.filter { it is ChatMessageText || it is ChatMessageThinking }.map { msg ->
-            val role = when (msg.side) {
-              ChatSide.USER -> "user"
-              ChatSide.AGENT -> "assistant"
-              ChatSide.SYSTEM -> "system"
-            }
-            val content = when (msg) {
-              is ChatMessageText -> msg.content
-              is ChatMessageThinking -> msg.content
-              else -> ""
-            }
-            "{\"role\":\"$role\",\"content\":${org.json.JSONObject.quote(content)}}"
+          val historyList = mutableListOf<String>()
+          val sysPrompt = uiSystemPrompt.value
+          if (sysPrompt.isNotEmpty()) {
+            historyList.add("{\"role\":\"system\",\"content\":${org.json.JSONObject.quote(sysPrompt)}}")
           }
+          historyList.addAll(
+            messagesSnapshot.filter { it is ChatMessageText || it is ChatMessageThinking }.map { msg ->
+              val role = when (msg.side) {
+                ChatSide.USER -> "user"
+                ChatSide.AGENT -> "assistant"
+                ChatSide.SYSTEM -> "system"
+              }
+              val content = when (msg) {
+                is ChatMessageText -> msg.content
+                is ChatMessageThinking -> msg.content
+                else -> ""
+              }
+              "{\"role\":\"$role\",\"content\":${org.json.JSONObject.quote(content)}}"
+            }
+          )
           extraContext["history"] = "[" + historyList.joinToString(",") + "]"
         }
 

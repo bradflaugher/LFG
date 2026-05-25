@@ -1,51 +1,44 @@
 # LFE
 
-A low-feature AI agent for Android. Skills-first, minimalistic, privacy-conscious.
+A minimal, privacy-first AI agent for Android. Skills-first and low-feature.
 
 ## What it does
 
-LFE runs LLMs (both on-device and cloud-based OpenAI-compatible APIs) on your phone and lets them call **skills** that execute locally.
-
+LFE runs large language models on your phone — both locally and via OpenAI-compatible APIs — and lets them call **skills** that execute actions directly on your device.
 
 ## Skills
 
-You can find the complete list of bundled skills in the [skills directory](android/src/app/src/main/assets/skills).
+Browse the full list of built-in skills in the [skills directory](android/src/app/src/main/assets/skills).
 
-Add your own by dropping a `SKILL.md` directory under
-`android/src/app/src/main/assets/skills/`. See **[docs/SKILLS.md](docs/SKILLS.md)**
-for the how-to — text personas, JavaScript skills, native intents, and
-hosting tips. The in-app **Skills → + → How to write skills** menu opens
-the same guide on your phone.
+See **[docs/SKILLS.md](docs/SKILLS.md)** for details on adding your own skills.
 
 ## Models
 
-Four Gemma 4 variants ship in the recommended list: **E2B** / **E4B** (stock, from
-litert-community — multi-modal text + image + audio) and **E2B-Abliterated** /
-**E4B-Abliterated** (uncensored, from
-[DuoNeural](https://huggingface.co/DuoNeural/Gemma-4-Abliterated-LiteRT) — text-only).
-All 32K context. Tap the gear icon to download.
+The app includes four recommended **Gemma 4** variants:
 
-Want something else? Grab any LiteRT-LM-compatible `.litertlm` or `.task` file from
-HuggingFace (or convert one yourself with [LiteRT-LM](https://github.com/google-ai-edge/LiteRT-LM)),
-copy or download it onto your device, and use **Import local model file** at the bottom of the
-model manager.
+- **E2B** and **E4B** — Stock multi-modal models (text + image + audio)
+- **E2B-Abliterated** and **E4B-Abliterated** — Uncensored versions (text-only)
+
+### Want a different model?
+
+1. Download any [LiteRT-LM](https://github.com/google-ai-edge/LiteRT-LM) compatible `.litertlm` or `.task` file from Hugging Face.
+2. Copy the file to your device, then use **Import local model file** at the bottom of the model manager.
+
+### Need a bigger model?
+
+LFE supports inference through any OpenAI-compatible API — perfect for models too large to run locally.
 
 ## Install
 
-Grab the latest APK from
-[**releases/latest**](https://github.com/bradflaugher/LFE/releases/latest) directly on your device.
+Download the latest APK from the [releases page](https://github.com/bradflaugher/LFE/releases/latest) directly on your Android device.
 
-Open the downloaded APK file and follow your device's instructions to install it. If you need help, check out the official Google guide on [how to install apps from other sources on Android](https://support.google.com/googleplay/answer/14669046).
+Open the APK and follow the on-screen instructions to install.  
+See Google’s guide on [installing apps from unknown sources](https://support.google.com/googleplay/answer/14669046) if needed.
 
-Latest Android APIs and build tooling required. LFE strictly targets the newest, bleeding-edge Android releases and does not support legacy Android versions or older environments.
+**Note:** LFE targets the latest Android versions only.
 
 ## License
 
 GPL-3.0-or-later. See [LICENSE](LICENSE).
 
-Includes code adapted from
-[Google AI Edge Gallery](https://github.com/google-ai-edge/gallery) (Apache License 2.0,
-© 2025 Google LLC) — much credit to that project — under Apache 2.0 § 4. Built on
-[LiteRT-LM](https://github.com/google-ai-edge/LiteRT-LM) and Mozilla
-[Readability.js](https://github.com/mozilla/readability). Inspired by
-[LFG](https://github.com/bradflaugher/LFG), a terminal sibling with the same skills layer.
+Includes code adapted from [Google AI Edge Gallery](https://github.com/google-ai-edge/gallery) (Apache 2.0).

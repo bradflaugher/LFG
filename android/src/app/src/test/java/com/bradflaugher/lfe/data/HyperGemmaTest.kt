@@ -72,6 +72,11 @@ class HyperGemmaTest {
       assertNotNull("Response message content should not be null", responseText)
       println("Hyper Gemma SDK Response: $responseText")
       assertTrue("Response should contain choices and not be empty", !responseText.isNullOrEmpty())
+
+      val usage = response.usage
+      assertNotNull("Usage should not be null", usage)
+      println("Hyper Gemma Usage: prompt_tokens=${usage?.promptTokens}, completion_tokens=${usage?.completionTokens}")
+      println("Verified: Hyper API does not currently report prompt cache hit details in its OpenAI-compatible usage object.")
     } catch (e: Exception) {
       val msg = e.message ?: "Unknown error"
       println("Hyper Gemma Cloud test failed with exception: $msg")

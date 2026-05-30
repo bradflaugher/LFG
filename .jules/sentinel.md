@@ -1,0 +1,4 @@
+## 2024-05-30 - Prevent token length leakage via timing attack in auth token comparison
+**Vulnerability:** The `secureEqual` function in `internal/server/auth.go` returned `false` early if the length of the provided token did not match the API key length. This allowed for an observable timing difference, enabling attackers to deduce the correct length of the secret token.
+**Learning:** Returning early on length mismatch defeats the purpose of a constant-time comparison loop that follows, as the length check introduces a data-dependent timing branch.
+**Prevention:** Rather than directly comparing the token strings, compute the SHA-256 hash of both strings. Because cryptographic hashes output fixed-length digests, the digest length is uniform. Comparing the two uniform-length digests using `crypto/subtle`'s `ConstantTimeCompare` ensures the execution time is truly constant, preventing length leakage and subsequent timing attacks.

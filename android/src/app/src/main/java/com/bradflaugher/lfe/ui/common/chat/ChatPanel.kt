@@ -149,7 +149,7 @@ fun ChatPanel(
   val imageCountToLastConfigChange =
     remember(messages) {
       var imageCount = 0
-      for (message in messages.reversed()) {
+      for (message in messages.asReversed()) {
         if (message is ChatMessageImage) {
           imageCount += message.bitmaps.size
         }
@@ -159,7 +159,7 @@ fun ChatPanel(
   val audioClipMesssageCountToLastconfigChange =
     remember(messages) {
       var audioClipMessageCount = 0
-      for (message in messages.reversed()) {
+      for (message in messages.asReversed()) {
         if (message is ChatMessageAudioClip) {
           audioClipMessageCount++
         }

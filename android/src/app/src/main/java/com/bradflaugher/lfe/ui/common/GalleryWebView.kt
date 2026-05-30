@@ -148,7 +148,7 @@ fun GalleryWebView(
         settings.apply {
           javaScriptEnabled = true
           domStorageEnabled = true
-          allowFileAccess = true
+          allowFileAccess = false
           mediaPlaybackRequiresUserGesture = false
         }
 

@@ -1,0 +1,3 @@
+## 2024-05-30 - Optimize rune iteration with IndexByte
+**Learning:** In Go, iterating over characters (runes) in a large string (like a 64KB bash output buffer) using `for i, r := range s` is significantly slower (e.g. ~78µs) than searching for a specific byte using `strings.IndexByte(s, '\n')` (e.g. ~2.4µs). When we just need to locate an ASCII character like a newline, `strings.IndexByte` provides a ~30x speedup by operating directly on bytes with optimized assembly rather than decoding UTF-8 runes.
+**Action:** Default to byte-oriented functions (`strings.IndexByte`, `bytes.IndexByte`) when searching for ASCII characters in large strings or byte slices, avoiding `for...range` loops unless proper UTF-8 decoding is explicitly required.

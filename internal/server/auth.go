@@ -1,6 +1,8 @@
 package server
 
 import (
+	"crypto/sha256"
+	"crypto/subtle"
 	"net/http"
 	"strings"
 )
@@ -31,13 +33,9 @@ func (s *Server) authMiddleware(next http.Handler) http.Handler {
 }
 
 // secureEqual is a constant-time string comparison to avoid timing-based token leaks.
+// It hashes both strings to avoid leaking the token length via early returns.
 func secureEqual(a, b string) bool {
-	if len(a) != len(b) {
-		return false
-	}
-	var diff byte
-	for i := 0; i < len(a); i++ {
-		diff |= a[i] ^ b[i]
-	}
-	return diff == 0
+	hashA := sha256.Sum256([]byte(a))
+	hashB := sha256.Sum256([]byte(b))
+	return subtle.ConstantTimeCompare(hashA[:], hashB[:]) == 1
 }

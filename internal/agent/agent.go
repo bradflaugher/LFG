@@ -4,6 +4,8 @@
 package agent
 
 import (
+	"strings"
+
 	"context"
 	"fmt"
 	"io"
@@ -104,11 +106,8 @@ func compactInput(s string) string {
 }
 
 func firstLine(s string, max int) string {
-	for i, r := range s {
-		if r == '\n' {
-			s = s[:i]
-			break
-		}
+	if i := strings.IndexByte(s, '\n'); i >= 0 {
+		s = s[:i]
 	}
 	if len(s) > max {
 		return s[:max-1] + "…"

@@ -148,7 +148,9 @@ fun GalleryWebView(
         settings.apply {
           javaScriptEnabled = true
           domStorageEnabled = true
-          allowFileAccess = true
+          // Prevent path traversal and local file inclusion vulnerabilities.
+          // WebViewAssetLoader is used instead to serve local assets securely.
+          allowFileAccess = false
           mediaPlaybackRequiresUserGesture = false
         }
 

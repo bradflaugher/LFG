@@ -7,6 +7,7 @@ import (
 	"context"
 	"fmt"
 	"io"
+	"strings"
 	"time"
 
 	"charm.land/fantasy"
@@ -104,11 +105,10 @@ func compactInput(s string) string {
 }
 
 func firstLine(s string, max int) string {
-	for i, r := range s {
-		if r == '\n' {
-			s = s[:i]
-			break
-		}
+	// Optimization: strings.IndexByte avoids UTF-8 decoding overhead in tight loops
+	// compared to range loops, significantly speeding up large text chunk parsing.
+	if i := strings.IndexByte(s, '\n'); i >= 0 {
+		s = s[:i]
 	}
 	if len(s) > max {
 		return s[:max-1] + "…"

@@ -478,4 +478,5 @@
   <!-- Content description spoken when the "chat history" icon is focused. [CHAR_LIMIT=NONE] -->
   <string name="cd_chat_history">Chat history</string>
 
+  <string name="cd_export_chat_history">Export chat history</string>
 </resources>

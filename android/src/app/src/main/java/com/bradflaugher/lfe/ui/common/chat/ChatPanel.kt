@@ -142,9 +142,15 @@ fun ChatPanel(
   val context = LocalContext.current
   val clipboard =
     remember(context) { context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager }
+  val copySuccessMessage = stringResource(R.string.snackbar_copy_to_clipboard_success)
   val copyToClipboard: (String) -> Unit =
-    remember(clipboard) {
-      { text -> clipboard.setPrimaryClip(ClipData.newPlainText("message", text)) }
+    remember(clipboard, scope, snackbarHostState, copySuccessMessage) {
+      { text ->
+        clipboard.setPrimaryClip(ClipData.newPlainText("message", text))
+        scope.launch {
+          snackbarHostState.showSnackbar(copySuccessMessage)
+        }
+      }
     }
   val imageCountToLastConfigChange =
     remember(messages) {

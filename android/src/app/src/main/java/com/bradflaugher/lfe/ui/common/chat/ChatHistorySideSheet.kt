@@ -157,7 +157,7 @@ fun ChatHistorySideSheetContent(
           ) {
             Icon(
               Icons.Outlined.FileDownload,
-              contentDescription = "Export chat history",
+              contentDescription = stringResource(R.string.cd_export_chat_history),
               tint = MaterialTheme.colorScheme.onSurfaceVariant
             )
           }

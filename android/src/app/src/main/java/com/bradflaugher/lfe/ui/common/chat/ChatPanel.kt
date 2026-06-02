@@ -40,9 +40,11 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ContentCopy
 import androidx.compose.material.icons.rounded.Refresh
@@ -177,7 +179,7 @@ fun ChatPanel(
   val focusManager = LocalFocusManager.current
 
   // List state to control scrolling.
-  val listState = rememberScrollState()
+  val listState = rememberLazyListState()
   val density = LocalDensity.current
   var showErrorDialog by remember { mutableStateOf(false) }
   var showFeedbackDialog by remember { mutableStateOf(false) }
@@ -338,15 +340,15 @@ fun ChatPanel(
           },
       ) {
         val cdChatPanel = stringResource(R.string.cd_chat_panel)
-        Column(
+        LazyColumn(
+          state = listState,
           modifier =
             Modifier.fillMaxSize()
               .nestedScroll(nestedScrollConnection)
-              .verticalScroll(state = listState)
               .semantics { contentDescription = cdChatPanel },
           verticalArrangement = Arrangement.Top,
         ) {
-          messages.forEachIndexed { index, message ->
+          itemsIndexed(messages) { index, message ->
             val imageHistoryCurIndex = remember { mutableIntStateOf(0) }
             var hAlign: Alignment.Horizontal = Alignment.End
             var backgroundColor: Color = MaterialTheme.customColors.userBubbleBgColor
@@ -546,7 +548,9 @@ fun ChatPanel(
           // positioned at the top edge of the view when the list is scrolled to the bottom.
           //
           // See how `dynamicBottomPadding` is calculated above.
-          Spacer(modifier = Modifier.height(dynamicBottomPadding).fillMaxWidth())
+          item {
+            Spacer(modifier = Modifier.height(dynamicBottomPadding).fillMaxWidth())
+          }
         }
 
         SnackbarHost(hostState = snackbarHostState, modifier = Modifier.padding(vertical = 4.dp))
@@ -668,16 +672,15 @@ fun ChatPanel(
 }
 
 private suspend fun scrollToBottom(
-  listState: ScrollState,
+  listState: LazyListState,
   animate: Boolean = false,
   animationDurationMs: Int = SCROLL_ANIMATION_DURATION_MS,
 ) {
-  if (animate) {
-    listState.animateScrollTo(
-      listState.maxValue,
-      animationSpec = tween(durationMillis = animationDurationMs, easing = FastOutSlowInEasing),
-    )
-  } else {
-    listState.scrollTo(listState.maxValue)
+  if (listState.layoutInfo.totalItemsCount > 0) {
+    if (animate) {
+      listState.animateScrollToItem(listState.layoutInfo.totalItemsCount - 1)
+    } else {
+      listState.scrollToItem(listState.layoutInfo.totalItemsCount - 1)
+    }
   }
 }

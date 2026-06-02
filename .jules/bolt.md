@@ -1,3 +1,3 @@
-## 2024-05-30 - Compose Recomposition Memory Leak
-**Learning:** In Jetpack Compose `remember` blocks that process large lists (like chat histories), using operations that allocate new collections (like `.reversed()`) causes unnecessary heap allocations and GC pressure on every recomposition.
-**Action:** Use `.asReversed()` instead of `.reversed()` when iterating backwards to create an O(1) view rather than an O(N) copy, especially in frequently recomposed UI layers.
+## 2026-06-02 - [Jetpack Compose LazyColumn State and Scrolling]
+**Learning:** When refactoring a Compose `Column` to a `LazyColumn` for performance, two critical issues occur: 1) local state inside items is lost when scrolled off-screen if using `remember` (must use `rememberSaveable`), and 2) `scrollToItem` aligns to the top of the viewport by default, which can obscure dynamic-height items like bottom Spacers unless an explicit, large `scrollOffset` is passed.
+**Action:** When migrating lists to `LazyColumn`, proactively replace `remember` with `rememberSaveable` for item state, and apply large offsets when scrolling to bottom items to guarantee bottom-alignment.

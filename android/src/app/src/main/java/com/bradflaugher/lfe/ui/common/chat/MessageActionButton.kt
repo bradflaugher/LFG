@@ -53,12 +53,12 @@ fun MessageActionButton(
             MaterialTheme.colorScheme.surfaceContainerHigh
           },
         )
-        .clickable(enabled = enabled) { onClick() },
+        .clickable(enabled = enabled, onClickLabel = label) { onClick() },
     verticalAlignment = Alignment.CenterVertically,
   ) {
     Icon(
       icon,
-      contentDescription = null,
+      contentDescription = null, // Handled by Row's click label
       modifier = Modifier.size(16.dp).offset(x = 6.dp).alpha(alpha),
     )
     Text(

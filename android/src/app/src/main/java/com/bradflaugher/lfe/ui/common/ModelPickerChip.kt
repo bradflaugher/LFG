@@ -123,7 +123,7 @@ fun ModelPickerChip(
         Icon(
           Icons.Rounded.ArrowDropDown,
           modifier = Modifier.size(20.dp),
-          contentDescription = null,
+          contentDescription = null, // handled by Row semantics
         )
       }
     }

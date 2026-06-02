@@ -173,6 +173,8 @@ fun WebLoginDialog(
                 webViewRef = this
                 settings.javaScriptEnabled = true
                 settings.domStorageEnabled = true
+                // SECURITY: Disable direct file access to prevent path traversal / local file inclusion vulnerabilities.
+                settings.allowFileAccess = false
                 settings.userAgentString = "Mozilla/5.0 (Linux; Android 16) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Mobile Safari/537.36"
 
                 CookieManager.getInstance().setAcceptCookie(true)

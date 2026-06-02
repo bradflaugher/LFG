@@ -162,6 +162,8 @@ object ArticleFetcher {
     val webView = WebView(context).apply {
       settings.javaScriptEnabled = true
       settings.domStorageEnabled = true
+      // SECURITY: Disable direct file access to prevent path traversal / local file inclusion vulnerabilities.
+      settings.allowFileAccess = false
       settings.loadsImagesAutomatically = true
       settings.blockNetworkImage = false
       settings.userAgentString = DEFAULT_USER_AGENT

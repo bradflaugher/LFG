@@ -25,7 +25,7 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
 import androidx.compose.animation.slideInVertically
-import androidx.compose.foundation.ScrollState
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -40,9 +40,13 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
+
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ContentCopy
 import androidx.compose.material.icons.rounded.Refresh
@@ -177,7 +181,7 @@ fun ChatPanel(
   val focusManager = LocalFocusManager.current
 
   // List state to control scrolling.
-  val listState = rememberScrollState()
+  val listState = rememberLazyListState()
   val density = LocalDensity.current
   var showErrorDialog by remember { mutableStateOf(false) }
   var showFeedbackDialog by remember { mutableStateOf(false) }
@@ -338,16 +342,16 @@ fun ChatPanel(
           },
       ) {
         val cdChatPanel = stringResource(R.string.cd_chat_panel)
-        Column(
+        LazyColumn(
           modifier =
             Modifier.fillMaxSize()
               .nestedScroll(nestedScrollConnection)
-              .verticalScroll(state = listState)
               .semantics { contentDescription = cdChatPanel },
           verticalArrangement = Arrangement.Top,
+          state = listState,
         ) {
-          messages.forEachIndexed { index, message ->
-            val imageHistoryCurIndex = remember { mutableIntStateOf(0) }
+          itemsIndexed(messages) { index, message ->
+            val imageHistoryCurIndex = rememberSaveable { mutableIntStateOf(0) }
             var hAlign: Alignment.Horizontal = Alignment.End
             var backgroundColor: Color = MaterialTheme.customColors.userBubbleBgColor
             var hardCornerAtLeftOrRight = false
@@ -542,11 +546,13 @@ fun ChatPanel(
             }
           }
 
-          // The spacer at the bottom to push the content up so that the last user message will be
-          // positioned at the top edge of the view when the list is scrolled to the bottom.
-          //
-          // See how `dynamicBottomPadding` is calculated above.
-          Spacer(modifier = Modifier.height(dynamicBottomPadding).fillMaxWidth())
+          item {
+            // The spacer at the bottom to push the content up so that the last user message will be
+            // positioned at the top edge of the view when the list is scrolled to the bottom.
+            //
+            // See how `dynamicBottomPadding` is calculated above.
+            Spacer(modifier = Modifier.height(dynamicBottomPadding).fillMaxWidth())
+          }
         }
 
         SnackbarHost(hostState = snackbarHostState, modifier = Modifier.padding(vertical = 4.dp))
@@ -668,16 +674,17 @@ fun ChatPanel(
 }
 
 private suspend fun scrollToBottom(
-  listState: ScrollState,
+  listState: LazyListState,
   animate: Boolean = false,
   animationDurationMs: Int = SCROLL_ANIMATION_DURATION_MS,
 ) {
+  val targetIndex = maxOf(0, listState.layoutInfo.totalItemsCount - 1)
   if (animate) {
-    listState.animateScrollTo(
-      listState.maxValue,
-      animationSpec = tween(durationMillis = animationDurationMs, easing = FastOutSlowInEasing),
+    listState.animateScrollToItem(
+      targetIndex,
+      scrollOffset = 10000
     )
   } else {
-    listState.scrollTo(listState.maxValue)
+    listState.scrollToItem(targetIndex, scrollOffset = 10000)
   }
 }

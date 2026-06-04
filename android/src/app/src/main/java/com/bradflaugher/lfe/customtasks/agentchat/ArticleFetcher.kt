@@ -166,6 +166,8 @@ object ArticleFetcher {
       settings.blockNetworkImage = false
       settings.userAgentString = DEFAULT_USER_AGENT
       settings.cacheMode = WebSettings.LOAD_DEFAULT
+      // SECURITY: Explicitly disable file access to prevent path traversal/LFI vulnerabilities
+      settings.allowFileAccess = false
     }
     CookieManager.getInstance().setAcceptCookie(true)
     CookieManager.getInstance().setAcceptThirdPartyCookies(webView, true)

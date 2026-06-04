@@ -479,4 +479,10 @@
   <string name="cd_chat_history">Chat history</string>
 
   <string name="cd_export_chat_history">Export chat history</string>
+
+  <!-- Additions by Palette -->
+  <string name="cd_search">Search</string>
+  <string name="cd_cancel">Cancel</string>
+  <string name="cd_action_button">Action: %1$s</string>
+  <string name="cd_dropdown_arrow">Dropdown</string>
 </resources>

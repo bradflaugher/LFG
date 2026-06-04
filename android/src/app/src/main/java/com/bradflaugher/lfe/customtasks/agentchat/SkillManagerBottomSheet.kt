@@ -362,11 +362,11 @@ fun SkillManagerBottomSheet(
               modifier = Modifier.weight(1f).clearFocusOnKeyboardDismiss(),
               shape = CircleShape,
               placeholder = { Text(stringResource(R.string.search_skill)) },
-              leadingIcon = { Icon(Icons.Rounded.Search, contentDescription = null) },
+              leadingIcon = { Icon(Icons.Rounded.Search, contentDescription = stringResource(R.string.cd_search)) },
               trailingIcon = {
                 if (searchQuery.trim().isNotEmpty()) {
                   IconButton(onClick = { searchQuery = "" }) {
-                    Icon(Icons.Outlined.Cancel, contentDescription = null)
+                    Icon(Icons.Outlined.Cancel, contentDescription = stringResource(R.string.cd_cancel))
                   }
                 }
               },

@@ -108,11 +108,11 @@ fun LogsViewer(
             .clearFocusOnKeyboardDismiss(),
         shape = CircleShape,
         singleLine = true,
-        leadingIcon = { Icon(Icons.Rounded.Search, contentDescription = null) },
+        leadingIcon = { Icon(Icons.Rounded.Search, contentDescription = stringResource(R.string.cd_search)) },
         trailingIcon = {
           if (filterText.isNotEmpty()) {
             IconButton(onClick = { filterText = "" }) {
-              Icon(Icons.Outlined.Cancel, contentDescription = "Clear filter")
+              Icon(Icons.Outlined.Cancel, contentDescription = stringResource(R.string.cd_cancel))
             }
           }
         },

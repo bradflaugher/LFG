@@ -5,3 +5,7 @@
 ## 2025-02-12 - Jetpack Compose Linting
 **Learning:** `LocalContextGetResourceValueCall` lint error happens when calling `context.getString()` inside `remember` blocks in Jetpack Compose, as changes to Configuration objects won't trigger invalidation.
 **Action:** Always extract string resources using `stringResource()` outside the block, then pass the resolved string as a dependency to the block or closure.
+
+## 2026-06-02 - Redundant Semantics Node
+**Learning:** Some compose elements like `Row` or `Modifier.clickable` can have `onClickLabel` properties or custom semantics that apply to its children, making nested `contentDescription`s on components like `Icon` redundant. Setting `contentDescription = null` for icons wrapped in parents with accurate semantic labels reduces screen reader double-reads.
+**Action:** Always check the parent composable elements for accessibility semantics before assigning an explicit string to a purely decorative or wrapped inner element.

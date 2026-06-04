@@ -194,12 +194,12 @@ fun AddSkillFromFeatureListBottomSheet(
           modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp, top = 8.dp),
           shape = CircleShape,
           placeholder = { Text(stringResource(R.string.search_skill)) },
-          leadingIcon = { Icon(Icons.Rounded.Search, contentDescription = null) },
+          leadingIcon = { Icon(Icons.Rounded.Search, contentDescription = stringResource(R.string.cd_search)) },
           trailingIcon = {
             // Show a clear button if the search query is not empty.
             if (searchQuery.trim().isNotEmpty()) {
               IconButton(onClick = { searchQuery = "" }) {
-                Icon(Icons.Outlined.Cancel, contentDescription = null)
+                Icon(Icons.Outlined.Cancel, contentDescription = stringResource(R.string.cd_cancel))
               }
             }
           },

@@ -175,6 +175,7 @@ fun WebLoginDialog(
                 settings.domStorageEnabled = true
                 // SECURITY: Explicitly disable file access to prevent path traversal/LFI vulnerabilities
                 settings.allowFileAccess = false
+                settings.allowContentAccess = false
                 settings.userAgentString = "Mozilla/5.0 (Linux; Android 16) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Mobile Safari/537.36"
 
                 CookieManager.getInstance().setAcceptCookie(true)

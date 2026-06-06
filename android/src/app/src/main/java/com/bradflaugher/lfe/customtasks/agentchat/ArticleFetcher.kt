@@ -168,6 +168,7 @@ object ArticleFetcher {
       settings.cacheMode = WebSettings.LOAD_DEFAULT
       // SECURITY: Explicitly disable file access to prevent path traversal/LFI vulnerabilities
       settings.allowFileAccess = false
+      settings.allowContentAccess = false
     }
     CookieManager.getInstance().setAcceptCookie(true)
     CookieManager.getInstance().setAcceptThirdPartyCookies(webView, true)

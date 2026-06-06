@@ -48,6 +48,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.bradflaugher.lfe.data.DataStoreRepository
@@ -135,7 +137,8 @@ fun CloudProviderDialog(
           label = { Text("Model Name (Display Name)") },
           placeholder = { Text("Cloud Model") },
           singleLine = true,
-          modifier = Modifier.fillMaxWidth()
+          modifier = Modifier.fillMaxWidth(),
+          keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next)
         )
 
         // Endpoint URL
@@ -146,7 +149,7 @@ fun CloudProviderDialog(
           placeholder = { Text("https://hyper.charm.land/v1/") },
           singleLine = true,
           modifier = Modifier.fillMaxWidth(),
-          keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Uri)
+          keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Uri, imeAction = ImeAction.Next)
         )
 
         // API Key
@@ -166,7 +169,7 @@ fun CloudProviderDialog(
               )
             }
           },
-          keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
+          keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password, imeAction = ImeAction.Next)
         )
 
         // Model ID
@@ -176,7 +179,18 @@ fun CloudProviderDialog(
           label = { Text("Model ID") },
           placeholder = { Text("gemma-4-26b-a4b-it") },
           singleLine = true,
-          modifier = Modifier.fillMaxWidth()
+          modifier = Modifier.fillMaxWidth(),
+          keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+          keyboardActions = KeyboardActions(
+            onDone = {
+              dataStoreRepository.saveSecret("CLOUD_DISPLAY_NAME", customDisplayName.trim())
+              dataStoreRepository.saveSecret("CLOUD_API_ENDPOINT", endpoint.trim())
+              dataStoreRepository.saveSecret("CLOUD_API_KEY", apiKey.trim())
+              dataStoreRepository.saveSecret("CLOUD_MODEL_ID", modelId.trim())
+              onSettingsSaved()
+              onDismiss()
+            }
+          )
         )
 
         Spacer(modifier = Modifier.height(8.dp))

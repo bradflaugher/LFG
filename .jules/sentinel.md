@@ -7,3 +7,7 @@
 **Vulnerability:** WebView instances in `ArticleFetcher.kt` and `WebLoginDialog.kt` implicitly relied on default `allowFileAccess` settings.
 **Learning:** Default behaviors vary across API levels. Relying on defaults leaves the application potentially vulnerable on older API levels to path traversal and local file inclusion (LFI) attacks.
 **Prevention:** Always explicitly set `settings.allowFileAccess = false` on all WebViews for consistent security configuration across all supported API levels.
+## 2025-02-14 - Prevent Local Content Inclusion via content:// URIs in WebViews
+**Vulnerability:** WebViews allowed content access by default, creating local content inclusion vulnerabilities if malicious HTML contained content:// URIs, possibly reading sensitive internal content provider data.
+**Learning:** Default WebView settings allowed content access, requiring explicit hardening, even when file access is disabled and WebViewAssetLoader is used for local assets.
+**Prevention:** Always set settings.allowContentAccess = false when configuring a WebView that does not strictly require access to content providers.

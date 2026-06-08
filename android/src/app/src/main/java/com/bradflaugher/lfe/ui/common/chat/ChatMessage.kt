@@ -47,6 +47,8 @@ open class ChatMessage(
   open val accelerator: String = "",
   open val hideSenderLabel: Boolean = false,
   open val disableBubbleShape: Boolean = false,
+  // Added stable ID to optimize LazyColumn recomposition by providing a unique key
+  open val id: String = java.util.UUID.randomUUID().toString(),
 ) {
   open fun clone(): ChatMessage {
     val cloned =
@@ -57,6 +59,7 @@ open class ChatMessage(
         accelerator = accelerator,
         hideSenderLabel = hideSenderLabel,
         disableBubbleShape = disableBubbleShape,
+        id = id,
       )
     return cloned
   }
@@ -66,9 +69,10 @@ open class ChatMessage(
 class ChatMessageLoading(
   var extraProgressLabel: String = "",
   override val accelerator: String = "",
+  override val id: String = java.util.UUID.randomUUID().toString(),
 ) : ChatMessage(type = ChatMessageType.LOADING, side = ChatSide.AGENT, accelerator = accelerator) {
   override fun clone(): ChatMessageLoading {
-    return ChatMessageLoading(extraProgressLabel = extraProgressLabel, accelerator = accelerator)
+    return ChatMessageLoading(extraProgressLabel = extraProgressLabel, accelerator = accelerator, id = id)
   }
 }
 
@@ -95,6 +99,7 @@ open class ChatMessageText(
   override val hideSenderLabel: Boolean = false,
   var data: Any? = null,
   var cacheHitPercentage: Float? = null,
+  override val id: String = java.util.UUID.randomUUID().toString(),
 ) :
   ChatMessage(
       type = ChatMessageType.TEXT,
@@ -114,6 +119,7 @@ open class ChatMessageText(
         hideSenderLabel = hideSenderLabel,
         data = data,
         cacheHitPercentage = cacheHitPercentage,
+        id = id,
       )
     return cloned
   }
@@ -133,6 +139,7 @@ class ChatMessageImage(
    * updates.
    */
   var persistedPaths: List<String>? = null,
+  override val id: String = java.util.UUID.randomUUID().toString(),
 ) :
   ChatMessage(
       type = ChatMessageType.IMAGE,
@@ -150,6 +157,7 @@ class ChatMessageImage(
       accelerator = accelerator,
       hideSenderLabel = hideSenderLabel,
       persistedPaths = persistedPaths?.toList(),
+      id = id,
     )
   }
 }
@@ -164,6 +172,7 @@ class ChatMessageAudioClip(
    * Caches the local absolute file path to bypass redundant disk write I/O during session saves.
    */
   var persistedPath: String? = null,
+  override val id: String = java.util.UUID.randomUUID().toString(),
 ) : ChatMessage(type = ChatMessageType.AUDIO_CLIP, side = side, latencyMs = latencyMs) {
   override fun clone(): ChatMessageAudioClip {
     return ChatMessageAudioClip(
@@ -172,6 +181,7 @@ class ChatMessageAudioClip(
       side = side,
       latencyMs = latencyMs,
       persistedPath = persistedPath,
+      id = id,
     )
   }
 
@@ -250,6 +260,7 @@ class ChatMessageWebView(
   val aspectRatio: Float,
   override val side: ChatSide = ChatSide.AGENT,
   override val hideSenderLabel: Boolean = false,
+  override val id: String = java.util.UUID.randomUUID().toString(),
 ) :
   ChatMessage(
       type = ChatMessageType.WEBVIEW,
@@ -264,6 +275,7 @@ class ChatMessageWebView(
       aspectRatio = aspectRatio,
       side = side,
       hideSenderLabel = hideSenderLabel,
+      id = id,
     )
   }
 }
@@ -292,6 +304,7 @@ class ChatMessageCollapsableProgressPanel(
   val items: List<ProgressPanelItem> = listOf(),
   val logMessages: List<LogMessage> = listOf(),
   val customData: Any? = null,
+  override val id: String = java.util.UUID.randomUUID().toString(),
 ) :
   ChatMessage(
       type = ChatMessageType.COLLAPSABLE_PROGRESS_PANEL,
@@ -307,6 +320,7 @@ class ChatMessageCollapsableProgressPanel(
       items = items.toList(),
       logMessages = logMessages.toList(),
       customData = customData,
+      id = id,
     )
   }
 }
@@ -318,6 +332,7 @@ class ChatMessageThinking(
   override val side: ChatSide = ChatSide.AGENT,
   override val hideSenderLabel: Boolean = false,
   override val accelerator: String = "",
+  override val id: String = java.util.UUID.randomUUID().toString(),
 ) :
   ChatMessage(
       type = ChatMessageType.THINKING,
@@ -333,6 +348,7 @@ class ChatMessageThinking(
       side = side,
       hideSenderLabel = hideSenderLabel,
       accelerator = accelerator,
+      id = id,
     )
   }
 }

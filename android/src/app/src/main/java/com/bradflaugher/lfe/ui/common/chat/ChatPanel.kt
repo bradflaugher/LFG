@@ -350,7 +350,11 @@ fun ChatPanel(
           verticalArrangement = Arrangement.Top,
           state = listState,
         ) {
-          itemsIndexed(messages) { index, message ->
+          // ⚡ Bolt Performance Optimization:
+          // Added a unique `key` parameter to `itemsIndexed` using the stable `message.id`.
+          // This allows Jetpack Compose to track items correctly, reducing unnecessary
+          // recompositions when messages are added or updated in the large chat list.
+          itemsIndexed(messages, key = { _, message -> message.id }) { index, message ->
             val imageHistoryCurIndex = rememberSaveable { mutableIntStateOf(0) }
             var hAlign: Alignment.Horizontal = Alignment.End
             var backgroundColor: Color = MaterialTheme.customColors.userBubbleBgColor

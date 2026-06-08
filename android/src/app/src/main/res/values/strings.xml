@@ -485,4 +485,9 @@
   <string name="cd_cancel">Cancel</string>
   <string name="cd_action_button">Action: %1$s</string>
   <string name="cd_dropdown_arrow">Dropdown</string>
+
+  <string name="action_take_picture">Take a picture</string>
+  <string name="action_pick_from_album">Pick from album</string>
+  <string name="action_record_audio_clip">Record audio clip</string>
+  <string name="action_pick_wav_file">Pick wav file</string>
 </resources>

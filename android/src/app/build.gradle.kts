@@ -19,7 +19,7 @@ plugins {
 
 android {
   namespace = "com.bradflaugher.lfe"
-  compileSdk = 36
+  compileSdk = 37
 
   defaultConfig {
     applicationId = "com.bradflaugher.lfe"

@@ -1,43 +1,75 @@
 # LFE
 
-A minimal, privacy-first AI agent for Android. Skills-first and low-feature.
+**The AI that never leaves your phone.** For everything you wouldn't paste into
+ChatGPT — and everything the big assistants won't do.
 
-## What it does
+LFE runs language models entirely on-device (or, if you choose, via an
+OpenAI-compatible API). It ships **uncensored** model options on purpose, and it
+lets the model call **skills** that act on your device. No account, no telemetry,
+works in airplane mode.
 
-LFE runs large language models on your phone (both locally and via OpenAI-compatible APIs) and lets them call **skills** that execute actions directly on your device.
+## Why LFE, when you already have Gemini / Claude / ChatGPT?
 
-## What can I actually do with it?
+You should keep those — they're more powerful, and great for everyday work. LFE
+is for the things they're *structurally* bad at:
 
-LFE *does things*, not just chats — all on-device. A few one-liners to try:
+- 🔒 **Private** — it runs on the device, so nothing you give it leaves your
+  pocket. It's the right tool for anything you'd never paste into a cloud chatbot.
+- 🙅 **Uncensored** — it ships [Abliterated](#models) models that don't refuse or
+  lecture, so it answers the frank, sensitive, or creative stuff the cloud models
+  sanitize.
+- ✈️ **Offline & yours** — no account, no signal required, no data harvesting.
 
-- 📶 **"Make a Wi-Fi QR code for *Cabin-5G*, password *trailmix2026*."** — guests scan to join.
-- 🧾 **"Split $128.40 four ways with a 20% tip."** — instant per-person amount, works offline.
-- ✈️ **"How much is 7,500 yen in dollars?"** — live currency conversion.
-- 💬 **"Rewrite this politely and text it to 555-0142: …"** — polishes the message, opens your SMS app pre-filled.
-- ⏰ **"Remind me to take the chicken out at 5pm."** — adds it to your calendar.
-- 📝 **"Note that I parked on level 3, section D."** … later: **"What were my notes?"**
-- 🍳 **"I've got eggs, onion, and cheddar — dinner ideas?"**
-- 📰 **"Summarize this article: <url>"** — fetched and condensed privately on the phone.
+Think of LFE as the **privacy front-end to your other AI tools**: sanitize, read,
+and reason about sensitive things here, then take the safe result to a bigger
+model if you want.
 
-👉 **[See the full recipe book → docs/RECIPES.md](docs/RECIPES.md)** for these and more, including multi-skill combos.
+## What it's best at
+
+Toggle skills on in the chat's **Skills** sheet, then just talk to it. The
+bundled set is built around the niche:
+
+**🔒 Privacy power-tools**
+- 🛡️ **Redact** — *"Scrub the names and account numbers out of this so I can safely paste it into ChatGPT."*
+- 📄 **Confidential Desk** — *"What does this lab result / lease / legal letter actually mean?"* — reads it on-device, nothing uploaded.
+- 🎣 **Scam check** — *"Is this text from 'my bank' a scam?"* — spot phishing without forwarding it anywhere.
+- 👁️ **Privacy Lens** — *"What is this app's privacy policy actually taking?"*
+
+**🙅 Won't say no** *(best with an Abliterated model)*
+- 💬 **Straight answer** — frank, judgment-free answers to sensitive personal questions.
+- ✍️ **Unfiltered muse** — an uncensored partner for mature/dark fiction.
+- 🎭 **Roleplay & rehearse** — practice a hard conversation, or immersive character chat — privately.
+- ⚖️ **Devil's advocate** — argue any side, steelman the uncomfortable position, pressure-test your thinking.
+
+**📓 Your data stays yours**
+- Private journal, mood tracker, notes, and budget — all on-device, never synced.
+
+**✈️ Offline & personal**
+- On-device translation, local password generation, and your calendar.
+
+👉 **[See the recipe book → docs/RECIPES.md](docs/RECIPES.md)** for concrete walkthroughs.
 
 ## Skills
 
-Skills are how LFE does anything beyond text — a persona, a bit of JavaScript, or
-an Android intent. Toggle them on in the chat's **Skills** sheet. The bundled set
-covers everyday phone tasks (Wi-Fi QR, tip splitting, currency conversion, quick
-notes, reminders, message proofreading, article summaries, and more).
-
-Browse them in the [skills directory](android/src/app/src/main/assets/skills), and
-see **[docs/SKILLS.md](docs/SKILLS.md)** to write your own — it's mostly just one
+Skills are how LFE does anything beyond plain chat — a persona, a bit of
+JavaScript, or an Android intent. Browse them in the
+[skills directory](android/src/app/src/main/assets/skills), and see
+**[docs/SKILLS.md](docs/SKILLS.md)** to write your own — it's mostly just one
 `SKILL.md` file.
+
+The four "won't say no" skills and the calendar skills are **off by default**
+(they reshape the assistant's voice or touch other apps) — flip them on in the
+Skills sheet when you want them.
 
 ## Models
 
-The app includes four recommended **Gemma 4** variants:
+The app includes four recommended **Gemma 4** variants — pick based on the job:
 
-- **E2B** and **E4B** — Stock multi-modal models (text + image + audio)
-- **E2B-Abliterated** and **E4B-Abliterated** — Uncensored versions (text-only)
+- **E2B** and **E4B** — Stock multi-modal models (text + image + audio). Use
+  these for the vision skills like **Confidential Desk** (photograph a document).
+- **E2B-Abliterated** and **E4B-Abliterated** — **Uncensored** (text-only). Switch
+  to these for the "won't say no" skills — frank answers, mature fiction, roleplay,
+  devil's advocate.
 
 ### Want a different model?
 

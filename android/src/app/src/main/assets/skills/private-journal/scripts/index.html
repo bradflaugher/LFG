@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Private Journal</title>
+</head>
+<body>
+  <script>
+    const STORE_KEY = 'lfe_private_journal';
+
+    function load() {
+      try {
+        const raw = localStorage.getItem(STORE_KEY);
+        const arr = raw ? JSON.parse(raw) : [];
+        return Array.isArray(arr) ? arr : [];
+      } catch (e) {
+        return [];
+      }
+    }
+    function save(entries) {
+      localStorage.setItem(STORE_KEY, JSON.stringify(entries));
+    }
+
+    window['ai_edge_gallery_get_result'] = async (data) => {
+      try {
+        const { action, text, days, id } = JSON.parse(data);
+        let entries = load();
+
+        switch (action) {
+          case 'add': {
+            if (!text || !String(text).trim()) {
+              return JSON.stringify({ error: 'The entry was empty — nothing saved.' });
+            }
+            const entry = { id: Date.now(), text: String(text).trim(), ts: new Date().toISOString() };
+            entries.push(entry);
+            save(entries);
+            return JSON.stringify({ result: `Saved your entry (#${entry.id}).` });
+          }
+          case 'list': {
+            let out = entries;
+            if (days && Number(days) > 0) {
+              const cutoff = Date.now() - Number(days) * 24 * 60 * 60 * 1000;
+              out = entries.filter((e) => new Date(e.ts).getTime() >= cutoff);
+            }
+            if (out.length === 0) {
+              return JSON.stringify({ result: 'No journal entries yet.' });
+            }
+            const lines = out.map((e) => {
+              const when = new Date(e.ts).toLocaleString();
+              return `#${e.id} (${when}):\n${e.text}`;
+            });
+            return JSON.stringify({ result: lines.join('\n\n') });
+          }
+          case 'delete': {
+            const before = entries.length;
+            entries = entries.filter((e) => e.id !== Number(id));
+            save(entries);
+            if (entries.length === before) {
+              return JSON.stringify({ error: `No entry found with id ${id}.` });
+            }
+            return JSON.stringify({ result: `Deleted entry #${id}.` });
+          }
+          case 'clear': {
+            save([]);
+            return JSON.stringify({ result: 'All journal entries cleared.' });
+          }
+          default:
+            return JSON.stringify({ error: `Unknown action "${action}". Use add, list, delete, or clear.` });
+        }
+      } catch (e) {
+        return JSON.stringify({ error: `Journal failed: ${e.message}` });
+      }
+    };
+  </script>
+</body>
+</html>

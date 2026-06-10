@@ -1,172 +1,171 @@
-# LFE Recipes — what to actually do with it
+# LFE Recipes — what it's actually for
 
-LFE is a private AI agent that lives on your phone and can *do things*, not just
-chat. Every example below runs on-device with the bundled skills — open the
-**Skills** sheet (the ⚙️ in the chat), switch on the ones a recipe needs, and
-just talk to it. Nothing leaves your phone unless a skill explicitly fetches
-from the web.
+LFE isn't trying to out-muscle Gemini or Claude. It's the AI you reach for when
+the thing in front of you **shouldn't leave your phone**, or when the cloud
+models **won't help**. Everything below runs on-device — open the **Skills**
+sheet, switch on what a recipe needs, and just talk.
 
-> New here? The fastest "oh, neat" moment is the **Wi-Fi QR** or **tip splitter**
-> below — both work offline and take one sentence.
-
----
-
-## 📶 Share your Wi-Fi without reading the password aloud
-
-**Skills:** `wifi-qr`
-
-> "Make a Wi-Fi QR code for network *Cabin-5G*, password *trailmix2026*."
-
-You get a QR code right in the chat. Guests point their camera at it and tap
-"join" — no spelling out `trailmix2026` three times. Screenshot it and stick it
-on the fridge.
+> **Two models, two jobs.** Use a **stock** Gemma model for the vision skill
+> (Confidential Desk reads a photo). Switch to an **Abliterated** model for the
+> "won't say no" skills. Both download from the model manager.
 
 ---
 
-## 🧾 Split the check at dinner
+## 🛡️ Sanitize it before you trust the cloud
 
-**Skills:** `tip-split`
+**Skill:** `redact` *(on by default)*
 
-> "Split $128.40 four ways with a 20% tip, round each person up."
+The killer move: LFE as the privacy filter in front of your *other* AI.
 
-> "What's 18% on $54?"
+> "Redact this so I can paste it into ChatGPT: *Hi, it's Jane Doe
+> (jane@acme.com, 555-0199), my account 4012-8899 was double-charged…*"
 
-Instant per-person number while everyone's reaching for their phones. Works in
-airplane mode.
-
----
-
-## ✈️ Travel money on the fly
-
-**Skills:** `currency-convert`
-
-> "How much is 7,500 yen in dollars?"
-
-> "I'm looking at a €45 menu — what's that in pounds?"
-
-Live reference rates (needs a connection). Pair with **tip-split** abroad:
-*"Split this 60-euro bill 3 ways and tell me each share in USD."*
+You get back `Hi, it's [NAME] ([EMAIL], [PHONE]), my account [ID] was
+double-charged…` plus a map of what it pulled. Now a powerful cloud model can
+help with the *problem* without ever seeing *who you are*.
 
 ---
 
-## 📝 Pocket scratchpad that actually remembers
+## 📄 Understand sensitive paperwork — nothing uploaded
 
-**Skills:** `quick-note`
+**Skill:** `explain-document` *(stock model, can read a photo)*
 
-> "Note that I parked on level 3, section D."
+Medical results, a lease, a legal notice, an insurance EOB, a tax letter — the
+stuff you most want explained and least want to upload anywhere.
 
-> "Remember: wine for Saturday, gift for Mom, call the bank."
+> *(photograph the document)* "What does this actually mean, and is there
+> anything I need to do?"
 
-> *(later)* "What were my notes?"
-
-Stored privately on the device — no account, no cloud, works offline. Great for
-parking spots, locker combos, the thing you'll definitely forget by the time you
-reach the car.
-
----
-
-## 💬 Write the awkward message for me, then send it
-
-**Skills:** `proofread` + `text-message` (or `send-email`)
-
-> "Rewrite this to my landlord politely: *the heating's been broken for a week
-> and I want it fixed*. Then text it to 555-0142."
-
-LFE polishes the tone on-device, then hands the finished message to your SMS app
-with everything pre-filled. You read it and hit send. Swap in `send-email` for
-the same trick over email.
+Plain-language summary, what stands out, deadlines/amounts, and what to ask your
+doctor/lawyer/accountant — entirely on the device.
 
 ---
 
-## ⏰ Remind me, hands-free
+## 🎣 "Is this a scam?"
 
-**Skills:** `set-reminder` (+ `whats-on-my-calendar`)
+**Skill:** `scam-check` *(on by default)*
 
-> "Remind me to take the chicken out of the freezer at 5pm."
+Stop forwarding suspicious texts to the family group chat. Check them privately.
 
-> "Add dentist Thursday at 9:30."
+> "Is this legit? *USPS: your package is held, pay a $1.99 fee at
+> usps-trackingsupport.com within 12h.*"
 
-> "What's on my calendar tomorrow?"
-
-It works out the date from "tomorrow"/"Thursday" and opens your calendar
-pre-filled. The calendar reader can tell you if you're actually free at 2pm
-before you say yes to something.
+Verdict, the exact tells (look-alike domain, fake urgency, the ask), and what to
+do — without sending the phish anywhere.
 
 ---
 
-## 🍳 "What can I make with what's in the fridge?"
+## 👁️ What is this app *actually* taking?
 
-**Skills:** `what-can-i-cook`
+**Skill:** `privacy-lens` *(on by default)*
 
-> "I've got eggs, half an onion, some cheddar, and bread. Dinner ideas?"
+> *(paste a privacy policy / ToS)* "What do they collect and what are the red
+> flags?"
 
-Two or three realistic dishes and quick steps for the best one — entirely from
-the model's own knowledge, no recipe site required.
-
----
-
-## 📰 Read it for me
-
-**Skills:** `summarize-article`
-
-> "Summarize https://example.com/long-investigation"
-
-The article is fetched and de-cluttered *on the phone* (no middleman server sees
-what you read), then boiled down to the title, a few bullets, and the takeaway.
+Ten pages of legalese → what they collect, who they share it with, the 🚩 clauses
+(broad content licenses, data-broker sharing, no real opt-out), and a bottom
+line. The policy never leaves your phone.
 
 ---
 
-## 🔐 Strong passwords + quick utilities, offline
+## 💬 The answer you won't get from a cloud bot
 
-**Skills:** `password-generator`, `calculate-hash`, `unit-converter`, `qr-code`
+**Skill:** `straight-answer` *(off by default — turn it on; best with an Abliterated model)*
 
-> "Generate three 20-character passwords with symbols."
+Frank, judgment-free help with the sensitive, awkward, or taboo-but-legitimate —
+health, sexuality, mental health, harm reduction, money, the law's grey areas —
+no lectures, no reflexive "consult a professional", no refusals.
 
-> "Convert 350°F to Celsius."
+> "Give it to me straight, no disclaimers: …"
 
-> "Make a QR code for https://my.link/rsvp"
-
-The everyday calculator-drawer of the suite. All offline.
-
----
-
-## 🌍 Quick facts without a browser
-
-**Skills:** `query-wikipedia`, `translator`
-
-> "Give me the one-paragraph version of the Treaty of Westphalia."
-
-> "How do I say 'where's the train station?' in Portuguese?"
+This is the whole reason to run an uncensored model on hardware you own.
 
 ---
 
-## 📊 Personal dashboards that stay on your phone
+## 🎭 Rehearse the conversation you're dreading
 
-**Skills:** `mood-tracker`, `budget-tracker`
+**Skill:** `roleplay` *(off by default; best with an Abliterated model)*
 
-> "Log my mood as a 7 — slept well, busy day."
+> "Play my manager and push back hard — I want to practice asking for a raise."
+> *(…)* "Pause — how did that land, and what's a stronger opening line?"
 
-> "I spent $42 on groceries."  …  "Show me this month's spending."
-
-These keep a private on-device history and draw a little chart inline. Your data
-never leaves the phone.
-
----
-
-## Putting it together (multi-skill combos)
-
-Because the model picks skills on its own, you can chain them in one ask:
-
-- **Night out:** *"Split this $96 bill 3 ways with 20% tip, and remind me to
-  Venmo Sam tomorrow morning."* → `tip-split` + `set-reminder`
-- **Trip prep:** *"Convert $200 to euros, and make a note of my hotel
-  confirmation 8841-22."* → `currency-convert` + `quick-note`
-- **Inbox zero:** *"Proofread this and email it to dana@work.com: …"* →
-  `proofread` + `send-email`
+Practice a breakup, a negotiation, coming out, a tough confrontation, with a
+partner that reacts realistically and coaches you — and stays on your phone, not
+in a cloud history tied to your name. Also does immersive character roleplay.
 
 ---
 
-Want to build your own? Skills are just a folder with a `SKILL.md` — see
-[SKILLS.md](./SKILLS.md). If you make something good, the bundled skills in
-`android/src/app/src/main/assets/skills/` are copy-paste templates for every
+## ✍️ Write the fiction the cloud models neuter
+
+**Skill:** `unfiltered-muse` *(off by default; best with an Abliterated model)*
+
+> "Co-write a noir scene — morally grey narrator, real violence, no punches
+> pulled."
+
+A craft-focused collaborator that doesn't sanitize dark themes or break
+character, and gives honest editing instead of flattery.
+
+---
+
+## ⚖️ Stress-test your own thinking
+
+**Skill:** `devils-advocate` *(off by default; best with an Abliterated model)*
+
+> "Steelman the strongest case *against* the decision I just made."
+
+A sparring partner that will genuinely argue any side — including ones a cloud
+model refuses to take — to find the holes before reality does.
+
+---
+
+## 📓 A diary that truly never leaves the device
+
+**Skills:** `private-journal`, `mood-tracker`
+
+> "Journal that today was long but I'm proud I went for a run."
+> *(later)* "How have I been this week?"
+
+On-device entries, gentle non-judgmental reflection, no account, no sync. The
+thing "AI journaling" apps promise but route through someone's cloud.
+
+---
+
+## 💸 Your numbers, crunched locally
+
+**Skill:** `budget-tracker`
+
+> "I spent $42 on groceries." … "Show me this month's spending."
+
+A private ledger with an inline chart — your finances never touch a server.
+
+---
+
+## ✈️ Off the grid
+
+**Skills:** `translator`, `password-generator`, `set-reminder`, `whats-on-my-calendar`
+
+> "How do I ask for the train station in Portuguese?" *(offline)*
+
+> "Generate three strong 20-character passwords." *(never ask a cloud AI for a
+> password — make them on the device)*
+
+> "Remind me to call the clinic tomorrow at 9." *(calendar skills are off by
+> default — enable them in the Skills sheet)*
+
+---
+
+## Putting it together
+
+Because the model picks skills on its own, you can chain them:
+
+- **Safe escalation:** *"Redact this support thread, then explain what my options
+  are."* → `redact` + `explain-document`, and you leave with a sanitized version
+  ready for a bigger model.
+- **Don't get got:** *"Is this email a scam, and what does its 'unsubscribe'
+  link's privacy policy actually do?"* → `scam-check` + `privacy-lens`.
+
+---
+
+Want to build your own? A skill is just a folder with a `SKILL.md` — see
+[SKILLS.md](./SKILLS.md). The bundled skills are copy-paste templates for every
 pattern.

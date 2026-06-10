@@ -31,12 +31,12 @@ a string, draw a chart, send an email, or remember anything between sessions.
 Skills bridge that gap without forcing every capability to be hard-coded into
 the app:
 
-- The bundled `qr-code` skill is ~50 lines of JS — it ships a tiny QR generator
-  in a hidden webview and the model knows when to call it.
-- The bundled `query-wikipedia` skill is a 30-line `fetch` call wrapped in a
-  `SKILL.md` description that tells the model when summarizing a topic counts.
-- The bundled `send-email` skill is *zero* lines of code — just a `SKILL.md`
-  pointing at the built-in `run_intent` tool.
+- The bundled `private-journal` skill is a small JS file that stores entries in
+  on-device storage and the model knows when to call it.
+- The bundled `redact` skill is *zero* lines of code — just a `SKILL.md` persona
+  that tells the model how to strip personal details out of text.
+- The bundled `set-reminder` skill is also code-free — just a `SKILL.md` pointing
+  at the built-in `run_intent` tool to add a calendar event.
 
 Once you've written one, sharing it is just sharing a folder.
 
@@ -261,25 +261,27 @@ the user can rotate or clear it from the Skills sheet.
 
 ## Type 3 — Native skills (Android intents)
 
-Use this when the right answer is "open the email app" or "show this on a
-map" rather than "generate text". You're handing off to Android.
+Use this when the right answer is "add it to the calendar" or "open another
+app" rather than "generate text". You're handing off to Android. This is the
+pattern the bundled `set-reminder` skill uses.
 
 ```markdown
 ---
-name: send-email
-description: Open the user's email app with a pre-filled draft.
+name: set-reminder
+description: Add a reminder or event to the user's calendar.
 ---
 
-# Send email
+# Set a reminder
 
 ## Instructions
 
 Call the `run_intent` tool with these exact parameters:
-- intent: send_email
+- intent: create_calendar_event
 - parameters: A JSON string with these fields:
-  - extra_email: the recipient address. String.
-  - extra_subject: the subject line. String.
-  - extra_text: the body. String.
+  - title: a short title. String.
+  - description: any extra detail, or "". String.
+  - begin_time: start time as yyyy-MM-dd'T'HH:mm:ss. String.
+  - end_time: end time, same format. String.
 ```
 
 The built-in intents today are:
@@ -334,8 +336,8 @@ folder. The app copies it into app-private storage.
 
 For skills that should ship with the APK, drop the folder into
 `android/src/app/src/main/assets/skills/` and rebuild. The bundled skills in
-this repo (`qr-code`, `query-wikipedia`, etc.) live there and double as
-copy-paste templates.
+this repo (`redact`, `scam-check`, `private-journal`, etc.) live there and
+double as copy-paste templates.
 
 ## Tips and gotchas
 
@@ -355,8 +357,8 @@ copy-paste templates.
   — it shows the data the model passed in, the value your script returned,
   and live `console.log` output.
 - **Skills can run offline** as long as your JS doesn't `fetch` external APIs.
-  The hashing, QR, mood-tracker, and password-generator skills all work with
-  airplane mode on.
+  The `private-journal`, `mood-tracker`, `quick-note`, and `password-generator`
+  skills all work with airplane mode on.
 
 That's the whole API. Browse `android/src/app/src/main/assets/skills/` for
 working examples of every pattern above.

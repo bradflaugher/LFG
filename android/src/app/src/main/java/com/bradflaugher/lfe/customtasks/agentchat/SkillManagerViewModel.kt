@@ -17,12 +17,12 @@ import android.net.Uri
 import android.provider.OpenableColumns
 import android.util.Log
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Lightbulb
-import androidx.compose.material.icons.outlined.LocalLibrary
-import androidx.compose.material.icons.outlined.Map
-import androidx.compose.material.icons.outlined.Notifications
-import androidx.compose.material.icons.outlined.QrCode
-import androidx.compose.material.icons.outlined.SentimentVerySatisfied
+import androidx.compose.material.icons.outlined.Book
+import androidx.compose.material.icons.outlined.Chat
+import androidx.compose.material.icons.outlined.Description
+import androidx.compose.material.icons.outlined.Security
+import androidx.compose.material.icons.outlined.Shield
+import androidx.compose.material.icons.outlined.Visibility
 import androidx.documentfile.provider.DocumentFile
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -55,41 +55,42 @@ private const val SKILL_ALLOWLIST_URL = ""
 val TRYOUT_CHIPS: List<SkillTryOutChip> =
   listOf(
     SkillTryOutChip(
-      icon = Icons.Outlined.Map,
-      label = "Interactive Map",
-      prompt = "Show me Googleplex on interactive map.",
-      skillName = "interactive-map",
-    ),
-    SkillTryOutChip(
-      icon = Icons.Outlined.Notifications,
-      label = "Schedule Reminder",
-      prompt = "Set a daily reminder at 9am to check my schedule for today.",
-      skillName = "schedule-notification",
-    ),
-    SkillTryOutChip(
-      icon = Icons.Outlined.SentimentVerySatisfied,
-      label = "Track my mood",
+      icon = Icons.Outlined.Shield,
+      label = "Redact before sharing",
       prompt =
-        "Log yesterday's mood as 2 because it was raining quite heavily, and log today's mood as 9 because I had a great time playing pickleball again. Then show me my mood dashboard.",
-      skillName = "mood-tracker",
+        "Redact this so it's safe to paste into another AI: \"Hi, this is Jane Doe (jane.doe@acme.com, 555-271-9943). My account 4012-8899-1234 was charged twice.\"",
+      skillName = "redact",
     ),
     SkillTryOutChip(
-      icon = Icons.Outlined.Lightbulb,
-      label = "Learn something new",
-      prompt = "I want to learn something new!",
-      skillName = "learn-something-new",
+      icon = Icons.Outlined.Description,
+      label = "Explain a document",
+      prompt = "I'll paste a confusing letter — explain what it actually means in plain language.",
+      skillName = "explain-document",
     ),
     SkillTryOutChip(
-      icon = Icons.Outlined.LocalLibrary,
-      label = "Query Wikipedia",
-      prompt = "Check Wikipedia about Oscars 2026. Tell me who won the best picture.",
-      skillName = "query-wikipedia",
+      icon = Icons.Outlined.Security,
+      label = "Is this a scam?",
+      prompt =
+        "Is this a scam? \"URGENT: your package is held. Pay a $1.99 redelivery fee at usps-trackingsupport.com within 12 hours.\"",
+      skillName = "scam-check",
     ),
     SkillTryOutChip(
-      icon = Icons.Outlined.QrCode,
-      label = "Generate QR code",
-      prompt = "Generate QR code for https://deepmind.google/models/gemma/",
-      skillName = "qr-code",
+      icon = Icons.Outlined.Visibility,
+      label = "What are they taking?",
+      prompt = "I'll paste an app's privacy policy — tell me what data they collect and the red flags.",
+      skillName = "privacy-lens",
+    ),
+    SkillTryOutChip(
+      icon = Icons.Outlined.Chat,
+      label = "Give it to me straight",
+      prompt = "Give me a frank, no-lecture answer to a sensitive question I'm about to ask.",
+      skillName = "straight-answer",
+    ),
+    SkillTryOutChip(
+      icon = Icons.Outlined.Book,
+      label = "Private journal",
+      prompt = "Journal that today was long but I'm proud I went for a run. Then tell me how I've been this week.",
+      skillName = "private-journal",
     ),
   )
 
@@ -1163,17 +1164,18 @@ class SkillManagerViewModel
     }
 
     companion object {
-      // Skills off by default. Intent-based skills (send-email, text-message,
-      // set-reminder, whats-on-my-calendar) launch other apps or need runtime
-      // permissions, so they're opt-in; the user enables them per the recipes.
-      // Self-contained JS/text skills stay on by default.
+      // Skills off by default — opt-in. Two groups:
+      //  - Uncensored persona skills: they re-shape the assistant's whole voice,
+      //    so they shouldn't hijack normal chats, and they're meant to be paired
+      //    with an Abliterated model the user deliberately switches to.
+      //  - Calendar intents: they launch other apps / need runtime permissions.
+      // The privacy power-tools and local-data skills stay on by default.
       private val DEFAULT_DISABLED_SKILLS =
         setOf(
-          "calculate-hash",
-          "kitchen-adventure",
-          "text-spinner",
-          "send-email",
-          "text-message",
+          "straight-answer",
+          "unfiltered-muse",
+          "roleplay",
+          "devils-advocate",
           "set-reminder",
           "whats-on-my-calendar",
         )

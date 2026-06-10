@@ -18,27 +18,26 @@ import org.junit.Test
 class BundledSkillsTest {
   private val expected =
     setOf(
-      "budget-tracker",
-      "calculate-hash",
-      "currency-convert",
-      "interactive-map",
+      // Privacy power-tools
+      "redact",
+      "explain-document",
+      "scam-check",
+      "privacy-lens",
+      // Uncensored (best with an Abliterated model)
+      "straight-answer",
+      "unfiltered-muse",
+      "roleplay",
+      "devils-advocate",
+      // Your data stays on the device
+      "private-journal",
       "mood-tracker",
-      "password-generator",
-      "proofread",
-      "qr-code",
-      "query-wikipedia",
       "quick-note",
-      "recommend-articles",
-      "send-email",
-      "set-reminder",
-      "summarize-article",
-      "text-message",
-      "tip-split",
+      "budget-tracker",
+      // Offline / personal
+      "password-generator",
       "translator",
-      "unit-converter",
-      "what-can-i-cook",
+      "set-reminder",
       "whats-on-my-calendar",
-      "wifi-qr",
     )
 
   private val skillsRoot = File("src/main/assets/skills")

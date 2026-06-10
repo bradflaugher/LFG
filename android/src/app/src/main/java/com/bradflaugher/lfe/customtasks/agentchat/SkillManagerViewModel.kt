@@ -1163,8 +1163,20 @@ class SkillManagerViewModel
     }
 
     companion object {
+      // Skills off by default. Intent-based skills (send-email, text-message,
+      // set-reminder, whats-on-my-calendar) launch other apps or need runtime
+      // permissions, so they're opt-in; the user enables them per the recipes.
+      // Self-contained JS/text skills stay on by default.
       private val DEFAULT_DISABLED_SKILLS =
-        setOf("calculate-hash", "kitchen-adventure", "text-spinner", "send-email")
+        setOf(
+          "calculate-hash",
+          "kitchen-adventure",
+          "text-spinner",
+          "send-email",
+          "text-message",
+          "set-reminder",
+          "whats-on-my-calendar",
+        )
     }
   }
 

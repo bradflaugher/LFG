@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Tip & Bill Splitter</title>
+</head>
+<body>
+  <script>
+    window['ai_edge_gallery_get_result'] = async (data) => {
+      try {
+        const parsed = JSON.parse(data);
+        const bill = Number(parsed.bill);
+        let tipPercent = parsed.tipPercent === undefined ? 18 : Number(parsed.tipPercent);
+        let people = parsed.people === undefined ? 1 : Math.floor(Number(parsed.people));
+        const roundUp = parsed.roundUp === true;
+
+        if (!isFinite(bill) || bill < 0) {
+          return JSON.stringify({ error: 'Please provide a valid bill amount.' });
+        }
+        if (!isFinite(tipPercent) || tipPercent < 0) tipPercent = 18;
+        if (!isFinite(people) || people < 1) people = 1;
+
+        const tip = bill * (tipPercent / 100);
+        const total = bill + tip;
+        let perPerson = total / people;
+        let note = '';
+        if (roundUp) {
+          perPerson = Math.ceil(perPerson);
+          const collected = perPerson * people;
+          const extra = collected - total;
+          note = ` (rounded up — collects ${collected.toFixed(2)}, ${extra.toFixed(2)} over)`;
+        }
+
+        const money = (n) => n.toFixed(2);
+        let result;
+        if (people > 1) {
+          result =
+            `Each of ${people} pays ${money(perPerson)}${note}.\n` +
+            `Bill ${money(bill)} + ${tipPercent}% tip ${money(tip)} = ${money(total)} total.`;
+        } else {
+          result =
+            `Total: ${money(total)} (bill ${money(bill)} + ${tipPercent}% tip ${money(tip)}).`;
+        }
+        return JSON.stringify({ result });
+      } catch (e) {
+        return JSON.stringify({ error: `Could not split the bill: ${e.message}` });
+      }
+    };
+  </script>
+</body>
+</html>

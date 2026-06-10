@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Quick Notes</title>
+</head>
+<body>
+  <script>
+    const STORE_KEY = 'lfe_quick_notes';
+
+    function load() {
+      try {
+        const raw = localStorage.getItem(STORE_KEY);
+        const arr = raw ? JSON.parse(raw) : [];
+        return Array.isArray(arr) ? arr : [];
+      } catch (e) {
+        return [];
+      }
+    }
+    function save(notes) {
+      localStorage.setItem(STORE_KEY, JSON.stringify(notes));
+    }
+
+    window['ai_edge_gallery_get_result'] = async (data) => {
+      try {
+        const { action, text, id } = JSON.parse(data);
+        let notes = load();
+
+        switch (action) {
+          case 'add': {
+            if (!text || !String(text).trim()) {
+              return JSON.stringify({ error: 'Nothing to save — the note text was empty.' });
+            }
+            const note = {
+              id: Date.now(),
+              text: String(text).trim(),
+              ts: new Date().toISOString(),
+            };
+            notes.push(note);
+            save(notes);
+            return JSON.stringify({ result: `Saved note #${note.id}: "${note.text}"` });
+          }
+          case 'list': {
+            if (notes.length === 0) {
+              return JSON.stringify({ result: 'You have no saved notes.' });
+            }
+            const lines = notes.map((n) => {
+              const when = new Date(n.ts).toLocaleString();
+              return `#${n.id} (${when}): ${n.text}`;
+            });
+            return JSON.stringify({ result: lines.join('\n') });
+          }
+          case 'delete': {
+            const before = notes.length;
+            notes = notes.filter((n) => n.id !== Number(id));
+            save(notes);
+            if (notes.length === before) {
+              return JSON.stringify({ error: `No note found with id ${id}.` });
+            }
+            return JSON.stringify({ result: `Deleted note #${id}.` });
+          }
+          case 'clear': {
+            save([]);
+            return JSON.stringify({ result: 'All notes cleared.' });
+          }
+          default:
+            return JSON.stringify({ error: `Unknown action "${action}". Use add, list, delete, or clear.` });
+        }
+      } catch (e) {
+        return JSON.stringify({ error: `Quick-note failed: ${e.message}` });
+      }
+    };
+  </script>
+</body>
+</html>

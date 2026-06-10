@@ -20,16 +20,25 @@ class BundledSkillsTest {
     setOf(
       "budget-tracker",
       "calculate-hash",
+      "currency-convert",
       "interactive-map",
       "mood-tracker",
       "password-generator",
+      "proofread",
       "qr-code",
       "query-wikipedia",
+      "quick-note",
       "recommend-articles",
       "send-email",
+      "set-reminder",
       "summarize-article",
+      "text-message",
+      "tip-split",
       "translator",
       "unit-converter",
+      "what-can-i-cook",
+      "whats-on-my-calendar",
+      "wifi-qr",
     )
 
   private val skillsRoot = File("src/main/assets/skills")

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Currency Converter</title>
+</head>
+<body>
+  <script>
+    window['ai_edge_gallery_get_result'] = async (data) => {
+      try {
+        const parsed = JSON.parse(data);
+        const amount = Number(parsed.amount);
+        const from = String(parsed.from || '').toUpperCase().trim();
+        const to = String(parsed.to || '').toUpperCase().trim();
+
+        if (!isFinite(amount) || amount < 0) {
+          return JSON.stringify({ error: 'Please provide a valid amount.' });
+        }
+        if (!/^[A-Z]{3}$/.test(from) || !/^[A-Z]{3}$/.test(to)) {
+          return JSON.stringify({ error: 'Currencies must be 3-letter codes like USD, EUR, JPY.' });
+        }
+
+        // Same currency: no API call needed.
+        if (from === to) {
+          return JSON.stringify({ result: `${amount.toFixed(2)} ${from} = ${amount.toFixed(2)} ${to}.` });
+        }
+
+        const url = `https://api.frankfurter.app/latest?amount=${encodeURIComponent(amount)}` +
+                    `&from=${from}&to=${to}`;
+        let resp;
+        try {
+          resp = await fetch(url);
+        } catch (e) {
+          return JSON.stringify({ error: 'No internet connection — currency conversion needs network access.' });
+        }
+        if (!resp.ok) {
+          return JSON.stringify({ error: `Conversion service returned an error (${resp.status}). Check the currency codes.` });
+        }
+        const json = await resp.json();
+        const converted = json && json.rates ? json.rates[to] : undefined;
+        if (converted === undefined) {
+          return JSON.stringify({ error: `Couldn't convert ${from} to ${to}. One of these currencies may not be supported.` });
+        }
+
+        const rate = converted / amount;
+        const result =
+          `${amount.toFixed(2)} ${from} = ${Number(converted).toFixed(2)} ${to} ` +
+          `(rate 1 ${from} = ${rate.toFixed(4)} ${to}, as of ${json.date}).`;
+        return JSON.stringify({ result });
+      } catch (e) {
+        return JSON.stringify({ error: `Currency conversion failed: ${e.message}` });
+      }
+    };
+  </script>
+</body>
+</html>

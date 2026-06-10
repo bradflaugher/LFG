@@ -282,8 +282,17 @@ Call the `run_intent` tool with these exact parameters:
   - extra_text: the body. String.
 ```
 
-The built-in intents today are: `send_email`, `send_text`, and a few related
-share/open actions — see `IntentHandler.kt` in the app source. Adding a new
+The built-in intents today are:
+
+| Intent                    | Parameters (JSON fields)                                  | Does |
+| ------------------------- | --------------------------------------------------------- | ---- |
+| `send_email`              | `extra_email`, `extra_subject`, `extra_text`              | Opens the email app with a draft. |
+| `send_sms`                | `phone_number`, `sms_body`                                | Opens the messaging app with a draft. |
+| `create_calendar_event`   | `title`, `description`, `begin_time`, `end_time` (`yyyy-MM-dd'T'HH:mm:ss`) | Opens the calendar app to add an event. |
+| `read_calendar_events`    | `date` (`yyyy-MM-dd`)                                     | Reads that day's events (asks calendar permission). |
+| `get_current_date_and_time` | *(none)*                                                | Returns the device's current date/time. |
+
+See `IntentHandler.kt` in the app source for the exact handlers. Adding a new
 intent (open camera, set alarm, etc.) means a small patch to the app itself.
 PRs welcome.
 

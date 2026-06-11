@@ -125,7 +125,7 @@ fun ChatHistorySideSheetContent(
 
     // History list
     LazyColumn(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(4.dp)) {
-      items(history) { session ->
+      items(history, key = { it.sessionId }) { session ->
         Row(
           modifier =
             Modifier.fillMaxWidth()

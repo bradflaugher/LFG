@@ -293,6 +293,7 @@ data class LogMessage(
   val source: String = "",
   val lineNumber: Int = -1,
   val message: String = "",
+  val id: String = java.util.UUID.randomUUID().toString(),
 )
 
 /** Chat message for showing a collapsable progress panel. */

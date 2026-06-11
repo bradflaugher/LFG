@@ -171,7 +171,7 @@ fun LogsViewer(
             )
           }
         } else {
-          items(filteredLogs) { log -> LogItem(log = log) }
+          items(filteredLogs, key = { it.id }) { log -> LogItem(log = log) }
         }
       }
 

@@ -72,7 +72,11 @@ open class BaseGalleryWebViewClient(private val context: Context) : WebViewClien
       if (!request.url.toString().startsWith("$LOCAL_URL_BASE/assets/")) {
         val path = request.url.path ?: ""
         val localFile = File(context.filesDir, path)
-        if (!localFile.exists() || localFile.isDirectory) {
+
+        // SECURITY: Prevent path traversal by ensuring the resolved file path is within the intended directory
+        val isPathTraversal = !localFile.canonicalPath.startsWith(context.filesDir.canonicalPath)
+
+        if (isPathTraversal || !localFile.exists() || localFile.isDirectory) {
           return WebResourceResponse("text/plain", "UTF-8", null)
         }
       }

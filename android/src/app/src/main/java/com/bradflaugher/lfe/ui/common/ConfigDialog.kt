@@ -731,7 +731,7 @@ fun BottomSheetSelectorRow(
           )
         }
         LazyColumn {
-          items(config.options) { option ->
+          items(config.options, key = { it.label }) { option ->
             Row(
               modifier =
                 Modifier.clickable {

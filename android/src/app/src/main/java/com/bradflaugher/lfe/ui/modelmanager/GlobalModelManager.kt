@@ -258,7 +258,7 @@ fun GlobalModelManager(
         contentPadding =
           PaddingValues(top = 16.dp, bottom = innerPadding.calculateBottomPadding() + 80.dp),
       ) {
-        items(builtInModels) { model ->
+        items(builtInModels, key = { "builtin_${it.name}" }) { model ->
           val expanded = modelItemExpandedStates.getOrDefault(model.name, true)
           ModelItem(
             model = model,
@@ -284,7 +284,7 @@ fun GlobalModelManager(
             )
           }
         }
-        items(importedModels) { model ->
+        items(importedModels, key = { "imported_${it.name}" }) { model ->
           ModelItem(
             model = model,
             task = null,

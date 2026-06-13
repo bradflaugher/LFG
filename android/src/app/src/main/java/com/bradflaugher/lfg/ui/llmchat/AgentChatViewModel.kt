@@ -213,6 +213,7 @@ open class AgentChatViewModelBase(
                           side = thinkingMsg.side,
                           accelerator = thinkingMsg.accelerator,
                           hideSenderLabel = thinkingMsg.hideSenderLabel,
+                          id = thinkingMsg.id,
                         ),
                       type = ChatMessageType.THINKING,
                     )
@@ -270,6 +271,7 @@ open class AgentChatViewModelBase(
                           side = thinkingMsg.side,
                           accelerator = thinkingMsg.accelerator,
                           hideSenderLabel = thinkingMsg.hideSenderLabel,
+                          id = thinkingMsg.id,
                         ),
                       type = ChatMessageType.THINKING,
                     )

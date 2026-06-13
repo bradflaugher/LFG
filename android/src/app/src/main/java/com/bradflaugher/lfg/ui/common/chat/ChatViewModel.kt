@@ -201,6 +201,7 @@ abstract class ChatViewModel(val userDataDataStore: DataStore<UserData>? = null)
             accelerator = lastMessage.accelerator,
             hideSenderLabel = lastMessage.hideSenderLabel,
             cacheHitPercentage = cacheHitPercentage ?: lastMessage.cacheHitPercentage,
+            id = lastMessage.id,
           )
         newMessages.removeAt(newMessages.size - 1)
         newMessages.add(newLastMessage)
@@ -323,6 +324,7 @@ abstract class ChatViewModel(val userDataDataStore: DataStore<UserData>? = null)
                 },
             customData = lastProgressPanelMessage.customData,
             logMessages = lastProgressPanelMessage.logMessages,
+            id = lastProgressPanelMessage.id,
           )
         newMessages[lastProgressPanelMessageIndex] = updatedMessage
       } else {
@@ -359,6 +361,7 @@ abstract class ChatViewModel(val userDataDataStore: DataStore<UserData>? = null)
             items = lastMessage.items,
             logMessages = newLogMessages,
             customData = lastMessage.customData,
+            id = lastMessage.id,
           )
         newMessages[lastCollapsableIndex] = updatedMessage
       }

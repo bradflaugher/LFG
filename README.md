@@ -1,6 +1,20 @@
-# LFG
+<div align="center">
+  <img src="docs/app_icon_512.png" alt="LFG App Icon" width="128" height="128">
+  <h1>LFG</h1>
+  <p><strong>The on-device AI that actually says the quiet part out loud.</strong></p>
 
-**LFG. The on-device AI that actually says the quiet part out loud.**
+  <a href="https://github.com/bradflaugher/LFG/releases/latest"><img src="https://img.shields.io/github/v/release/bradflaugher/LFG?style=for-the-badge&color=orange&label=Latest%20Release" alt="Latest Release"></a>
+  <a href="https://github.com/bradflaugher/LFG/releases/latest"><img src="https://img.shields.io/github/downloads/bradflaugher/LFG/total?style=for-the-badge&color=blue&label=Downloads" alt="Downloads"></a>
+  <a href="https://github.com/bradflaugher/LFG/blob/main/LICENSE"><img src="https://img.shields.io/github/license/bradflaugher/LFG?style=for-the-badge&color=green" alt="License"></a>
+
+  <br><br>
+
+  <a href="https://github.com/bradflaugher/LFG/releases/latest"><img src="docs/badges/get-it-on-github.png" alt="Get it on GitHub" height="60"></a>
+  &nbsp;&nbsp;
+  <a href="https://apps.obtainium.imranr.dev/redirect.html?r=obtainium://add/https://github.com/bradflaugher/LFG"><img src="docs/badges/badge_obtainium.png" alt="Get it on Obtainium" height="60"></a>
+</div>
+
+<br>
 
 For everything you wouldn't paste into ChatGPT. For everything the polite robots refuse, hedge, or lecture you about. Runs 100% on your phone (or your chosen API). No account. No cloud. No receipts.
 
@@ -68,7 +82,13 @@ Drop any LiteRT-LM compatible `.litertlm` or `.task` into the model manager impo
 
 ## Install
 
-Grab the latest APK from [Releases](https://github.com/bradflaugher/LFG/releases/latest) and sideload it.
+<a href="https://github.com/bradflaugher/LFG/releases/latest"><img src="docs/badges/get-it-on-github.png" alt="Get it on GitHub" height="60"></a>
+&nbsp;&nbsp;
+<a href="https://apps.obtainium.imranr.dev/redirect.html?r=obtainium://add/https://github.com/bradflaugher/LFG"><img src="docs/badges/badge_obtainium.png" alt="Get it on Obtainium" height="60"></a>
+
+**GitHub Releases (manual):** Grab the latest APK from [Releases](https://github.com/bradflaugher/LFG/releases/latest) and sideload it.
+
+**Obtainium (auto-updates):** Click the badge above or add `https://github.com/bradflaugher/LFG` as a source in [Obtainium](https://github.com/ImranR98/Obtainium). You'll get automatic update notifications whenever a new build drops.
 
 (You'll need to allow "install from unknown sources". Google will complain because this app exists to do the things their policies don't like.)
 

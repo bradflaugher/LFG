@@ -1,14 +1,15 @@
 ---
 name: read-webpage
-description: Fetch and read main text or links, or display an interactive WebView of a webpage/URL to the user. Use this when the user asks to read, summarize, extract info, list links, or view/interact with a webpage.
+description: Fetch and read main text or links, click links/buttons, or display an interactive WebView of a webpage/URL to the user. Use this when the user asks to read, summarize, extract info, list links, click links/buttons, or view/interact with a webpage.
 ---
 
 # Web Reader
 
-This skill lets you read content directly from the web or show interactive web pages to the user. It uses three dedicated tools:
+This skill lets you read content directly from the web or show interactive web pages to the user. It uses four dedicated tools:
 
 - `fetchArticle` to retrieve the main text and title of any page (cleaned up via Readability.js).
 - `fetchLinks` to retrieve a list of links (hrefs and text) from a page.
+- `clickAndReadWebpage` to load a URL, click a specific button or link (via CSS selector), and return the updated article text.
 - `showWebpage` to display an interactive WebView of a webpage inline in the chat so the user can scroll, click, or log in.
 
 Because these tools use a local WebView, cookies from your active browser session (configured via the Web Browser icon in the chat) are automatically attached. This allows you to read articles from paid subscriptions (like NYT, WSJ, Bloomberg) if you are logged in.
@@ -25,10 +26,13 @@ Because these tools use a local WebView, cookies from your active browser sessio
    * `fetchLinks` returns a JSON string under the `links` key containing the links on the page.
    * Present the relevant links to the user so they can select which page to read next using `fetchArticle`.
 
-3. **Display or Interact with a webpage:**
+3. **Click links or buttons dynamically:**
+   When the user asks to click a button, link, expander, or tab on a webpage (e.g., "click 'Read More'", "expand comments", "click the next page button"), call `clickAndReadWebpage` with the URL and the CSS selector of the element to click. This loads the page, clicks the element, waits for dynamic updates, and returns the updated article text.
+
+4. **Display or Interact with a webpage:**
    When the user wants to view/browse a webpage directly, or if they need to manually interact with/sign in to a page, call the `showWebpage` tool with the URL. This embeds an interactive WebView inline in the chat.
 
-4. **Handle paywalls and errors:**
+5. **Handle paywalls and errors:**
    If the tool returns an error, explain what happened in a single, helpful sentence. If the content appears to be blocked by a paywall or sign-in wall, suggest logging in via the Web Browser button (top right of the chat) first.
 
 ## Examples
@@ -39,8 +43,11 @@ Because these tools use a local WebView, cookies from your active browser sessio
 - "Extract the key figures from https://finance-report.org"
 - "Open https://github.com so I can browse it"
 - "Show me https://nytimes.com"
+- "Click on the button with class 'load-more' on https://example.com/comments"
+- "Expand the first article on https://news-site.com"
 
 ## Privacy note
 
 All network fetches, rendering, and interactions happen entirely on your phone via a local WebView. No third-party servers see the URL or your session cookies.
+
 

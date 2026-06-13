@@ -70,6 +70,13 @@ class FetchLinksAgentAction(
   val result: CompletableDeferred<String> = CompletableDeferred(),
 ) : AgentAction(name = AgentActionName.FETCH_LINKS)
 
+// Load a URL, click an element, wait, and extract title + main text using Readability.
+class ClickAndReadWebpageAgentAction(
+  val url: String,
+  val selector: String,
+  val result: CompletableDeferred<String> = CompletableDeferred(),
+) : AgentAction(name = AgentActionName.CLICK_AND_READ_WEBPAGE)
+
 enum class AgentActionName() {
   CALL_JS_SKILL,
   SKILL_PROGRESS,
@@ -77,6 +84,7 @@ enum class AgentActionName() {
   REQUEST_PERMISSION,
   FETCH_ARTICLE,
   FETCH_LINKS,
+  CLICK_AND_READ_WEBPAGE,
 }
 
 data class SkillTryOutChip(

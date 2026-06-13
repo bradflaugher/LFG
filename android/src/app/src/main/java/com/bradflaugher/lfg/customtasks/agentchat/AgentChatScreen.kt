@@ -44,6 +44,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.bradflaugher.lfg.R
 import com.bradflaugher.lfg.common.AskInfoAgentAction
 import com.bradflaugher.lfg.common.CallJsAgentAction
+import com.bradflaugher.lfg.common.ClickAndReadWebpageAgentAction
 import com.bradflaugher.lfg.common.FetchArticleAgentAction
 import com.bradflaugher.lfg.common.FetchLinksAgentAction
 import com.bradflaugher.lfg.common.LOCAL_URL_BASE
@@ -347,6 +348,14 @@ fun AgentChatScreen(
                 action.result.complete(result)
               } catch (e: Exception) {
                 action.result.complete(ArticleFetcher.errorJson(e.message ?: "fetch failed"))
+              }
+            }
+            is ClickAndReadWebpageAgentAction -> {
+              try {
+                val result = ArticleFetcher.clickAndFetch(context, action.url, action.selector)
+                action.result.complete(result)
+              } catch (e: Exception) {
+                action.result.complete(ArticleFetcher.errorJson(e.message ?: "click and fetch failed"))
               }
             }
           }

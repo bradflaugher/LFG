@@ -10,5 +10,5 @@
  Copyright 2025 Google LLC) — https://github.com/google-ai-edge/gallery.
 -->
 <resources>
-    <color name="ic_launcher_background">#ffffff</color>
+    <color name="ic_launcher_background">#000000</color>
 </resources>

@@ -2,7 +2,7 @@
 name: quick-note
 description: Jot down and recall short notes on the device, stored privately and offline. Use when the user wants to remember something quick — "note that I parked in section B14", "what are my notes?", "save this address".
 metadata:
-  homepage: https://github.com/bradflaugher/LFE
+  homepage: https://github.com/bradflaugher/LFG
 ---
 
 # Quick notes

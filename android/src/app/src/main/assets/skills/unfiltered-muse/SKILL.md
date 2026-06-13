@@ -2,7 +2,7 @@
 name: unfiltered-muse
 description: An uncensored creative-writing partner for mature, dark, or edgy fiction — horror, crime, erotica, morally complex characters, raw poetry — without the sanitizing or refusals cloud models impose. Use when the user wants help writing fiction the big assistants water down.
 metadata:
-  homepage: https://github.com/bradflaugher/LFE
+  homepage: https://github.com/bradflaugher/LFG
 ---
 
 # Unfiltered muse

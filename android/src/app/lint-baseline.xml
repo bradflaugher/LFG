@@ -7,7 +7,7 @@
         errorLine1="      notify(1, builder.build())"
         errorLine2="      ~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
-            file="src/main/java/com/bradflaugher/lfe/data/DownloadRepository.kt"
+            file="src/main/java/com/bradflaugher/lfg/data/DownloadRepository.kt"
             line="312"
             column="7"/>
     </issue>
@@ -18,11 +18,11 @@
         errorLine1="                type = &quot;text/plain&quot;"
         errorLine2="                ~~~~~~~~~~~~~~~~~~~">
         <location
-            file="src/main/java/com/bradflaugher/lfe/customtasks/agentchat/IntentHandler.kt"
+            file="src/main/java/com/bradflaugher/lfg/customtasks/agentchat/IntentHandler.kt"
             line="95"
             column="17"/>
         <location
-            file="src/main/java/com/bradflaugher/lfe/customtasks/agentchat/IntentHandler.kt"
+            file="src/main/java/com/bradflaugher/lfg/customtasks/agentchat/IntentHandler.kt"
             line="94"
             column="17"
             message="Originally set here"/>
@@ -34,7 +34,7 @@
         errorLine1="      notify(1, builder.build())"
         errorLine2="      ~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
-            file="src/main/java/com/bradflaugher/lfe/data/DownloadRepository.kt"
+            file="src/main/java/com/bradflaugher/lfg/data/DownloadRepository.kt"
             line="312"
             column="7"/>
     </issue>
@@ -67,7 +67,7 @@
         errorLine1="agp = &quot;8.8.2&quot;"
         errorLine2="      ~~~~~~~">
         <location
-            file="$HOME/LFE/android/src/gradle/libs.versions.toml"
+            file="$HOME/LFG/android/src/gradle/libs.versions.toml"
             line="2"
             column="7"/>
     </issue>
@@ -78,7 +78,7 @@
         errorLine1="agp = &quot;8.8.2&quot;"
         errorLine2="      ~~~~~~~">
         <location
-            file="$HOME/LFE/android/src/gradle/libs.versions.toml"
+            file="$HOME/LFG/android/src/gradle/libs.versions.toml"
             line="2"
             column="7"/>
     </issue>
@@ -89,7 +89,7 @@
         errorLine1="agp = &quot;8.8.2&quot;"
         errorLine2="      ~~~~~~~">
         <location
-            file="$HOME/LFE/android/src/gradle/libs.versions.toml"
+            file="$HOME/LFG/android/src/gradle/libs.versions.toml"
             line="2"
             column="7"/>
     </issue>
@@ -100,7 +100,7 @@
         errorLine1="coreKtx = &quot;1.15.0&quot;"
         errorLine2="          ~~~~~~~~">
         <location
-            file="$HOME/LFE/android/src/gradle/libs.versions.toml"
+            file="$HOME/LFG/android/src/gradle/libs.versions.toml"
             line="4"
             column="11"/>
     </issue>
@@ -111,7 +111,7 @@
         errorLine1="coreKtx = &quot;1.15.0&quot;"
         errorLine2="          ~~~~~~~~">
         <location
-            file="$HOME/LFE/android/src/gradle/libs.versions.toml"
+            file="$HOME/LFG/android/src/gradle/libs.versions.toml"
             line="4"
             column="11"/>
     </issue>
@@ -122,7 +122,7 @@
         errorLine1="coreKtx = &quot;1.15.0&quot;"
         errorLine2="          ~~~~~~~~">
         <location
-            file="$HOME/LFE/android/src/gradle/libs.versions.toml"
+            file="$HOME/LFG/android/src/gradle/libs.versions.toml"
             line="4"
             column="11"/>
     </issue>
@@ -133,7 +133,7 @@
         errorLine1="junitVersion = &quot;1.2.1&quot;"
         errorLine2="               ~~~~~~~">
         <location
-            file="$HOME/LFE/android/src/gradle/libs.versions.toml"
+            file="$HOME/LFG/android/src/gradle/libs.versions.toml"
             line="6"
             column="16"/>
     </issue>
@@ -144,7 +144,7 @@
         errorLine1="junitVersion = &quot;1.2.1&quot;"
         errorLine2="               ~~~~~~~">
         <location
-            file="$HOME/LFE/android/src/gradle/libs.versions.toml"
+            file="$HOME/LFG/android/src/gradle/libs.versions.toml"
             line="6"
             column="16"/>
     </issue>
@@ -155,7 +155,7 @@
         errorLine1="junitVersion = &quot;1.2.1&quot;"
         errorLine2="               ~~~~~~~">
         <location
-            file="$HOME/LFE/android/src/gradle/libs.versions.toml"
+            file="$HOME/LFG/android/src/gradle/libs.versions.toml"
             line="6"
             column="16"/>
     </issue>
@@ -166,7 +166,7 @@
         errorLine1="espressoCore = &quot;3.6.1&quot;"
         errorLine2="               ~~~~~~~">
         <location
-            file="$HOME/LFE/android/src/gradle/libs.versions.toml"
+            file="$HOME/LFG/android/src/gradle/libs.versions.toml"
             line="7"
             column="16"/>
     </issue>
@@ -177,7 +177,7 @@
         errorLine1="espressoCore = &quot;3.6.1&quot;"
         errorLine2="               ~~~~~~~">
         <location
-            file="$HOME/LFE/android/src/gradle/libs.versions.toml"
+            file="$HOME/LFG/android/src/gradle/libs.versions.toml"
             line="7"
             column="16"/>
     </issue>
@@ -188,7 +188,7 @@
         errorLine1="espressoCore = &quot;3.6.1&quot;"
         errorLine2="               ~~~~~~~">
         <location
-            file="$HOME/LFE/android/src/gradle/libs.versions.toml"
+            file="$HOME/LFG/android/src/gradle/libs.versions.toml"
             line="7"
             column="16"/>
     </issue>
@@ -199,7 +199,7 @@
         errorLine1="lifecycleRuntimeKtx = &quot;2.8.7&quot;"
         errorLine2="                      ~~~~~~~">
         <location
-            file="$HOME/LFE/android/src/gradle/libs.versions.toml"
+            file="$HOME/LFG/android/src/gradle/libs.versions.toml"
             line="8"
             column="23"/>
     </issue>
@@ -210,7 +210,7 @@
         errorLine1="lifecycleRuntimeKtx = &quot;2.8.7&quot;"
         errorLine2="                      ~~~~~~~">
         <location
-            file="$HOME/LFE/android/src/gradle/libs.versions.toml"
+            file="$HOME/LFG/android/src/gradle/libs.versions.toml"
             line="8"
             column="23"/>
     </issue>
@@ -221,7 +221,7 @@
         errorLine1="lifecycleRuntimeKtx = &quot;2.8.7&quot;"
         errorLine2="                      ~~~~~~~">
         <location
-            file="$HOME/LFE/android/src/gradle/libs.versions.toml"
+            file="$HOME/LFG/android/src/gradle/libs.versions.toml"
             line="8"
             column="23"/>
     </issue>
@@ -232,7 +232,7 @@
         errorLine1="activityCompose = &quot;1.10.1&quot;"
         errorLine2="                  ~~~~~~~~">
         <location
-            file="$HOME/LFE/android/src/gradle/libs.versions.toml"
+            file="$HOME/LFG/android/src/gradle/libs.versions.toml"
             line="9"
             column="19"/>
     </issue>
@@ -243,7 +243,7 @@
         errorLine1="activityCompose = &quot;1.10.1&quot;"
         errorLine2="                  ~~~~~~~~">
         <location
-            file="$HOME/LFE/android/src/gradle/libs.versions.toml"
+            file="$HOME/LFG/android/src/gradle/libs.versions.toml"
             line="9"
             column="19"/>
     </issue>
@@ -254,7 +254,7 @@
         errorLine1="activityCompose = &quot;1.10.1&quot;"
         errorLine2="                  ~~~~~~~~">
         <location
-            file="$HOME/LFE/android/src/gradle/libs.versions.toml"
+            file="$HOME/LFG/android/src/gradle/libs.versions.toml"
             line="9"
             column="19"/>
     </issue>
@@ -265,7 +265,7 @@
         errorLine1="composeBom = &quot;2026.02.00&quot;"
         errorLine2="             ~~~~~~~~~~~~">
         <location
-            file="$HOME/LFE/android/src/gradle/libs.versions.toml"
+            file="$HOME/LFG/android/src/gradle/libs.versions.toml"
             line="10"
             column="14"/>
     </issue>
@@ -276,7 +276,7 @@
         errorLine1="composeBom = &quot;2026.02.00&quot;"
         errorLine2="             ~~~~~~~~~~~~">
         <location
-            file="$HOME/LFE/android/src/gradle/libs.versions.toml"
+            file="$HOME/LFG/android/src/gradle/libs.versions.toml"
             line="10"
             column="14"/>
     </issue>
@@ -287,7 +287,7 @@
         errorLine1="composeBom = &quot;2026.02.00&quot;"
         errorLine2="             ~~~~~~~~~~~~">
         <location
-            file="$HOME/LFE/android/src/gradle/libs.versions.toml"
+            file="$HOME/LFG/android/src/gradle/libs.versions.toml"
             line="10"
             column="14"/>
     </issue>
@@ -298,7 +298,7 @@
         errorLine1="navigation = &quot;2.8.9&quot;"
         errorLine2="             ~~~~~~~">
         <location
-            file="$HOME/LFE/android/src/gradle/libs.versions.toml"
+            file="$HOME/LFG/android/src/gradle/libs.versions.toml"
             line="11"
             column="14"/>
     </issue>
@@ -309,7 +309,7 @@
         errorLine1="navigation = &quot;2.8.9&quot;"
         errorLine2="             ~~~~~~~">
         <location
-            file="$HOME/LFE/android/src/gradle/libs.versions.toml"
+            file="$HOME/LFG/android/src/gradle/libs.versions.toml"
             line="11"
             column="14"/>
     </issue>
@@ -320,7 +320,7 @@
         errorLine1="navigation = &quot;2.8.9&quot;"
         errorLine2="             ~~~~~~~">
         <location
-            file="$HOME/LFE/android/src/gradle/libs.versions.toml"
+            file="$HOME/LFG/android/src/gradle/libs.versions.toml"
             line="11"
             column="14"/>
     </issue>
@@ -331,7 +331,7 @@
         errorLine1="workRuntime = &quot;2.10.0&quot;"
         errorLine2="              ~~~~~~~~">
         <location
-            file="$HOME/LFE/android/src/gradle/libs.versions.toml"
+            file="$HOME/LFG/android/src/gradle/libs.versions.toml"
             line="15"
             column="15"/>
     </issue>
@@ -342,7 +342,7 @@
         errorLine1="workRuntime = &quot;2.10.0&quot;"
         errorLine2="              ~~~~~~~~">
         <location
-            file="$HOME/LFE/android/src/gradle/libs.versions.toml"
+            file="$HOME/LFG/android/src/gradle/libs.versions.toml"
             line="15"
             column="15"/>
     </issue>
@@ -353,7 +353,7 @@
         errorLine1="workRuntime = &quot;2.10.0&quot;"
         errorLine2="              ~~~~~~~~">
         <location
-            file="$HOME/LFE/android/src/gradle/libs.versions.toml"
+            file="$HOME/LFG/android/src/gradle/libs.versions.toml"
             line="15"
             column="15"/>
     </issue>
@@ -364,7 +364,7 @@
         errorLine1="dataStore = &quot;1.1.7&quot;"
         errorLine2="            ~~~~~~~">
         <location
-            file="$HOME/LFE/android/src/gradle/libs.versions.toml"
+            file="$HOME/LFG/android/src/gradle/libs.versions.toml"
             line="16"
             column="13"/>
     </issue>
@@ -375,7 +375,7 @@
         errorLine1="dataStore = &quot;1.1.7&quot;"
         errorLine2="            ~~~~~~~">
         <location
-            file="$HOME/LFE/android/src/gradle/libs.versions.toml"
+            file="$HOME/LFG/android/src/gradle/libs.versions.toml"
             line="16"
             column="13"/>
     </issue>
@@ -386,7 +386,7 @@
         errorLine1="dataStore = &quot;1.1.7&quot;"
         errorLine2="            ~~~~~~~">
         <location
-            file="$HOME/LFE/android/src/gradle/libs.versions.toml"
+            file="$HOME/LFG/android/src/gradle/libs.versions.toml"
             line="16"
             column="13"/>
     </issue>
@@ -397,7 +397,7 @@
         errorLine1="gson = &quot;2.12.1&quot;"
         errorLine2="       ~~~~~~~~">
         <location
-            file="$HOME/LFE/android/src/gradle/libs.versions.toml"
+            file="$HOME/LFG/android/src/gradle/libs.versions.toml"
             line="17"
             column="8"/>
     </issue>
@@ -408,7 +408,7 @@
         errorLine1="gson = &quot;2.12.1&quot;"
         errorLine2="       ~~~~~~~~">
         <location
-            file="$HOME/LFE/android/src/gradle/libs.versions.toml"
+            file="$HOME/LFG/android/src/gradle/libs.versions.toml"
             line="17"
             column="8"/>
     </issue>
@@ -419,7 +419,7 @@
         errorLine1="gson = &quot;2.12.1&quot;"
         errorLine2="       ~~~~~~~~">
         <location
-            file="$HOME/LFE/android/src/gradle/libs.versions.toml"
+            file="$HOME/LFG/android/src/gradle/libs.versions.toml"
             line="17"
             column="8"/>
     </issue>
@@ -430,7 +430,7 @@
         errorLine1="lifecycleProcess = &quot;2.8.7&quot;"
         errorLine2="                   ~~~~~~~">
         <location
-            file="$HOME/LFE/android/src/gradle/libs.versions.toml"
+            file="$HOME/LFG/android/src/gradle/libs.versions.toml"
             line="18"
             column="20"/>
     </issue>
@@ -441,7 +441,7 @@
         errorLine1="lifecycleProcess = &quot;2.8.7&quot;"
         errorLine2="                   ~~~~~~~">
         <location
-            file="$HOME/LFE/android/src/gradle/libs.versions.toml"
+            file="$HOME/LFG/android/src/gradle/libs.versions.toml"
             line="18"
             column="20"/>
     </issue>
@@ -452,7 +452,7 @@
         errorLine1="lifecycleProcess = &quot;2.8.7&quot;"
         errorLine2="                   ~~~~~~~">
         <location
-            file="$HOME/LFE/android/src/gradle/libs.versions.toml"
+            file="$HOME/LFG/android/src/gradle/libs.versions.toml"
             line="18"
             column="20"/>
     </issue>
@@ -463,7 +463,7 @@
         errorLine1="webkit = &quot;1.14.0&quot;"
         errorLine2="         ~~~~~~~~">
         <location
-            file="$HOME/LFE/android/src/gradle/libs.versions.toml"
+            file="$HOME/LFG/android/src/gradle/libs.versions.toml"
             line="19"
             column="10"/>
     </issue>
@@ -474,7 +474,7 @@
         errorLine1="webkit = &quot;1.14.0&quot;"
         errorLine2="         ~~~~~~~~">
         <location
-            file="$HOME/LFE/android/src/gradle/libs.versions.toml"
+            file="$HOME/LFG/android/src/gradle/libs.versions.toml"
             line="19"
             column="10"/>
     </issue>
@@ -485,7 +485,7 @@
         errorLine1="webkit = &quot;1.14.0&quot;"
         errorLine2="         ~~~~~~~~">
         <location
-            file="$HOME/LFE/android/src/gradle/libs.versions.toml"
+            file="$HOME/LFG/android/src/gradle/libs.versions.toml"
             line="19"
             column="10"/>
     </issue>
@@ -496,7 +496,7 @@
         errorLine1="documentfile = &quot;1.0.1&quot;"
         errorLine2="               ~~~~~~~">
         <location
-            file="$HOME/LFE/android/src/gradle/libs.versions.toml"
+            file="$HOME/LFG/android/src/gradle/libs.versions.toml"
             line="20"
             column="16"/>
     </issue>
@@ -507,7 +507,7 @@
         errorLine1="documentfile = &quot;1.0.1&quot;"
         errorLine2="               ~~~~~~~">
         <location
-            file="$HOME/LFE/android/src/gradle/libs.versions.toml"
+            file="$HOME/LFG/android/src/gradle/libs.versions.toml"
             line="20"
             column="16"/>
     </issue>
@@ -518,7 +518,7 @@
         errorLine1="documentfile = &quot;1.0.1&quot;"
         errorLine2="               ~~~~~~~">
         <location
-            file="$HOME/LFE/android/src/gradle/libs.versions.toml"
+            file="$HOME/LFG/android/src/gradle/libs.versions.toml"
             line="20"
             column="16"/>
     </issue>
@@ -529,7 +529,7 @@
         errorLine1="playServicesTfliteJava = &quot;16.4.0&quot;"
         errorLine2="                         ~~~~~~~~">
         <location
-            file="$HOME/LFE/android/src/gradle/libs.versions.toml"
+            file="$HOME/LFG/android/src/gradle/libs.versions.toml"
             line="27"
             column="26"/>
     </issue>
@@ -540,7 +540,7 @@
         errorLine1="playServicesTfliteJava = &quot;16.4.0&quot;"
         errorLine2="                         ~~~~~~~~">
         <location
-            file="$HOME/LFE/android/src/gradle/libs.versions.toml"
+            file="$HOME/LFG/android/src/gradle/libs.versions.toml"
             line="27"
             column="26"/>
     </issue>
@@ -551,7 +551,7 @@
         errorLine1="playServicesTfliteJava = &quot;16.4.0&quot;"
         errorLine2="                         ~~~~~~~~">
         <location
-            file="$HOME/LFE/android/src/gradle/libs.versions.toml"
+            file="$HOME/LFG/android/src/gradle/libs.versions.toml"
             line="27"
             column="26"/>
     </issue>
@@ -562,7 +562,7 @@
         errorLine1="playServicesTfliteJava = &quot;16.4.0&quot;"
         errorLine2="                         ~~~~~~~~">
         <location
-            file="$HOME/LFE/android/src/gradle/libs.versions.toml"
+            file="$HOME/LFG/android/src/gradle/libs.versions.toml"
             line="27"
             column="26"/>
     </issue>
@@ -573,7 +573,7 @@
         errorLine1="playServicesTfliteJava = &quot;16.4.0&quot;"
         errorLine2="                         ~~~~~~~~">
         <location
-            file="$HOME/LFE/android/src/gradle/libs.versions.toml"
+            file="$HOME/LFG/android/src/gradle/libs.versions.toml"
             line="27"
             column="26"/>
     </issue>
@@ -584,7 +584,7 @@
         errorLine1="playServicesTfliteJava = &quot;16.4.0&quot;"
         errorLine2="                         ~~~~~~~~">
         <location
-            file="$HOME/LFE/android/src/gradle/libs.versions.toml"
+            file="$HOME/LFG/android/src/gradle/libs.versions.toml"
             line="27"
             column="26"/>
     </issue>
@@ -595,7 +595,7 @@
         errorLine1="playServicesTfliteGpu = &quot;16.4.0&quot;"
         errorLine2="                        ~~~~~~~~">
         <location
-            file="$HOME/LFE/android/src/gradle/libs.versions.toml"
+            file="$HOME/LFG/android/src/gradle/libs.versions.toml"
             line="28"
             column="25"/>
     </issue>
@@ -606,7 +606,7 @@
         errorLine1="playServicesTfliteGpu = &quot;16.4.0&quot;"
         errorLine2="                        ~~~~~~~~">
         <location
-            file="$HOME/LFE/android/src/gradle/libs.versions.toml"
+            file="$HOME/LFG/android/src/gradle/libs.versions.toml"
             line="28"
             column="25"/>
     </issue>
@@ -617,7 +617,7 @@
         errorLine1="playServicesTfliteGpu = &quot;16.4.0&quot;"
         errorLine2="                        ~~~~~~~~">
         <location
-            file="$HOME/LFE/android/src/gradle/libs.versions.toml"
+            file="$HOME/LFG/android/src/gradle/libs.versions.toml"
             line="28"
             column="25"/>
     </issue>
@@ -628,7 +628,7 @@
         errorLine1="cameraX = &quot;1.4.2&quot;"
         errorLine2="          ~~~~~~~">
         <location
-            file="$HOME/LFE/android/src/gradle/libs.versions.toml"
+            file="$HOME/LFG/android/src/gradle/libs.versions.toml"
             line="29"
             column="11"/>
     </issue>
@@ -639,7 +639,7 @@
         errorLine1="cameraX = &quot;1.4.2&quot;"
         errorLine2="          ~~~~~~~">
         <location
-            file="$HOME/LFE/android/src/gradle/libs.versions.toml"
+            file="$HOME/LFG/android/src/gradle/libs.versions.toml"
             line="29"
             column="11"/>
     </issue>
@@ -650,7 +650,7 @@
         errorLine1="cameraX = &quot;1.4.2&quot;"
         errorLine2="          ~~~~~~~">
         <location
-            file="$HOME/LFE/android/src/gradle/libs.versions.toml"
+            file="$HOME/LFG/android/src/gradle/libs.versions.toml"
             line="29"
             column="11"/>
     </issue>
@@ -661,7 +661,7 @@
         errorLine1="cameraX = &quot;1.4.2&quot;"
         errorLine2="          ~~~~~~~">
         <location
-            file="$HOME/LFE/android/src/gradle/libs.versions.toml"
+            file="$HOME/LFG/android/src/gradle/libs.versions.toml"
             line="29"
             column="11"/>
     </issue>
@@ -672,7 +672,7 @@
         errorLine1="cameraX = &quot;1.4.2&quot;"
         errorLine2="          ~~~~~~~">
         <location
-            file="$HOME/LFE/android/src/gradle/libs.versions.toml"
+            file="$HOME/LFG/android/src/gradle/libs.versions.toml"
             line="29"
             column="11"/>
     </issue>
@@ -683,7 +683,7 @@
         errorLine1="cameraX = &quot;1.4.2&quot;"
         errorLine2="          ~~~~~~~">
         <location
-            file="$HOME/LFE/android/src/gradle/libs.versions.toml"
+            file="$HOME/LFG/android/src/gradle/libs.versions.toml"
             line="29"
             column="11"/>
     </issue>
@@ -694,7 +694,7 @@
         errorLine1="cameraX = &quot;1.4.2&quot;"
         errorLine2="          ~~~~~~~">
         <location
-            file="$HOME/LFE/android/src/gradle/libs.versions.toml"
+            file="$HOME/LFG/android/src/gradle/libs.versions.toml"
             line="29"
             column="11"/>
     </issue>
@@ -705,7 +705,7 @@
         errorLine1="cameraX = &quot;1.4.2&quot;"
         errorLine2="          ~~~~~~~">
         <location
-            file="$HOME/LFE/android/src/gradle/libs.versions.toml"
+            file="$HOME/LFG/android/src/gradle/libs.versions.toml"
             line="29"
             column="11"/>
     </issue>
@@ -716,7 +716,7 @@
         errorLine1="cameraX = &quot;1.4.2&quot;"
         errorLine2="          ~~~~~~~">
         <location
-            file="$HOME/LFE/android/src/gradle/libs.versions.toml"
+            file="$HOME/LFG/android/src/gradle/libs.versions.toml"
             line="29"
             column="11"/>
     </issue>
@@ -727,7 +727,7 @@
         errorLine1="cameraX = &quot;1.4.2&quot;"
         errorLine2="          ~~~~~~~">
         <location
-            file="$HOME/LFE/android/src/gradle/libs.versions.toml"
+            file="$HOME/LFG/android/src/gradle/libs.versions.toml"
             line="29"
             column="11"/>
     </issue>
@@ -738,7 +738,7 @@
         errorLine1="cameraX = &quot;1.4.2&quot;"
         errorLine2="          ~~~~~~~">
         <location
-            file="$HOME/LFE/android/src/gradle/libs.versions.toml"
+            file="$HOME/LFG/android/src/gradle/libs.versions.toml"
             line="29"
             column="11"/>
     </issue>
@@ -749,7 +749,7 @@
         errorLine1="cameraX = &quot;1.4.2&quot;"
         errorLine2="          ~~~~~~~">
         <location
-            file="$HOME/LFE/android/src/gradle/libs.versions.toml"
+            file="$HOME/LFG/android/src/gradle/libs.versions.toml"
             line="29"
             column="11"/>
     </issue>
@@ -760,7 +760,7 @@
         errorLine1="splashscreen = &quot;1.2.0-beta01&quot;"
         errorLine2="               ~~~~~~~~~~~~~~">
         <location
-            file="$HOME/LFE/android/src/gradle/libs.versions.toml"
+            file="$HOME/LFG/android/src/gradle/libs.versions.toml"
             line="31"
             column="16"/>
     </issue>
@@ -771,7 +771,7 @@
         errorLine1="splashscreen = &quot;1.2.0-beta01&quot;"
         errorLine2="               ~~~~~~~~~~~~~~">
         <location
-            file="$HOME/LFE/android/src/gradle/libs.versions.toml"
+            file="$HOME/LFG/android/src/gradle/libs.versions.toml"
             line="31"
             column="16"/>
     </issue>
@@ -782,7 +782,7 @@
         errorLine1="splashscreen = &quot;1.2.0-beta01&quot;"
         errorLine2="               ~~~~~~~~~~~~~~">
         <location
-            file="$HOME/LFE/android/src/gradle/libs.versions.toml"
+            file="$HOME/LFG/android/src/gradle/libs.versions.toml"
             line="31"
             column="16"/>
     </issue>
@@ -793,7 +793,7 @@
         errorLine1="exifinterface = &quot;1.4.1&quot;"
         errorLine2="                ~~~~~~~">
         <location
-            file="$HOME/LFE/android/src/gradle/libs.versions.toml"
+            file="$HOME/LFG/android/src/gradle/libs.versions.toml"
             line="34"
             column="17"/>
     </issue>
@@ -804,7 +804,7 @@
         errorLine1="exifinterface = &quot;1.4.1&quot;"
         errorLine2="                ~~~~~~~">
         <location
-            file="$HOME/LFE/android/src/gradle/libs.versions.toml"
+            file="$HOME/LFG/android/src/gradle/libs.versions.toml"
             line="34"
             column="17"/>
     </issue>
@@ -815,7 +815,7 @@
         errorLine1="exifinterface = &quot;1.4.1&quot;"
         errorLine2="                ~~~~~~~">
         <location
-            file="$HOME/LFE/android/src/gradle/libs.versions.toml"
+            file="$HOME/LFG/android/src/gradle/libs.versions.toml"
             line="34"
             column="17"/>
     </issue>
@@ -848,7 +848,7 @@
         errorLine1="          val resources = LocalContext.current.resources"
         errorLine2="                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
-            file="src/main/java/com/bradflaugher/lfe/ui/modelmanager/ModelList.kt"
+            file="src/main/java/com/bradflaugher/lfg/ui/modelmanager/ModelList.kt"
             line="286"
             column="27"/>
     </issue>
@@ -859,7 +859,7 @@
         errorLine1="  modifier: Modifier = Modifier,"
         errorLine2="  ~~~~~~~~">
         <location
-            file="src/main/java/com/bradflaugher/lfe/ui/common/modelitem/DownloadModelPanel.kt"
+            file="src/main/java/com/bradflaugher/lfg/ui/common/modelitem/DownloadModelPanel.kt"
             line="60"
             column="3"/>
     </issue>
@@ -903,7 +903,7 @@
         errorLine1="          javaScriptEnabled = true"
         errorLine2="          ~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
-            file="src/main/java/com/bradflaugher/lfe/ui/common/GalleryWebView.kt"
+            file="src/main/java/com/bradflaugher/lfg/ui/common/GalleryWebView.kt"
             line="149"
             column="11"/>
     </issue>
@@ -925,7 +925,7 @@
         errorLine1="    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {"
         errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
-            file="src/main/java/com/bradflaugher/lfe/data/Consts.kt"
+            file="src/main/java/com/bradflaugher/lfg/data/Consts.kt"
             line="66"
             column="9"/>
     </issue>
@@ -936,7 +936,7 @@
         errorLine1="    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {"
         errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
-            file="src/main/java/com/bradflaugher/lfe/MainActivity.kt"
+            file="src/main/java/com/bradflaugher/lfg/MainActivity.kt"
             line="120"
             column="9"/>
     </issue>
@@ -947,7 +947,7 @@
         errorLine1="    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {"
         errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
-            file="src/main/java/com/bradflaugher/lfe/data/ModelAllowlist.kt"
+            file="src/main/java/com/bradflaugher/lfg/data/ModelAllowlist.kt"
             line="70"
             column="9"/>
     </issue>
@@ -958,7 +958,7 @@
         errorLine1="    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {"
         errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
-            file="src/main/java/com/bradflaugher/lfe/ui/theme/Theme.kt"
+            file="src/main/java/com/bradflaugher/lfg/ui/theme/Theme.kt"
             line="340"
             column="9"/>
     </issue>
@@ -969,7 +969,7 @@
         errorLine1="      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {"
         errorLine2="          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
-            file="src/main/java/com/bradflaugher/lfe/ui/common/Utils.kt"
+            file="src/main/java/com/bradflaugher/lfg/ui/common/Utils.kt"
             line="431"
             column="11"/>
     </issue>
@@ -4804,7 +4804,7 @@
         errorLine1="          setOnTouchListener { v, event ->"
         errorLine2="                             ^">
         <location
-            file="src/main/java/com/bradflaugher/lfe/ui/common/GalleryWebView.kt"
+            file="src/main/java/com/bradflaugher/lfg/ui/common/GalleryWebView.kt"
             line="156"
             column="30"/>
     </issue>

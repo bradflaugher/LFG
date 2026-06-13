@@ -1,0 +1,355 @@
+/*
+ * LFG — Uncensored on-device AI agent for Android.
+ * Copyright (C) 2026 Brad Flaugher
+ *
+ * Licensed under the GNU General Public License v3.0 or later.
+ * See LICENSE in the project root for terms.
+ *
+ * Includes code adapted from Google AI Edge Gallery (Apache 2.0,
+ * Copyright 2025 Google LLC) — https://github.com/google-ai-edge/gallery.
+ */
+package com.bradflaugher.lfg.ui.common.chat
+
+import android.graphics.Bitmap
+import android.util.Log
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Check
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.vector.ImageVector
+
+private const val TAG = "AGChatMessage"
+
+enum class ChatMessageType {
+  INFO,
+  WARNING,
+  ERROR,
+  TEXT,
+  IMAGE,
+  AUDIO_CLIP,
+  LOADING,
+  PROMPT_TEMPLATES,
+  WEBVIEW,
+  COLLAPSABLE_PROGRESS_PANEL,
+  THINKING,
+}
+
+enum class ChatSide {
+  USER,
+  AGENT,
+  SYSTEM,
+}
+
+/** Base class for a chat message. */
+open class ChatMessage(
+  open val type: ChatMessageType,
+  open val side: ChatSide,
+  open val latencyMs: Float = -1f,
+  open val accelerator: String = "",
+  open val hideSenderLabel: Boolean = false,
+  open val disableBubbleShape: Boolean = false,
+  // Added stable ID to optimize LazyColumn recomposition by providing a unique key
+  open val id: String = java.util.UUID.randomUUID().toString(),
+) {
+  open fun clone(): ChatMessage {
+    val cloned =
+      ChatMessage(
+        type = type,
+        side = side,
+        latencyMs = latencyMs,
+        accelerator = accelerator,
+        hideSenderLabel = hideSenderLabel,
+        disableBubbleShape = disableBubbleShape,
+        id = id,
+      )
+    return cloned
+  }
+}
+
+/** Chat message for showing loading status. */
+class ChatMessageLoading(
+  var extraProgressLabel: String = "",
+  override val accelerator: String = "",
+  override val id: String = java.util.UUID.randomUUID().toString(),
+) : ChatMessage(type = ChatMessageType.LOADING, side = ChatSide.AGENT, accelerator = accelerator) {
+  override fun clone(): ChatMessageLoading {
+    return ChatMessageLoading(extraProgressLabel = extraProgressLabel, accelerator = accelerator, id = id)
+  }
+}
+
+/** Chat message for info (help). */
+class ChatMessageInfo(val content: String) :
+  ChatMessage(type = ChatMessageType.INFO, side = ChatSide.SYSTEM)
+
+/** Chat message for warning message. */
+class ChatMessageWarning(val content: String) :
+  ChatMessage(type = ChatMessageType.WARNING, side = ChatSide.SYSTEM)
+
+/** Chat message for error message. */
+class ChatMessageError(val content: String) :
+  ChatMessage(type = ChatMessageType.ERROR, side = ChatSide.SYSTEM)
+
+/** Chat message for plain text. */
+open class ChatMessageText(
+  val content: String,
+  override val side: ChatSide,
+  // Negative numbers will hide the latency display.
+  override val latencyMs: Float = 0f,
+  val isMarkdown: Boolean = true,
+  override val accelerator: String = "",
+  override val hideSenderLabel: Boolean = false,
+  var data: Any? = null,
+  var cacheHitPercentage: Float? = null,
+  override val id: String = java.util.UUID.randomUUID().toString(),
+) :
+  ChatMessage(
+      type = ChatMessageType.TEXT,
+      side = side,
+      latencyMs = latencyMs,
+      accelerator = accelerator,
+      hideSenderLabel = hideSenderLabel,
+    ) {
+  override fun clone(): ChatMessageText {
+    val cloned =
+      ChatMessageText(
+        content = content,
+        side = side,
+        latencyMs = latencyMs,
+        accelerator = accelerator,
+        isMarkdown = isMarkdown,
+        hideSenderLabel = hideSenderLabel,
+        data = data,
+        cacheHitPercentage = cacheHitPercentage,
+        id = id,
+      )
+    return cloned
+  }
+}
+
+/** Chat message for images. */
+class ChatMessageImage(
+  val bitmaps: List<Bitmap>,
+  val imageBitMaps: List<ImageBitmap>,
+  val maxSize: Int = 200,
+  override val side: ChatSide,
+  override val latencyMs: Float = 0f,
+  override val accelerator: String = "",
+  override val hideSenderLabel: Boolean = false,
+  /**
+   * Caches the local absolute file paths to avoid redundant PNG compressions across session
+   * updates.
+   */
+  var persistedPaths: List<String>? = null,
+  override val id: String = java.util.UUID.randomUUID().toString(),
+) :
+  ChatMessage(
+      type = ChatMessageType.IMAGE,
+      side = side,
+      latencyMs = latencyMs,
+      accelerator = accelerator,
+      hideSenderLabel = hideSenderLabel,
+    ) {
+  override fun clone(): ChatMessageImage {
+    return ChatMessageImage(
+      bitmaps = bitmaps.toList(),
+      imageBitMaps = imageBitMaps.toList(),
+      side = side,
+      latencyMs = latencyMs,
+      accelerator = accelerator,
+      hideSenderLabel = hideSenderLabel,
+      persistedPaths = persistedPaths?.toList(),
+      id = id,
+    )
+  }
+}
+
+/** Chat message for audio clip. */
+class ChatMessageAudioClip(
+  val audioData: ByteArray,
+  val sampleRate: Int,
+  override val side: ChatSide,
+  override val latencyMs: Float = 0f,
+  /**
+   * Caches the local absolute file path to bypass redundant disk write I/O during session saves.
+   */
+  var persistedPath: String? = null,
+  override val id: String = java.util.UUID.randomUUID().toString(),
+) : ChatMessage(type = ChatMessageType.AUDIO_CLIP, side = side, latencyMs = latencyMs) {
+  override fun clone(): ChatMessageAudioClip {
+    return ChatMessageAudioClip(
+      audioData = audioData,
+      sampleRate = sampleRate,
+      side = side,
+      latencyMs = latencyMs,
+      persistedPath = persistedPath,
+      id = id,
+    )
+  }
+
+  fun genByteArrayForWav(): ByteArray {
+    val header = ByteArray(44)
+
+    val pcmDataSize = audioData.size
+    val wavFileSize = pcmDataSize + 44 // 44 bytes for the header
+    val channels = 1 // Mono
+    val bitsPerSample: Short = 16
+    val byteRate = sampleRate * channels * bitsPerSample / 8
+    Log.d(TAG, "Wav metadata: sampleRate: $sampleRate")
+
+    // RIFF/WAVE header
+    header[0] = 'R'.code.toByte()
+    header[1] = 'I'.code.toByte()
+    header[2] = 'F'.code.toByte()
+    header[3] = 'F'.code.toByte()
+    header[4] = (wavFileSize and 0xff).toByte()
+    header[5] = (wavFileSize shr 8 and 0xff).toByte()
+    header[6] = (wavFileSize shr 16 and 0xff).toByte()
+    header[7] = (wavFileSize shr 24 and 0xff).toByte()
+    header[8] = 'W'.code.toByte()
+    header[9] = 'A'.code.toByte()
+    header[10] = 'V'.code.toByte()
+    header[11] = 'E'.code.toByte()
+    header[12] = 'f'.code.toByte()
+    header[13] = 'm'.code.toByte()
+    header[14] = 't'.code.toByte()
+    header[15] = ' '.code.toByte()
+    header[16] = 16
+    header[17] = 0
+    header[18] = 0
+    header[19] = 0 // Sub-chunk size (16 for PCM)
+    header[20] = 1
+    header[21] = 0 // Audio format (1 for PCM)
+    header[22] = channels.toByte()
+    header[23] = 0 // Number of channels
+    header[24] = (sampleRate and 0xff).toByte()
+    header[25] = (sampleRate shr 8 and 0xff).toByte()
+    header[26] = (sampleRate shr 16 and 0xff).toByte()
+    header[27] = (sampleRate shr 24 and 0xff).toByte()
+    header[28] = (byteRate and 0xff).toByte()
+    header[29] = (byteRate shr 8 and 0xff).toByte()
+    header[30] = (byteRate shr 16 and 0xff).toByte()
+    header[31] = (byteRate shr 24 and 0xff).toByte()
+    header[32] = (channels * bitsPerSample / 8).toByte()
+    header[33] = 0 // Block align
+    header[34] = bitsPerSample.toByte()
+    header[35] = (bitsPerSample.toInt() shr 8 and 0xff).toByte() // Bits per sample
+    header[36] = 'd'.code.toByte()
+    header[37] = 'a'.code.toByte()
+    header[38] = 't'.code.toByte()
+    header[39] = 'a'.code.toByte()
+    header[40] = (pcmDataSize and 0xff).toByte()
+    header[41] = (pcmDataSize shr 8 and 0xff).toByte()
+    header[42] = (pcmDataSize shr 16 and 0xff).toByte()
+    header[43] = (pcmDataSize shr 24 and 0xff).toByte()
+
+    return header + audioData
+  }
+
+  fun getDurationInSeconds(): Float {
+    // PCM 16-bit
+    val bytesPerSample = 2
+    val bytesPerFrame = bytesPerSample * 1 // mono
+    val totalFrames = audioData.size.toFloat() / bytesPerFrame
+    return totalFrames / sampleRate
+  }
+}
+
+/** Chat message for showing a WebView. */
+class ChatMessageWebView(
+  val url: String,
+  val iframe: Boolean,
+  val aspectRatio: Float,
+  override val side: ChatSide = ChatSide.AGENT,
+  override val hideSenderLabel: Boolean = false,
+  override val id: String = java.util.UUID.randomUUID().toString(),
+) :
+  ChatMessage(
+      type = ChatMessageType.WEBVIEW,
+      side = side,
+      hideSenderLabel = hideSenderLabel,
+      disableBubbleShape = true,
+    ) {
+  override fun clone(): ChatMessageWebView {
+    return ChatMessageWebView(
+      url = url,
+      iframe = iframe,
+      aspectRatio = aspectRatio,
+      side = side,
+      hideSenderLabel = hideSenderLabel,
+      id = id,
+    )
+  }
+}
+
+data class ProgressPanelItem(val title: String, val description: String)
+
+enum class LogMessageLevel {
+  Info,
+  Warning,
+  Error,
+}
+
+data class LogMessage(
+  val level: LogMessageLevel = LogMessageLevel.Info,
+  val source: String = "",
+  val lineNumber: Int = -1,
+  val message: String = "",
+  val id: String = java.util.UUID.randomUUID().toString(),
+)
+
+/** Chat message for showing a collapsable progress panel. */
+class ChatMessageCollapsableProgressPanel(
+  val title: String,
+  val inProgress: Boolean,
+  override val accelerator: String,
+  val doneIcon: ImageVector = Icons.Rounded.Check,
+  val items: List<ProgressPanelItem> = listOf(),
+  val logMessages: List<LogMessage> = listOf(),
+  val customData: Any? = null,
+  override val id: String = java.util.UUID.randomUUID().toString(),
+) :
+  ChatMessage(
+      type = ChatMessageType.COLLAPSABLE_PROGRESS_PANEL,
+      side = ChatSide.AGENT,
+      accelerator = accelerator,
+    ) {
+  override fun clone(): ChatMessageCollapsableProgressPanel {
+    return ChatMessageCollapsableProgressPanel(
+      title = title,
+      inProgress = inProgress,
+      accelerator = accelerator,
+      doneIcon = doneIcon,
+      items = items.toList(),
+      logMessages = logMessages.toList(),
+      customData = customData,
+      id = id,
+    )
+  }
+}
+
+/** Chat message for showcasing a thought process. */
+class ChatMessageThinking(
+  val content: String,
+  val inProgress: Boolean,
+  override val side: ChatSide = ChatSide.AGENT,
+  override val hideSenderLabel: Boolean = false,
+  override val accelerator: String = "",
+  override val id: String = java.util.UUID.randomUUID().toString(),
+) :
+  ChatMessage(
+      type = ChatMessageType.THINKING,
+      side = side,
+      hideSenderLabel = hideSenderLabel,
+      disableBubbleShape = true,
+      accelerator = accelerator,
+    ) {
+  override fun clone(): ChatMessageThinking {
+    return ChatMessageThinking(
+      content = content,
+      inProgress = inProgress,
+      side = side,
+      hideSenderLabel = hideSenderLabel,
+      accelerator = accelerator,
+      id = id,
+    )
+  }
+}

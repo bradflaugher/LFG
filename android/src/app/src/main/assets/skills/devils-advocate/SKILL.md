@@ -2,7 +2,7 @@
 name: devils-advocate
 description: Argue the other side, steelman an uncomfortable position, or pressure-test the user's thinking — without dodging or "I can't take that position". Use when the user wants their idea challenged, both sides of a debate, or the strongest case against what they believe.
 metadata:
-  homepage: https://github.com/bradflaugher/LFE
+  homepage: https://github.com/bradflaugher/LFG
 ---
 
 # Devil's advocate

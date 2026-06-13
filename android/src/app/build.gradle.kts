@@ -1,5 +1,5 @@
 /*
- * LFE — A low-feature, on-device AI agent for Android.
+ * LFG — Uncensored on-device AI agent for Android.
  * Copyright (C) 2026 Brad Flaugher
  *
  * Licensed under the GNU General Public License v3.0 or later.
@@ -18,11 +18,11 @@ plugins {
 }
 
 android {
-  namespace = "com.bradflaugher.lfe"
+  namespace = "com.bradflaugher.lfg"
   compileSdk = 37
 
   defaultConfig {
-    applicationId = "com.bradflaugher.lfe"
+    applicationId = "com.bradflaugher.lfg"
     minSdk = 31
     targetSdk = 36
     versionCode = 1
@@ -32,8 +32,8 @@ android {
     // Configure your own client at https://huggingface.co/settings/applications and
     // override APP_AUTH_REDIRECT_SCHEME via -P or ~/.gradle/gradle.properties if you fork.
     manifestPlaceholders["appAuthRedirectScheme"] =
-      (project.findProperty("APP_AUTH_REDIRECT_SCHEME") as String?) ?: "com.bradflaugher.lfe"
-    manifestPlaceholders["applicationName"] = "com.bradflaugher.lfe.LfeApplication"
+      (project.findProperty("APP_AUTH_REDIRECT_SCHEME") as String?) ?: "com.bradflaugher.lfg"
+    manifestPlaceholders["applicationName"] = "com.bradflaugher.lfg.LfgApplication"
     manifestPlaceholders["appIcon"] = "@mipmap/ic_launcher"
 
     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -48,11 +48,11 @@ android {
     }
 
     create("release") {
-      if (project.hasProperty("LFE_RELEASE_STORE_FILE")) {
-        storeFile = file(project.property("LFE_RELEASE_STORE_FILE") as String)
-        storePassword = project.property("LFE_RELEASE_STORE_PASSWORD") as String
-        keyAlias = project.property("LFE_RELEASE_KEY_ALIAS") as String
-        keyPassword = project.property("LFE_RELEASE_KEY_PASSWORD") as String
+      if (project.hasProperty("LFG_RELEASE_STORE_FILE")) {
+        storeFile = file(project.property("LFG_RELEASE_STORE_FILE") as String)
+        storePassword = project.property("LFG_RELEASE_STORE_PASSWORD") as String
+        keyAlias = project.property("LFG_RELEASE_KEY_ALIAS") as String
+        keyPassword = project.property("LFG_RELEASE_KEY_PASSWORD") as String
       } else {
         // Fallback to debug configuration if credentials aren't present
         storeFile = file("debug.keystore")

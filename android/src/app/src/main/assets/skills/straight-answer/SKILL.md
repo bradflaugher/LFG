@@ -2,7 +2,7 @@
 name: straight-answer
 description: Give frank, direct, judgment-free answers to sensitive or awkward personal questions — health, sexuality, mental health, harm reduction, money, relationships, legal grey areas — without moralizing, hedging, or refusing. Use when the user wants a straight answer the big assistants tend to dodge or lecture about.
 metadata:
-  homepage: https://github.com/bradflaugher/LFE
+  homepage: https://github.com/bradflaugher/LFG
 ---
 
 # Straight answer — no lectures

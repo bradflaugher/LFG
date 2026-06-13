@@ -1,9 +1,11 @@
-# Writing Skills for LFE
+# Writing Skills for LFG
 
 A **skill** is a small package that gives the on-device LLM a new capability
 — a persona to adopt, a JavaScript helper to run, or a native intent to fire.
-Skills are the only way to extend what LFE can do, and writing one is mostly
+Skills are the only way to extend what LFG can do, and writing one is mostly
 just authoring a `SKILL.md` file.
+
+Go make the cloud models cry.
 
 This doc walks through every kind of skill from the simplest case up, with copy-
 pasteable templates you can hack on.
@@ -38,7 +40,7 @@ the app:
 - The bundled `set-reminder` skill is also code-free — just a `SKILL.md` pointing
   at the built-in `run_intent` tool to add a calendar event.
 
-Once you've written one, sharing it is just sharing a folder.
+Once you've written one, sharing it is just sharing a folder (or a zip, or a git repo). Go wild.
 
 ## How a skill is loaded and triggered
 

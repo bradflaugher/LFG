@@ -2,7 +2,7 @@
 name: privacy-lens
 description: Decode a privacy policy, terms of service, or app-permission list and tell the user what data is collected, who it's shared with, and the red flags. Use when the user pastes a privacy policy / ToS / EULA, or asks "what is this app/site actually taking?"
 metadata:
-  homepage: https://github.com/bradflaugher/LFE
+  homepage: https://github.com/bradflaugher/LFG
 ---
 
 # Privacy Lens — what are they actually taking?

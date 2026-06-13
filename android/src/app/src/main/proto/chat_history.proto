@@ -1,4 +1,4 @@
-/* LFE — A low-feature, on-device AI agent for Android.
+/* LFG — Uncensored on-device AI agent for Android.
  * Copyright (C) 2026 Brad Flaugher
  *
  * Licensed under the GNU General Public License v3.0 or later.
@@ -9,9 +9,9 @@
  */
 syntax = "proto3";
 
-package com.bradflaugher.lfe.proto;
+package com.bradflaugher.lfg.proto;
 
-option java_package = "com.bradflaugher.lfe.proto";
+option java_package = "com.bradflaugher.lfg.proto";
 option java_outer_classname = "ChatHistory";
 option java_multiple_files = true;
 

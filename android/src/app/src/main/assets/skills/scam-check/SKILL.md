@@ -2,7 +2,7 @@
 name: scam-check
 description: Check whether a suspicious message, email, link, or call is a scam or phishing attempt. Use when the user pastes or describes something that might be fraudulent — "is this a scam?", "is this link safe?", "I got a weird text from my bank".
 metadata:
-  homepage: https://github.com/bradflaugher/LFE
+  homepage: https://github.com/bradflaugher/LFG
 ---
 
 # Scam & phishing check

@@ -2,7 +2,7 @@
 name: set-reminder
 description: Add a reminder or event to the user's calendar. Use when the user wants to be reminded of something at a time — "remind me to call the dentist tomorrow at 9am", "add a lunch with Sam on Friday at noon".
 metadata:
-  homepage: https://github.com/bradflaugher/LFE
+  homepage: https://github.com/bradflaugher/LFG
 ---
 
 # Set a reminder / calendar event

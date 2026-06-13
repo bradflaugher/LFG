@@ -1,5 +1,5 @@
 /*
- * LFE — Copyright (C) 2026 Brad Flaugher. GPL-3.0-or-later.
+ * LFG — Copyright (C) 2026 Brad Flaugher. GPL-3.0-or-later.
  * Includes code adapted from Google AI Edge Gallery (Apache 2.0).
  */
 

@@ -42,6 +42,7 @@ class BundledSkillsTest {
       "alibi-generator",
       "brutal-roast",
       "comeback-king",
+      "read-webpage",
     )
 
   private val skillsRoot = File("src/main/assets/skills")

@@ -1,4 +1,4 @@
-# LFE — root-level ignores. Android Gradle module has its own .gitignore.
+# LFG — root-level ignores. Android Gradle module has its own .gitignore.
 
 # Logs / crashes.
 *.log

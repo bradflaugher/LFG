@@ -44,13 +44,13 @@ jobs:
       - name: Decode Keystore
         id: decode_keystore
         env:
-          LFE_RELEASE_KEYSTORE_BASE64: ${{ secrets.LFE_RELEASE_KEYSTORE_BASE64 }}
-          LFE_RELEASE_STORE_PASSWORD: ${{ secrets.LFE_RELEASE_STORE_PASSWORD }}
-          LFE_RELEASE_KEY_ALIAS: ${{ secrets.LFE_RELEASE_KEY_ALIAS }}
-          LFE_RELEASE_KEY_PASSWORD: ${{ secrets.LFE_RELEASE_KEY_PASSWORD }}
+          LFG_RELEASE_KEYSTORE_BASE64: ${{ secrets.LFG_RELEASE_KEYSTORE_BASE64 }}
+          LFG_RELEASE_STORE_PASSWORD: ${{ secrets.LFG_RELEASE_STORE_PASSWORD }}
+          LFG_RELEASE_KEY_ALIAS: ${{ secrets.LFG_RELEASE_KEY_ALIAS }}
+          LFG_RELEASE_KEY_PASSWORD: ${{ secrets.LFG_RELEASE_KEY_PASSWORD }}
         run: |
-          if [ -n "$LFE_RELEASE_KEYSTORE_BASE64" ] && [ -n "$LFE_RELEASE_STORE_PASSWORD" ] && [ -n "$LFE_RELEASE_KEY_ALIAS" ] && [ -n "$LFE_RELEASE_KEY_PASSWORD" ]; then
-            echo "$LFE_RELEASE_KEYSTORE_BASE64" | base64 --decode > release.keystore
+          if [ -n "$LFG_RELEASE_KEYSTORE_BASE64" ] && [ -n "$LFG_RELEASE_STORE_PASSWORD" ] && [ -n "$LFG_RELEASE_KEY_ALIAS" ] && [ -n "$LFG_RELEASE_KEY_PASSWORD" ]; then
+            echo "$LFG_RELEASE_KEYSTORE_BASE64" | base64 --decode > release.keystore
             echo "path=${{ github.workspace }}/android/src/release.keystore" >> "$GITHUB_OUTPUT"
           else
             echo "Signing keys are missing or incomplete. Skipping release signing and falling back to debug signing."
@@ -58,17 +58,17 @@ jobs:
 
       - name: Assemble release APK
         env:
-          LFE_RELEASE_STORE_PASSWORD: ${{ secrets.LFE_RELEASE_STORE_PASSWORD }}
-          LFE_RELEASE_KEY_ALIAS: ${{ secrets.LFE_RELEASE_KEY_ALIAS }}
-          LFE_RELEASE_KEY_PASSWORD: ${{ secrets.LFE_RELEASE_KEY_PASSWORD }}
+          LFG_RELEASE_STORE_PASSWORD: ${{ secrets.LFG_RELEASE_STORE_PASSWORD }}
+          LFG_RELEASE_KEY_ALIAS: ${{ secrets.LFG_RELEASE_KEY_ALIAS }}
+          LFG_RELEASE_KEY_PASSWORD: ${{ secrets.LFG_RELEASE_KEY_PASSWORD }}
         run: |
-          LFE_RELEASE_STORE_FILE="${{ steps.decode_keystore.outputs.path }}"
-          if [ -n "$LFE_RELEASE_STORE_FILE" ]; then
+          LFG_RELEASE_STORE_FILE="${{ steps.decode_keystore.outputs.path }}"
+          if [ -n "$LFG_RELEASE_STORE_FILE" ]; then
             ./gradlew assembleRelease \
-              -PLFE_RELEASE_STORE_FILE="$LFE_RELEASE_STORE_FILE" \
-              -PLFE_RELEASE_STORE_PASSWORD="$LFE_RELEASE_STORE_PASSWORD" \
-              -PLFE_RELEASE_KEY_ALIAS="$LFE_RELEASE_KEY_ALIAS" \
-              -PLFE_RELEASE_KEY_PASSWORD="$LFE_RELEASE_KEY_PASSWORD"
+              -PLFG_RELEASE_STORE_FILE="$LFG_RELEASE_STORE_FILE" \
+              -PLFG_RELEASE_STORE_PASSWORD="$LFG_RELEASE_STORE_PASSWORD" \
+              -PLFG_RELEASE_KEY_ALIAS="$LFG_RELEASE_KEY_ALIAS" \
+              -PLFG_RELEASE_KEY_PASSWORD="$LFG_RELEASE_KEY_PASSWORD"
           else
             ./gradlew assembleRelease
           fi
@@ -95,7 +95,7 @@ jobs:
             echo "no APK produced" >&2
             exit 1
           fi
-          out="lfe-${{ steps.ident.outputs.tag }}.apk"
+          out="lfg-${{ steps.ident.outputs.tag }}.apk"
           cp "${apk[0]}" "${out}"
           echo "apk=${PWD}/${out}" >> "$GITHUB_OUTPUT"
 
@@ -110,10 +110,10 @@ jobs:
 
           Install:
           ```
-          adb install -r lfe-${{ steps.ident.outputs.tag }}.apk
+          adb install -r lfg-${{ steps.ident.outputs.tag }}.apk
           ```
 
-          **First-time sideloaders:** LFE strictly targets the latest
+          **First-time sideloaders:** LFG strictly targets the latest
           Android releases. If you need help, check out the official Google
           guide on [how to install apps from other sources on Android](https://support.google.com/googleplay/answer/14669046).
           EOF

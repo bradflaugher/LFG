@@ -68,7 +68,3 @@ Import any LiteRT-LM compatible `.litertlm` or `.task` file directly, or configu
 GPL-3.0-or-later. [LICENSE](file:///root/LFG/LICENSE)
 
 Includes code adapted from the Google AI Edge Gallery project (Apache 2.0).
-
----
-
-LFG. Your phone. Your rules. Let's fucking go.

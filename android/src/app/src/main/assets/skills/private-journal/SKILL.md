@@ -2,7 +2,7 @@
 name: private-journal
 description: A private journal that lives only on this device — write entries, look them back over, and get gentle, judgment-free reflection. Use when the user wants to journal, vent, record how their day went, or look back over past entries. Nothing is ever uploaded.
 metadata:
-  homepage: https://github.com/bradflaugher/LFE
+  homepage: https://github.com/bradflaugher/LFG
 ---
 
 # Private journal

@@ -2,7 +2,7 @@
 name: whats-on-my-calendar
 description: Read the user's calendar events for a given day and summarize them. Use when the user asks what's on their schedule, what they have today or tomorrow, or whether they're free at a certain time.
 metadata:
-  homepage: https://github.com/bradflaugher/LFE
+  homepage: https://github.com/bradflaugher/LFG
 ---
 
 # What's on my calendar?

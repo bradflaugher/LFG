@@ -1,5 +1,5 @@
 {
-  "_comment": "LFE model allowlist. All models are routed to the single LLM_AGENT_CHAT task. Bundled here so first launch works offline; updates fetched from GitHub at runtime.",
+  "_comment": "LFG model allowlist. All models are routed to the single LLM_AGENT_CHAT task. Bundled here so first launch works offline; updates fetched from GitHub at runtime.",
   "models": [
     {
       "name": "Gemma-4-E2B-it",

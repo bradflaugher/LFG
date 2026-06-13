@@ -1,13 +1,10 @@
-# LFE Recipes — what it's actually for
+# LFG Recipes — what it's actually for
 
-LFE isn't trying to out-muscle Gemini or Claude. It's the AI you reach for when
-the thing in front of you **shouldn't leave your phone**, or when the cloud
-models **won't help**. Everything below runs on-device — open the **Skills**
-sheet, switch on what a recipe needs, and just talk.
+LFG isn't here to write your slide decks better than Claude. It's the AI you open when the thing you're dealing with **cannot leave your phone**, or when every cloud model starts with "As a helpful assistant, I must decline..."
 
-> **Two models, two jobs.** Use a **stock** Gemma model for the vision skill
-> (Confidential Desk reads a photo). Switch to an **Abliterated** model for the
-> "won't say no" skills. Both download from the model manager.
+Everything here runs fully on-device. Open **Skills**, toggle the ones the job needs, talk to it like a person who owes you nothing.
+
+> **Two models, two jobs.** Stock Gemma for vision (Confidential Desk / photo docs). Abliterated models for anything you wouldn't say in front of HR. Both in the model manager.
 
 ---
 
@@ -15,7 +12,7 @@ sheet, switch on what a recipe needs, and just talk.
 
 **Skill:** `redact` *(on by default)*
 
-The killer move: LFE as the privacy filter in front of your *other* AI.
+The killer move: LFG as the "oh god don't let them see my name" filter before you hand anything to the cloud.
 
 > "Redact this so I can paste it into ChatGPT: *Hi, it's Jane Doe
 > (jane@acme.com, 555-0199), my account 4012-8899 was double-charged…*"
@@ -78,7 +75,7 @@ no lectures, no reflexive "consult a professional", no refusals.
 
 > "Give it to me straight, no disclaimers: …"
 
-This is the whole reason to run an uncensored model on hardware you own.
+This is why the fucking thing exists.
 
 ---
 
@@ -95,7 +92,7 @@ in a cloud history tied to your name. Also does immersive character roleplay.
 
 ---
 
-## ✍️ Write the fiction the cloud models neuter
+## ✍️ Write the fiction the cloud models neuter on sight
 
 **Skill:** `unfiltered-muse` *(off by default; best with an Abliterated model)*
 

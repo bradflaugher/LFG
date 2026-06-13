@@ -1,0 +1,83 @@
+/*
+ * LFG — Uncensored on-device AI agent for Android.
+ * Copyright (C) 2026 Brad Flaugher
+ *
+ * Licensed under the GNU General Public License v3.0 or later.
+ * See LICENSE in the project root for terms.
+ *
+ * Includes code adapted from Google AI Edge Gallery (Apache 2.0,
+ * Copyright 2025 Google LLC) — https://github.com/google-ai-edge/gallery.
+ */
+package com.bradflaugher.lfg.ui.common.chat
+
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.selection.SelectionContainer
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.LiveRegionMode
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.liveRegion
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
+import com.bradflaugher.lfg.R
+import com.bradflaugher.lfg.ui.common.BufferedFadingMarkdownText
+import com.bradflaugher.lfg.ui.common.MarkdownText
+
+/** Composable function to display the text content of a ChatMessageText. */
+@Composable
+fun MessageBodyText(
+  message: ChatMessageText,
+  inProgress: Boolean,
+  horizontalPadding: Dp = 12.dp,
+  onCopyClicked: (String) -> Unit = {},
+) {
+  if (message.side == ChatSide.USER) {
+    LongPressCopyContainer(copyText = message.content, onCopyClicked = onCopyClicked) {
+      MarkdownText(
+        text = message.content,
+        modifier = Modifier.padding(vertical = 12.dp).padding(horizontal = horizontalPadding),
+        textColor = Color.White,
+        linkColor = Color.White,
+      )
+    }
+  } else if (message.side == ChatSide.AGENT) {
+    val cdResponse = stringResource(R.string.cd_model_response_text)
+    if (message.isMarkdown) {
+      BufferedFadingMarkdownText(
+        text = message.content,
+        inProgress = inProgress,
+        modifier =
+          Modifier.padding(vertical = 12.dp).padding(horizontal = horizontalPadding).semantics(
+            mergeDescendants = true,
+          ) {
+            contentDescription = cdResponse
+            // Only announce when message is complete.
+            if (!inProgress) {
+              liveRegion = LiveRegionMode.Polite
+            }
+          },
+      )
+    } else {
+      SelectionContainer {
+        Text(
+          message.content,
+          style = MaterialTheme.typography.bodyMedium,
+          color = MaterialTheme.colorScheme.onSurface,
+          modifier =
+            Modifier.padding(vertical = 12.dp).padding(horizontal = horizontalPadding).semantics {
+              contentDescription = cdResponse
+              // Only announce when message is complete.
+              if (!inProgress) {
+                liveRegion = LiveRegionMode.Polite
+              }
+            },
+        )
+      }
+    }
+  }
+}

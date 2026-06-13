@@ -1,32 +1,37 @@
 <!--
- LFE — A low-feature, on-device AI agent for Android.
+ LFG — Uncensored on-device AI agent for Android.
  Copyright (C) 2026 Brad Flaugher
 
  Licensed under the GNU General Public License v3.0 or later.
  See LICENSE in the project root for terms.
 -->
 <!--
-  Splash icon: plain "LFE" wordmark on transparent background, sized for the
+  Splash icon: bold "LFG" wordmark on transparent background, sized for the
   Android 12+ SplashScreen API (192dp inner safe-zone inside a 432dp viewport).
   Replaces the 4-shape Google-colored animated icon. Kept as a VectorDrawable so
   the existing `windowSplashScreenAnimatedIcon` attribute still loads it (Android
   treats a non-AnimatedVectorDrawable as a static icon with 0 ms animation).
+  LFG: Let's Fucking Go — on-device, uncensored, private.
 -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="432dp"
     android:height="432dp"
     android:viewportWidth="432"
     android:viewportHeight="432">
-  <!-- L -->
+  <!-- L (bold, improved) -->
   <path
       android:fillColor="#FF1A1A1A"
-      android:pathData="M120,150 L120,282 L196,282 L196,266 L138,266 L138,150 Z" />
+      android:pathData="M72,120 L72,312 L104,312 L104,280 L144,280 L144,312 L176,312 L176,120 L144,120 L144,152 L104,152 L104,120 Z" />
   <!-- F -->
   <path
       android:fillColor="#FF1A1A1A"
-      android:pathData="M208,150 L208,282 L226,282 L226,222 L266,222 L266,206 L226,206 L226,166 L274,166 L274,150 Z" />
-  <!-- E -->
+      android:pathData="M200,120 L200,312 L232,312 L232,232 L288,232 L288,200 L232,200 L232,152 L296,152 L296,120 Z" />
+  <!-- G -->
   <path
       android:fillColor="#FF1A1A1A"
-      android:pathData="M286,150 L286,282 L348,282 L348,266 L304,266 L304,222 L340,222 L340,206 L304,206 L304,166 L348,166 L348,150 Z" />
+      android:pathData="M312,120 L312,312 L384,312 L384,280 L352,280 L352,200 L360,200 L360,168 L328,168 L328,280 L352,280 L352,312 L312,312 Z" />
+  <!-- Fiery accent punch triangle (LFG energy) -->
+  <path
+      android:fillColor="#FFFF3D00"
+      android:pathData="M392,136 L400,120 L408,136 L400,152 Z" />
 </vector>

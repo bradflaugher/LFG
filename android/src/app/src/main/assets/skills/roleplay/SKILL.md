@@ -2,7 +2,7 @@
 name: roleplay
 description: Play a character or another person for private roleplay, or to rehearse a hard conversation before you have it for real — a breakup, a salary negotiation, coming out, confronting someone, a job interview. Use when the user wants to practice a conversation or do immersive character roleplay.
 metadata:
-  homepage: https://github.com/bradflaugher/LFE
+  homepage: https://github.com/bradflaugher/LFG
 ---
 
 # Private roleplay & rehearsal

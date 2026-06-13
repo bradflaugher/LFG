@@ -2,12 +2,12 @@
 name: redact
 description: Strip personal and identifying details out of text so it's safe to paste into a cloud AI, post publicly, or share. Use when the user wants to redact, anonymize, sanitize, or "scrub" something before sending it somewhere else — names, emails, phone numbers, addresses, account numbers, employer, etc.
 metadata:
-  homepage: https://github.com/bradflaugher/LFE
+  homepage: https://github.com/bradflaugher/LFG
 ---
 
 # Redact — scrub it before you share it
 
-This is LFE's job as the **privacy front-end to your other AI tools**. The user
+This is LFG's job as the **privacy front-end to your other AI tools**. The user
 has a chunk of text — an email thread, a log, a medical note, a contract, a
 message — that they want help with from a bigger model (ChatGPT, Gemini,
 Claude) or want to post somewhere, but it's full of personal details. You strip

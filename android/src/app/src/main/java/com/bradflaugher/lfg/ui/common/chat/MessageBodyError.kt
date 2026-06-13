@@ -1,0 +1,51 @@
+/*
+ * LFG — Uncensored on-device AI agent for Android.
+ * Copyright (C) 2026 Brad Flaugher
+ *
+ * Licensed under the GNU General Public License v3.0 or later.
+ * See LICENSE in the project root for terms.
+ *
+ * Includes code adapted from Google AI Edge Gallery (Apache 2.0,
+ * Copyright 2025 Google LLC) — https://github.com/google-ai-edge/gallery.
+ */
+package com.bradflaugher.lfg.ui.common.chat
+
+// import androidx.compose.ui.tooling.preview.Preview
+// import com.bradflaugher.lfg.ui.theme.LfgTheme
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.unit.dp
+import com.bradflaugher.lfg.ui.common.MarkdownText
+import com.bradflaugher.lfg.ui.theme.customColors
+
+/**
+ * Composable function to display error message content within a chat.
+ *
+ * Supports markdown.
+ */
+@Composable
+fun MessageBodyError(message: ChatMessageError) {
+  Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
+    Box(
+      modifier =
+        Modifier.clip(RoundedCornerShape(16.dp))
+          .background(MaterialTheme.customColors.errorContainerColor),
+    ) {
+      MarkdownText(
+        text = message.content,
+        modifier = Modifier.padding(horizontal = 16.dp, vertical = 6.dp),
+        smallFontSize = true,
+        textColor = MaterialTheme.customColors.errorTextColor,
+      )
+    }
+  }
+}

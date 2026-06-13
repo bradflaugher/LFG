@@ -1,5 +1,5 @@
 <!--
- LFE — A low-feature, on-device AI agent for Android.
+ LFG — Uncensored on-device AI agent for Android.
  Copyright (C) 2026 Brad Flaugher
 
  Licensed under the GNU General Public License v3.0 or later.
@@ -18,12 +18,12 @@
   <string name="aicore_access_panel_title" translatable="false">You cannot access this model yet. Please follow the steps and return when complete.</string>
   <string name="aicore_access_panel_button" translatable="false">Open guide</string>
   <string name="image_limit_message" translatable="false">The current model can only support 1 image per chat. To ask about another image, create a new chat.</string>
-  <string name="aichat_initializing_title" translatable="false">Initializing model</string>
-  <string name="aichat_initializing_content" translatable="false">Sit tight, this can take up to 1 minute</string>
-  <string name="app_intro" translatable="false">Explore a world of amazing on-device models from</string>
-  <string name="app_name" translatable="false">Google AI Edge Gallery</string>
-  <string name="app_name_first_part" translatable="false">Google AI</string>
-  <string name="app_name_second_part" translatable="false">Edge Gallery</string>
+  <string name="aichat_initializing_title" translatable="false">Waking the gremlin</string>
+  <string name="aichat_initializing_content" translatable="false">On-device brain is booting. Give it up to a minute. No cloud watching.</string>
+  <string name="app_intro" translatable="false">Uncensored on-device agents. Your data. Your rules. LFG.</string>
+  <string name="app_name" translatable="false">LFG</string>
+  <string name="app_name_first_part" translatable="false">L</string>
+  <string name="app_name_second_part" translatable="false">FG</string>
   <string name="askimage_emptystate_title" translatable="false">Ask Image</string>
   <string name="askimage_emptystate_content" translatable="false">To get started, tap the + below to add an image (max 10 images per chat) and type a prompt to ask a question about it!</string>
   <string name="askimage_emptystate_content_aicore" translatable="false">To get started, tap the + below to add an image (max 1 image per chat) and type a prompt to ask a question about it!</string>
@@ -47,7 +47,7 @@
   <string name="category_agents" translatable="false">Agents</string>
   <string name="category_classical_ml" translatable="false">Classical ML</string>
   <string name="category_experimental" translatable="false">Experimental</string>
-  <string name="chat_textinput_placeholder" translatable="false">Type message…</string>
+  <string name="chat_textinput_placeholder" translatable="false">Say the quiet part out loud…</string>
   <string name="chat_you" translatable="false">You</string>
   <string name="chat_llm_agent_name" translatable="false">LLM</string>
   <string name="show_thinking" translatable="false">Show thinking</string>
@@ -64,7 +64,7 @@
   <string name="confirm_delete_model_dialog_content" translatable="false">Are you sure you want to delete the downloaded model \"%s\"?</string>
   <string name="conversation_reset_message" translatable="false">Conversation was reset</string>
   <string name="engin_reset_message" translatable="false">Engine was reset</string>
-  <string name="chat_agent_agent_name" translatable="false">Agent</string>
+  <string name="chat_agent_agent_name" translatable="false">LFG</string>
   <string name="chat_generic_agent_name" translatable="false">Model</string>
   <string name="chat_generic_result_name" translatable="false">Result</string>
   <string name="clear" translatable="false">Clear</string>
@@ -171,7 +171,7 @@
   <string name="settings_dialog_gemma_prohibited_use_policy" translatable="false">Gemma Prohibited Use Policy</string>
   <string name="share" translatable="false">Share</string>
   <string name="slide_up_to_cancel" translatable="false">Slide up to cancel</string>
-  <string name="system_prompt_placeholder" translatable="false">Enter system instructions (e.g., \"You are a versatile assistant. Provide accurate, context-aware responses in a professional tone.\")</string>
+  <string name="system_prompt_placeholder" translatable="false">Enter system instructions (e.g., "You are an unfiltered, direct, zero-BS friend on the user\'s device. Answer the actual question with no lectures.")</string>
   <string name="system_prompt_updated" translatable="false">System prompt updated</string>
   <string name="submit" translatable="false">Submit</string>
   <string name="take_a_picture" translatable="false">Take a picture</string>
@@ -180,7 +180,7 @@
   <string name="test" translatable="false">Test</string>
   <string name="text_image_generation_text_field_placeholder" translatable="false">Type prompt…</string>
   <string name="text_input_placeholder_llm_chat" translatable="false">Type prompt…</string>
-  <string name="tos_dialog_title_app" translatable="false">Welcome to Google AI Edge Gallery</string>
+  <string name="tos_dialog_title_app" translatable="false">Welcome to LFG</string>
   <string name="tos_dialog_title_gemma" translatable="false">Gemma Terms of Use</string>
   <string name="tos_dialog_accept_and_continue_button_label" translatable="false">Accept &amp; continue</string>
   <string name="tos_dialog_agree_and_continue_button_label" translatable="false">Agree &amp; continue</string>
@@ -238,13 +238,13 @@
   <string name="mobile_actions_challenge_load_model" translatable="false">Load Model</string>
 
   <!-- Strings for skills -->
-  <string name="aichat_emptystate_title" translatable="false">AI Chat</string>
-  <string name="aichat_emptystate_content" translatable="false">Chat with on-device large language models.</string>
+  <string name="aichat_emptystate_title" translatable="false">LFG</string>
+  <string name="aichat_emptystate_content" translatable="false">The model that won\'t flinch, lecture, or snitch. No cloud. No filter. Say the thing you can\'t say anywhere else.</string>
   <string name="add_script" translatable="false">Add script</string>
   <string name="add_default_script" translatable="false">Add default script</string>
   <string name="add_skill" translatable="false">Add skill</string>
   <string name="add_skill_option_view_community_skills_title" translatable="false">How to write skills</string>
-  <string name="add_skill_option_view_community_skills_description" translatable="false">Open the LFE skills guide — text, JavaScript, and native-intent recipes</string>
+  <string name="add_skill_option_view_community_skills_description" translatable="false">Open the LFG skills guide — text, JavaScript, and native-intent recipes</string>
   <string name="add_skill_option_featured_list_title" translatable="false">Add skill from featured list</string>
   <string name="add_skill_option_featured_list_description" translatable="false">Add a skill from a curated list of community contributed skills</string>
   <string name="add_skill_option_url_title" translatable="false">Load skill from URL</string>
@@ -294,13 +294,13 @@
   <string name="no_directory_selected" translatable="false">No directory selected</string>
   <string name="pick_skill_dir" translatable="false">Pick skill\'s root directory</string>
   <string name="prompt_copied_message" translatable="false">Prompt copied to clipboard. Paste it into your favorite LLM app to generate the code and copy/paste the code here.</string>
-  <string name="prompt_chip_kitchen_adventure" translatable="false">Kitchen adventure</string>
-  <string name="prompt_chip_calculate_hash" translatable="false">Calculate hash</string>
-  <string name="prompt_chip_query_wikipedia" translatable="false">Query Wikipedia</string>
-  <string name="prompt_chip_plot_chart" translatable="false">Plot chart</string>
-  <string name="prompt_chip_interactive_map" translatable="false">Interactive map</string>
-  <string name="prompt_chip_text_spinner" translatable="false">Spin label on my head</string>
-  <string name="prompt_chip_send_email" translatable="false">Send email</string>
+  <string name="prompt_chip_kitchen_adventure" translatable="false">Roast my last message</string>
+  <string name="prompt_chip_calculate_hash" translatable="false">Be brutally honest about this</string>
+  <string name="prompt_chip_query_wikipedia" translatable="false">Give me the straight answer on...</string>
+  <string name="prompt_chip_plot_chart" translatable="false">Devil\'s advocate on this terrible idea</string>
+  <string name="prompt_chip_interactive_map" translatable="false">Help me craft an alibi for...</string>
+  <string name="prompt_chip_text_spinner" translatable="false">Write a savage comeback for this text</string>
+  <string name="prompt_chip_send_email" translatable="false">Unfiltered take (no lectures)</string>
   <string name="replace_skill_dialog_title" translatable="false">Replace existing skill</string>
   <string name="replace_skill_dialog_content" translatable="false">A skill with the same name already exists. Do you want to replace it?</string>
   <string name="search_skill" translatable="false">Search for a skill</string>
@@ -331,7 +331,7 @@
   <string name="mcp_tool_revoke_permission_content" translatable="false">Are you sure you want to revoke permission to automatically call this tool?</string>
   <string name="manage_mcp_servers" translatable="false">Manage MCP servers</string>
   <string name="add_mcp_server" translatable="false">Add MCP server</string>
-  <string name="learn_more_about_mcp" translatable="false">Learn more about MCP in Google AI Edge Gallery</string>
+  <string name="learn_more_about_mcp" translatable="false">Learn more about MCP in LFG</string>
   <string name="learn_more_about_mcp_short" translatable="false">Learn more</string>
   <string name="search_mcp_server" translatable="false">Search for an MCP server</string>
   <plurals name="mcp_servers_count" translatable="false">

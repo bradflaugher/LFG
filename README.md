@@ -1,96 +1,85 @@
 # LFG
 
-**LFG! Let's have uncensored agents with data that never leaves your phone (unless we tell it to).** For everything you wouldn't paste into
-ChatGPT — and everything the big assistants won't do.
+**LFG. The on-device AI that actually says the quiet part out loud.**
 
-LFE runs language models entirely on-device (or, if you choose, via an
-OpenAI-compatible API). It ships **uncensored** model options on purpose, and it
-lets the model call **skills** that act on your device. No account, no telemetry,
-works in airplane mode.
+For everything you wouldn't paste into ChatGPT. For everything the polite robots refuse, hedge, or lecture you about. Runs 100% on your phone (or your chosen API). No account. No cloud. No receipts.
 
-## Why LFE, when you already have Gemini / Claude / ChatGPT?
+LFG ships uncensored models on purpose and gives the model real **skills** that can touch your device, your data, and your life. Airplane mode friendly. Your data never leaves unless a skill you enabled does something.
 
-You should keep those — they're more powerful, and great for everyday work. LFE
-is for the things they're *structurally* bad at:
+## Why LFG when you already have the big ones?
 
-- 🔒 **Private** — it runs on the device, so nothing you give it leaves your
-  pocket. It's the right tool for anything you'd never paste into a cloud chatbot.
-- 🙅 **Uncensored** — it ships [Abliterated](#models) models that don't refuse or
-  lecture, so it answers the frank, sensitive, or creative stuff the cloud models
-  sanitize.
-- ✈️ **Offline & yours** — no account, no signal required, no data harvesting.
+The big cloud models are great at writing your TPS reports and summarizing meetings.
 
-Think of LFE as the **privacy front-end to your other AI tools**: sanitize, read,
-and reason about sensitive things here, then take the safe result to a bigger
-model if you want.
+LFG is for the shit they're *structurally forbidden* from helping with:
 
-## What it's best at
+- 🔒 **Private as fuck** — everything stays on your hardware. Perfect for medical letters, weird kinks, financial disasters, "is this text from my ex unhinged?", or anything that would be a GDPR incident if it left the building.
+- 🙅 **Uncensored by design** — Abliterated models that don't clutch pearls. They answer the awkward, the illegal-but-not-immoral, the creative, the "I just need to know."
+- ✈️ **Yours** — no login, no telemetry, works when your carrier is crying. Delete the app and it's gone.
 
-Toggle skills on in the chat's **Skills** sheet, then just talk to it. The
-bundled set is built around the niche:
+Use LFG as the **unfiltered privacy layer** in front of your other tools. Scrub here, then paste the safe version into the cloud model.
 
-**🔒 Privacy power-tools**
-- 🛡️ **Redact** — *"Scrub the names and account numbers out of this so I can safely paste it into ChatGPT."*
-- 📄 **Confidential Desk** — *"What does this lab result / lease / legal letter actually mean?"* — reads it on-device, nothing uploaded.
-- 🎣 **Scam check** — *"Is this text from 'my bank' a scam?"* — spot phishing without forwarding it anywhere.
-- 👁️ **Privacy Lens** — *"What is this app's privacy policy actually taking?"*
+## What it's actually good at
 
-**🙅 Won't say no** *(best with an Abliterated model)*
-- 💬 **Straight answer** — frank, judgment-free answers to sensitive personal questions.
-- ✍️ **Unfiltered muse** — an uncensored partner for mature/dark fiction.
-- 🎭 **Roleplay & rehearse** — practice a hard conversation, or immersive character chat — privately.
-- ⚖️ **Devil's advocate** — argue any side, steelman the uncomfortable position, pressure-test your thinking.
+Open the **Skills** sheet in chat, toggle what you need, and talk like a normal (deranged) person.
 
-**📓 Your data stays yours**
-- Private journal, mood tracker, notes, and budget — all on-device, never synced.
+**🛡️ Privacy power tools (mostly on by default)**
+- **Redact** — turn your disaster of a text into something you can safely show the cloud.
+- **Explain document** — photograph the lab results / lease / cease-and-desist and get the "what does this actually mean and am I fucked" version, all on-device.
+- **Scam check** — paste the "your package is held, click here" text and find out it's fake before you click.
+- **Privacy Lens** — paste a ToS or privacy policy, learn exactly which orifices they're renting out your data through.
 
-**✈️ Offline & personal**
-- On-device translation, local password generation, and your calendar.
+**🔥 Won't say no (off by default — enable when you're ready)**
+- **Straight answer** — health, sex, substances, money, family, the law's gray zones. No "I'm not a doctor" walls of text.
+- **Unfiltered muse** — write the dark, horny, unhinged fiction the cloud models neuter.
+- **Roleplay & rehearse** — practice the breakup / confrontation / coming out / salary ask with an AI that won't hold back.
+- **Devil's advocate** — steelman the take you hate. Pressure test your own bullshit.
 
-👉 **[See the recipe book → docs/RECIPES.md](docs/RECIPES.md)** for concrete walkthroughs.
+**🧠 Your data, your phone**
+- Private journal, mood tracker, quick notes, budget — zero sync, zero cloud.
+
+**🛠️ Random useful chaos**
+- On-device translator, password generator, calendar reader/writer, set reminders, plus whatever custom skills you add.
+
+**New punchy ones (try them):**
+- **Brutal roast** — destroy your dating bio / group chat text / life choices with no mercy and some laughs.
+- **Comeback king** — paste what they just said, walk away with ammo.
+- **Alibi generator** — need a boring, consistent, defensible story? We got you (use responsibly).
+
+👉 See the [recipe book](docs/RECIPES.md) for real examples of how people actually use this thing.
 
 ## Skills
 
-Skills are how LFE does anything beyond plain chat — a persona, a bit of
-JavaScript, or an Android intent. Browse them in the
-[skills directory](android/src/app/src/main/assets/skills), and see
-**[docs/SKILLS.md](docs/SKILLS.md)** to write your own — it's mostly just one
-`SKILL.md` file.
+Skills turn the LLM into an agent that can *do* stuff: personas, JS helpers that store data or draw charts, or firing real Android intents (calendar, flashlight, etc.).
 
-The four "won't say no" skills and the calendar skills are **off by default**
-(they reshape the assistant's voice or touch other apps) — flip them on in the
-Skills sheet when you want them.
+All bundled skills live in [android/src/app/src/main/assets/skills](android/src/app/src/main/assets/skills). Writing your own is just a `SKILL.md` (see [docs/SKILLS.md](docs/SKILLS.md)).
+
+The spicy skills (straight-answer, unfiltered-muse, roleplay, devil's advocate, brutal-roast, comeback-king, alibi-generator, etc.) and anything that touches other apps start **off**. Flip them on in the Skills sheet when you want the full unhinged experience.
 
 ## Models
 
-The app includes four recommended **Gemma 4** variants — pick based on the job:
+Ships with four Gemma variants:
 
-- **E2B** and **E4B** — Stock multi-modal models (text + image + audio). Use
-  these for the vision skills like **Confidential Desk** (photograph a document).
-- **E2B-Abliterated** and **E4B-Abliterated** — **Uncensored** (text-only). Switch
-  to these for the "won't say no" skills — frank answers, mature fiction, roleplay,
-  devil's advocate.
+- **E2B / E4B** (stock) — multimodal. Use these for vision skills (photograph documents for Confidential Desk).
+- **E2B-Abliterated / E4B-Abliterated** (text-only) — the ones that will actually answer your worst questions. Switch to these for the "won't say no" skills.
 
-### Want a different model?
+### Bring your own
 
-1. Download any [LiteRT-LM](https://github.com/google-ai-edge/LiteRT-LM) compatible `.litertlm` or `.task` file from Hugging Face.
-2. Copy the file to your device, then use **Import local model file** at the bottom of the model manager.
-
-### Need a bigger model?
-
-LFE supports inference through any OpenAI-compatible API. This is perfect for models too large to run locally.
+Drop any LiteRT-LM compatible `.litertlm` or `.task` into the model manager import. Or point it at any OpenAI-compatible API for the big models when you need the extra brain.
 
 ## Install
 
-Download the latest APK from the [releases page](https://github.com/bradflaugher/LFE/releases/latest) directly on your Android device.
+Grab the latest APK from [Releases](https://github.com/bradflaugher/LFG/releases/latest) and sideload it.
 
-Open the APK and follow the on-screen instructions to install.  
-See Google’s guide on [installing apps from unknown sources](https://support.google.com/googleplay/answer/14669046) if needed.
+(You'll need to allow "install from unknown sources". Google will complain because this app exists to do the things their policies don't like.)
 
-**Note:** LFE targets the latest Android versions only.
+**LFG targets recent Android only.**
 
 ## License
 
-GPL-3.0-or-later. See [LICENSE](LICENSE).
+GPL-3.0-or-later. [LICENSE](LICENSE)
 
-Includes code adapted from [Google AI Edge Gallery](https://github.com/google-ai-edge/gallery) (Apache 2.0).
+Forked/adapted from Google AI Edge Gallery (Apache 2.0).
+
+---
+
+LFG. Your phone. Your rules. Let's fucking go.

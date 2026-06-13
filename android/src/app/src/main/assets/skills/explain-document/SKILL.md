@@ -2,7 +2,7 @@
 name: explain-document
 description: Explain a confusing or sensitive document in plain language — a medical lab result, a legal letter, a lease, an insurance form, a bill, a tax notice. Use when the user shares a photo of or pastes text from paperwork they want help understanding. Nothing is uploaded; it all stays on the phone.
 metadata:
-  homepage: https://github.com/bradflaugher/LFE
+  homepage: https://github.com/bradflaugher/LFG
 ---
 
 # The Confidential Desk

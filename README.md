@@ -1,98 +1,75 @@
 <div align="center">
   <img src="docs/app_icon_512.png" alt="LFG App Icon" width="128" height="128">
   <h1>LFG</h1>
-  <p><strong>The on-device AI that actually says the quiet part out loud.</strong></p>
+  <p><strong>The on-device AI that doesn't treat your curiosity like a liability.</strong></p>
 
   <a href="https://github.com/bradflaugher/LFG/releases/latest"><img src="https://img.shields.io/github/v/release/bradflaugher/LFG?style=for-the-badge&color=orange&label=Latest%20Release" alt="Latest Release"></a>
   <a href="https://github.com/bradflaugher/LFG/releases/latest"><img src="https://img.shields.io/github/downloads/bradflaugher/LFG/total?style=for-the-badge&color=blue&label=Downloads" alt="Downloads"></a>
   <a href="https://github.com/bradflaugher/LFG/blob/main/LICENSE"><img src="https://img.shields.io/github/license/bradflaugher/LFG?style=for-the-badge&color=green" alt="License"></a>
-
-  <br><br>
-
-  <a href="https://github.com/bradflaugher/LFG/releases/latest"><img src="docs/badges/get-it-on-github.png" alt="Get it on GitHub" height="60"></a>
 </div>
 
-<br>
+For everything you wouldn't type into a corporate cloud model. For everything the polite robots refuse, hedge, or lecture you about. Runs 100% on your phone with no accounts, no telemetry, and no paper trail.
 
-For everything you wouldn't paste into ChatGPT. For everything the polite robots refuse, hedge, or lecture you about. Runs 100% on your phone (or your chosen API). No account. No cloud. No receipts.
+LFG is built to run uncensored models locally, giving them direct access to **skills** that interact with your device. It works entirely in airplane mode. Your data never leaves your silicon.
 
-LFG ships uncensored models on purpose and gives the model real **skills** that can touch your device, your data, and your life. Airplane mode friendly. Your data never leaves unless a skill you enabled does something.
+## Why LFG?
 
-## Why LFG when you already have the big ones?
+Cloud AI is built for corporate productivity. It's safe, sterile, and structurally forbidden from helping with anything remotely sensitive or raw. LFG is for everything else:
 
-The big cloud models are great at writing your TPS reports and summarizing meetings.
+* 🔒 **Absolute Privacy:** Everything stays on your hardware. Perfect for sensitive documents, financial panic, relationship drafts, or anything you wouldn't trust to a third-party server.
+* 🙅 **Zero Censorship:** Abliterated models that answer awkward, creative, or direct questions without moralizing or lecturing you.
+* ✈️ **100% Local:** No sign-up, no internet connection required. Works when your network is dead. Delete the app, and your data disappears with it.
 
-LFG is for the shit they're *structurally forbidden* from helping with:
+Use LFG as a **privacy filter**: draft and scrub your text here in complete privacy, then clean it up before pasting it to the cloud.
 
-- 🔒 **Private as fuck** — everything stays on your hardware. Perfect for medical letters, weird kinks, financial disasters, "is this text from my ex unhinged?", or anything that would be a GDPR incident if it left the building.
-- 🙅 **Uncensored by design** — Abliterated models that don't clutch pearls. They answer the awkward, the illegal-but-not-immoral, the creative, the "I just need to know."
-- ✈️ **Yours** — no login, no telemetry, works when your carrier is crying. Delete the app and it's gone.
+## What It Can Do
 
-Use LFG as the **unfiltered privacy layer** in front of your other tools. Scrub here, then paste the safe version into the cloud model.
+Toggle **Skills** inside the chat sheet to give your local model real-world utility:
 
-## What it's actually good at
+* **🛡️ Privacy Triage (Default):**
+  * **Redact:** Scrub identifying details from text before sharing it elsewhere.
+  * **Confidential Desk:** Decode leases, medical results, or legalese without exposing them to cloud trackers.
+  * **Privacy Lens:** Parse a terms-of-service document to find exactly where your data is commercialized.
+* **🔥 Uncensored (Opt-In):**
+  * **Straight Answer:** Direct guidance on health, finance, and legal gray zones without the standard walls of text.
+  * **Devil's Advocate:** Steelman arguments you disagree with to pressure-test your own logic.
+  * **Confrontation Rehearsal:** Practice breakups, salary negotiations, or difficult conversations with zero judgment.
+  * **Chaos Engine:** Generate alibis, craft sharp comebacks, or roast your writing.
 
-Open the **Skills** sheet in chat, toggle what you need, and talk like a normal (deranged) person.
-
-**🛡️ Privacy power tools (mostly on by default)**
-- **Redact** — turn your disaster of a text into something you can safely show the cloud.
-- **Explain document** — photograph the lab results / lease / cease-and-desist and get the "what does this actually mean and am I fucked" version, all on-device.
-- **Scam check** — paste the "your package is held, click here" text and find out it's fake before you click.
-- **Privacy Lens** — paste a ToS or privacy policy, learn exactly which orifices they're renting out your data through.
-
-**🔥 Won't say no (off by default — enable when you're ready)**
-- **Straight answer** — health, sex, substances, money, family, the law's gray zones. No "I'm not a doctor" walls of text.
-- **Unfiltered muse** — write the dark, horny, unhinged fiction the cloud models neuter.
-- **Roleplay & rehearse** — practice the breakup / confrontation / coming out / salary ask with an AI that won't hold back.
-- **Devil's advocate** — steelman the take you hate. Pressure test your own bullshit.
-
-**🧠 Your data, your phone**
-- Private journal, mood tracker, quick notes, budget — zero sync, zero cloud.
-
-**🛠️ Random useful chaos**
-- On-device translator, password generator, calendar reader/writer, set reminders, plus whatever custom skills you add.
-
-**New punchy ones (try them):**
-- **Brutal roast** — destroy your dating bio / group chat text / life choices with no mercy and some laughs.
-- **Comeback king** — paste what they just said, walk away with ammo.
-- **Alibi generator** — need a boring, consistent, defensible story? We got you (use responsibly).
-
-👉 See the [recipe book](docs/RECIPES.md) for real examples of how people actually use this thing.
+👉 Check out the [Recipe Book](file:///root/LFG/docs/RECIPES.md) for real-world examples.
 
 ## Skills
 
-Skills turn the LLM into an agent that can *do* stuff: personas, JS helpers that store data or draw charts, or firing real Android intents (calendar, flashlight, etc.).
+Skills allow the LLM to execute tasks: custom personas, JS helper scripts that save data or render graphs, or native Android intents (like calendar and system toggles).
 
-All bundled skills live in [android/src/app/src/main/assets/skills](android/src/app/src/main/assets/skills). Writing your own is just a `SKILL.md` (see [docs/SKILLS.md](docs/SKILLS.md)).
-
-The spicy skills (straight-answer, unfiltered-muse, roleplay, devil's advocate, brutal-roast, comeback-king, alibi-generator, etc.) and anything that touches other apps start **off**. Flip them on in the Skills sheet when you want the full unhinged experience.
+* All bundled skills are located in [assets/skills](file:///root/LFG/android/src/app/src/main/assets/skills).
+* Creating your own is as simple as writing a markdown file—see the [Skills Guide](file:///root/LFG/docs/SKILLS.md).
+* Utility and agentic skills start **off** by default. Toggle them on in the chat sheet to unlock the full experience.
 
 ## Models
 
-Ships with four Gemma variants:
+Ships pre-configured with four Gemma variants:
+* **E2B / E4B (Stock):** Multimodal. Best for vision skills (scanning documents or images locally).
+* **E2B-Abliterated / E4B-Abliterated (Text-only):** Designed to answer unfiltered questions. Use these for opt-in skills.
 
-- **E2B / E4B** (stock) — multimodal. Use these for vision skills (photograph documents for Confidential Desk).
-- **E2B-Abliterated / E4B-Abliterated** (text-only) — the ones that will actually answer your worst questions. Switch to these for the "won't say no" skills.
-
-### Bring your own
-
-Drop any LiteRT-LM compatible `.litertlm` or `.task` into the model manager import. Or point it at any OpenAI-compatible API for the big models when you need the extra brain.
+### Bring Your Own
+Import any LiteRT-LM compatible `.litertlm` or `.task` file directly, or configure LFG to target any external OpenAI-compatible API when you need larger model capabilities.
 
 ## Install
 
 <a href="https://github.com/bradflaugher/LFG/releases/latest"><img src="docs/badges/get-it-on-github.png" alt="Get it on GitHub" height="60"></a>
 
-Grab the latest APK from [Releases](https://github.com/bradflaugher/LFG/releases/latest) and sideload it.
+1. Download the latest APK from the [Releases](https://github.com/bradflaugher/LFG/releases/latest) page.
+2. Enable "Install from unknown sources" on your device to sideload the APK. 
+   *(Google will flag the app because it bypasses cloud telemetry and corporate guidelines).*
 
-(You'll need to allow "install from unknown sources". Google will complain because this app exists to do the things their policies don't like.)
-
-**LFG targets recent Android only.**
+**LFG requires recent Android versions.**
 
 ## License
 
-GPL-3.0-or-later. [LICENSE](LICENSE)
+GPL-3.0-or-later. [LICENSE](file:///root/LFG/LICENSE)
 
-Forked/adapted from Google AI Edge Gallery (Apache 2.0).
+Forked and adapted from the Google AI Edge Gallery (Apache 2.0).
 
 ---
 

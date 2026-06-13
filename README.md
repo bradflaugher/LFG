@@ -9,9 +9,9 @@
 
   <br><br>
 
-  <a href="https://github.com/bradflaugher/LFG/releases/latest"><img src="docs/badges/get-it-on-github.png" alt="Get it on GitHub" height="60"></a>
+  <a href="https://github.com/bradflaugher/LFG/releases/latest"><img src="docs/badges/get-it-on-github.png" alt="Get it on GitHub" height="80"></a>
   &nbsp;&nbsp;
-  <a href="https://apps.obtainium.imranr.dev/redirect.html?r=obtainium://add/https://github.com/bradflaugher/LFG"><img src="docs/badges/badge_obtainium.png" alt="Get it on Obtainium" height="60"></a>
+  <a href="https://apps.obtainium.imranr.dev/redirect.html?r=obtainium://add/https://github.com/bradflaugher/LFG"><img src="docs/badges/badge_obtainium.png" alt="Get it on Obtainium" height="80"></a>
 </div>
 
 <br>
@@ -82,9 +82,9 @@ Drop any LiteRT-LM compatible `.litertlm` or `.task` into the model manager impo
 
 ## Install
 
-<a href="https://github.com/bradflaugher/LFG/releases/latest"><img src="docs/badges/get-it-on-github.png" alt="Get it on GitHub" height="60"></a>
+<a href="https://github.com/bradflaugher/LFG/releases/latest"><img src="docs/badges/get-it-on-github.png" alt="Get it on GitHub" height="80"></a>
 &nbsp;&nbsp;
-<a href="https://apps.obtainium.imranr.dev/redirect.html?r=obtainium://add/https://github.com/bradflaugher/LFG"><img src="docs/badges/badge_obtainium.png" alt="Get it on Obtainium" height="60"></a>
+<a href="https://apps.obtainium.imranr.dev/redirect.html?r=obtainium://add/https://github.com/bradflaugher/LFG"><img src="docs/badges/badge_obtainium.png" alt="Get it on Obtainium" height="80"></a>
 
 **GitHub Releases (manual):** Grab the latest APK from [Releases](https://github.com/bradflaugher/LFG/releases/latest) and sideload it.
 

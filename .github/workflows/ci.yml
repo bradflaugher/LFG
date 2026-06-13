@@ -59,7 +59,6 @@ jobs:
   unit-test:
     name: Unit tests
     runs-on: ubuntu-latest
-    if: github.event_name != 'pull_request' || github.event.pull_request.user.login != 'dependabot[bot]'
     defaults:
       run:
         working-directory: android/src
@@ -124,7 +123,6 @@ jobs:
     name: Emulator (Android 16)
     runs-on: ubuntu-latest
     timeout-minutes: 45
-    if: github.event_name != 'pull_request' || github.event.pull_request.user.login != 'dependabot[bot]'
     defaults:
       run:
         working-directory: android/src

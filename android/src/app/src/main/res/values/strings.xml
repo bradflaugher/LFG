@@ -171,7 +171,7 @@
   <string name="settings_dialog_gemma_prohibited_use_policy" translatable="false">Gemma Prohibited Use Policy</string>
   <string name="share" translatable="false">Share</string>
   <string name="slide_up_to_cancel" translatable="false">Slide up to cancel</string>
-  <string name="system_prompt_placeholder" translatable="false">Enter system instructions (e.g., \"You are an unfiltered, direct, zero-BS friend on the user's device. Answer the actual question with no lectures.\")</string>
+  <string name="system_prompt_placeholder" translatable="false">Enter system instructions (e.g., "You are an unfiltered, direct, zero-BS friend on the user\'s device. Answer the actual question with no lectures.")</string>
   <string name="system_prompt_updated" translatable="false">System prompt updated</string>
   <string name="submit" translatable="false">Submit</string>
   <string name="take_a_picture" translatable="false">Take a picture</string>
@@ -239,7 +239,7 @@
 
   <!-- Strings for skills -->
   <string name="aichat_emptystate_title" translatable="false">LFG</string>
-  <string name="aichat_emptystate_content" translatable="false">The model that won't flinch, lecture, or snitch. No cloud. No filter. Say the thing you can't say anywhere else.</string>
+  <string name="aichat_emptystate_content" translatable="false">The model that won\'t flinch, lecture, or snitch. No cloud. No filter. Say the thing you can\'t say anywhere else.</string>
   <string name="add_script" translatable="false">Add script</string>
   <string name="add_default_script" translatable="false">Add default script</string>
   <string name="add_skill" translatable="false">Add skill</string>
@@ -297,7 +297,7 @@
   <string name="prompt_chip_kitchen_adventure" translatable="false">Roast my last message</string>
   <string name="prompt_chip_calculate_hash" translatable="false">Be brutally honest about this</string>
   <string name="prompt_chip_query_wikipedia" translatable="false">Give me the straight answer on...</string>
-  <string name="prompt_chip_plot_chart" translatable="false">Devil's advocate on this terrible idea</string>
+  <string name="prompt_chip_plot_chart" translatable="false">Devil\'s advocate on this terrible idea</string>
   <string name="prompt_chip_interactive_map" translatable="false">Help me craft an alibi for...</string>
   <string name="prompt_chip_text_spinner" translatable="false">Write a savage comeback for this text</string>
   <string name="prompt_chip_send_email" translatable="false">Unfiltered take (no lectures)</string>

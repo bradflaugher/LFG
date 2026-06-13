@@ -1183,6 +1183,7 @@ class SkillManagerViewModel
           "privacy-lens",
           "private-journal",
           "quick-note",
+          "read-webpage",
           "redact",
           "roleplay",
           "scam-check",

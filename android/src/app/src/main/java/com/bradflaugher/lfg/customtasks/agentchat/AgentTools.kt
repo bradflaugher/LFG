@@ -330,6 +330,41 @@ open class AgentTools() : ToolSet {
     }
   }
 
+  @Tool(
+    description =
+      "Display an interactive WebView of a webpage/URL to the user within the chat, " +
+        "allowing them to view, scroll, click, and interact with the page.",
+  )
+  fun showWebpage(
+    @ToolParam(description = "The full https:// URL of the webpage to display.") url: String,
+  ): Map<String, String> {
+    return runBlocking(Dispatchers.Default) {
+      val trimmed = url.trim()
+      if (!trimmed.startsWith("http://") && !trimmed.startsWith("https://")) {
+        return@runBlocking mapOf(
+          "error" to "URL must start with http:// or https://",
+          "status" to "failed",
+        )
+      }
+      _actionChannel.send(
+        SkillProgressAgentAction(
+          label = "Opening webpage",
+          inProgress = true,
+          addItemTitle = "Open webpage",
+          addItemDescription = trimmed,
+        ),
+      )
+      resultWebviewToShow =
+        CallJsSkillResultWebview(
+          url = trimmed,
+          iframe = false,
+          aspectRatio = 1.0f,
+        )
+      mapOf("result" to "WebView displayed to the user.", "status" to "succeeded")
+    }
+  }
+
+
   /**
    * Guards against missing entities (tools or intents) by checking if they exist as skills. Returns
    * a failure response with a specific hint to the model to try running it as a skill if it is

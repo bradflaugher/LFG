@@ -50,6 +50,13 @@ fun BufferedFadingMarkdownText(
   inProgress: Boolean,
   modifier: Modifier = Modifier,
 ) {
+  if (inProgress) {
+    SelectionContainer {
+      MarkdownText(text = text, modifier = modifier)
+    }
+    return
+  }
+
   var text1 by remember { mutableStateOf(text) }
   var text2 by remember { mutableStateOf("") }
   val alpha2 = remember { Animatable(0f) }

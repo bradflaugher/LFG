@@ -38,6 +38,10 @@ class BundledSkillsTest {
       "translator",
       "set-reminder",
       "whats-on-my-calendar",
+      // New punchy LFG skills
+      "alibi-generator",
+      "brutal-roast",
+      "comeback-king",
     )
 
   private val skillsRoot = File("src/main/assets/skills")

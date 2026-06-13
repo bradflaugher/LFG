@@ -9,8 +9,7 @@
 
   <br><br>
 
-  <a href="https://github.com/bradflaugher/LFG/releases/latest"><img src="https://img.shields.io/badge/GitHub-Download_APK-181717?style=for-the-badge&logo=github" alt="Get it on GitHub"></a>
-  <a href="https://apps.obtainium.imranr.dev/redirect.html?r=obtainium://add/https://github.com/bradflaugher/LFG"><img src="https://img.shields.io/badge/Obtainium-Auto_Update-7B4EA3?style=for-the-badge&logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZmlsbD0id2hpdGUiIGQ9Ik0xMiAyTDQgN3Y1YzAgNS41NSAzLjQyIDEwLjc0IDggMTIgNC41OC0xLjI2IDgtNi40NSA4LTEyVjdsLTgtNXoiLz48L3N2Zz4=" alt="Get it on Obtainium"></a>
+  <a href="https://github.com/bradflaugher/LFG/releases/latest"><img src="docs/badges/get-it-on-github.png" alt="Get it on GitHub" height="60"></a>
 </div>
 
 <br>
@@ -81,12 +80,9 @@ Drop any LiteRT-LM compatible `.litertlm` or `.task` into the model manager impo
 
 ## Install
 
-<a href="https://github.com/bradflaugher/LFG/releases/latest"><img src="https://img.shields.io/badge/GitHub-Download_APK-181717?style=for-the-badge&logo=github" alt="Get it on GitHub"></a>
-<a href="https://apps.obtainium.imranr.dev/redirect.html?r=obtainium://add/https://github.com/bradflaugher/LFG"><img src="https://img.shields.io/badge/Obtainium-Auto_Update-7B4EA3?style=for-the-badge&logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZmlsbD0id2hpdGUiIGQ9Ik0xMiAyTDQgN3Y1YzAgNS41NSAzLjQyIDEwLjc0IDggMTIgNC41OC0xLjI2IDgtNi40NSA4LTEyVjdsLTgtNXoiLz48L3N2Zz4=" alt="Get it on Obtainium"></a>
+<a href="https://github.com/bradflaugher/LFG/releases/latest"><img src="docs/badges/get-it-on-github.png" alt="Get it on GitHub" height="60"></a>
 
-**GitHub Releases (manual):** Grab the latest APK from [Releases](https://github.com/bradflaugher/LFG/releases/latest) and sideload it.
-
-**Obtainium (auto-updates):** Click the badge above or add `https://github.com/bradflaugher/LFG` as a source in [Obtainium](https://github.com/ImranR98/Obtainium). You'll get automatic update notifications whenever a new build drops.
+Grab the latest APK from [Releases](https://github.com/bradflaugher/LFG/releases/latest) and sideload it.
 
 (You'll need to allow "install from unknown sources". Google will complain because this app exists to do the things their policies don't like.)
 

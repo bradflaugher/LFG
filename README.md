@@ -1,7 +1,7 @@
 <div align="center">
   <img src="docs/app_icon_512.png" alt="LFG App Icon" width="128" height="128">
   <h1>LFG</h1>
-  <p><strong>The on-device AI that doesn't treat your curiosity like a liability.</strong></p>
+  <p><strong>Uncensored AI agents on our phones! LFG!</strong></p>
 
   <a href="https://github.com/bradflaugher/LFG/releases/latest"><img src="https://img.shields.io/github/v/release/bradflaugher/LFG?style=for-the-badge&color=orange&label=Latest%20Release" alt="Latest Release"></a>
   <a href="https://github.com/bradflaugher/LFG/releases/latest"><img src="https://img.shields.io/github/downloads/bradflaugher/LFG/total?style=for-the-badge&color=blue&label=Downloads" alt="Downloads"></a>

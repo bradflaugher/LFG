@@ -6,13 +6,13 @@
   <a href="https://github.com/bradflaugher/LFG/blob/main/LICENSE"><img src="https://img.shields.io/github/license/bradflaugher/LFG?style=for-the-badge&color=green" alt="License"></a>
 </div>
 
-For everything you wouldn't type into a corporate cloud model. For everything the polite robots refuse, hedge, or lecture you about. Runs 100% on your phone with no accounts, no telemetry, and no paper trail.
+For private, agentic interactions with a reasonably smart model with no filter. For everything the polite robots refuse, hedge, or lecture you about. Runs 100% on your phone with no accounts, no telemetry, and no paper trail.
 
 LFG is built to run uncensored models locally, giving them direct access to **skills** that interact with your device. It works entirely in airplane mode. Your data never leaves your silicon.
 
 ## Why LFG?
 
-Cloud AI is built for corporate productivity. It's safe, sterile, and structurally forbidden from helping with anything remotely sensitive or raw. LFG is for everything else:
+Hosted frontier models are built for organizational productivity. The are "safe", sterile, and structurally forbidden from helping with anything remotely sensitive or raw. LFG is for everything else:
 
 * 🔒 **Absolute Privacy:** Everything stays on your hardware. Perfect for sensitive documents, financial panic, relationship drafts, or anything you wouldn't trust to a third-party server.
 * 🙅 **Zero Censorship:** Abliterated models that answer awkward, creative, or direct questions without moralizing or lecturing you.
@@ -61,7 +61,7 @@ Import any LiteRT-LM compatible `.litertlm` or `.task` file directly, or configu
 2. Enable "Install from unknown sources" on your device to sideload the APK. 
    *(Google will flag the app because it bypasses cloud telemetry and corporate guidelines).*
 
-**LFG requires recent Android versions.**
+**LFG targets only the latest stable Android version.**
 
 ## License
 

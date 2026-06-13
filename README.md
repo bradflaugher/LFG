@@ -1,6 +1,6 @@
-# LFE
+# LFG
 
-**The AI that never leaves your phone.** For everything you wouldn't paste into
+**LFG! Let's have uncensored agents with data that never leaves your phone (unless we tell it to).** For everything you wouldn't paste into
 ChatGPT — and everything the big assistants won't do.
 
 LFE runs language models entirely on-device (or, if you choose, via an

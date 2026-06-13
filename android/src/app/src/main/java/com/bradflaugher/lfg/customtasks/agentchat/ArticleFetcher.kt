@@ -132,6 +132,160 @@ object ArticleFetcher {
       runWithWebView(context = context, url = url, preScripts = emptyList(), script = script)
     }
 
+  @SuppressLint("SetJavaScriptEnabled")
+  suspend fun clickAndFetch(
+    context: Context,
+    url: String,
+    selector: String,
+  ): String =
+    withContext(Dispatchers.Main) {
+      val readabilityJs =
+        try {
+          context.assets.open("js/readability.js").bufferedReader().use { it.readText() }
+        } catch (e: Exception) {
+          Log.e(TAG, "Could not load Readability.js", e)
+          return@withContext errorJson("Readability bundle missing: ${e.message}")
+        }
+
+      try {
+        withTimeout(LOAD_TIMEOUT_MS + EXTRACT_TIMEOUT_MS + 5_000L) {
+          suspendCancellableCoroutine { cont ->
+            val webView = WebView(context).apply {
+              settings.javaScriptEnabled = true
+              settings.domStorageEnabled = true
+              settings.loadsImagesAutomatically = true
+              settings.blockNetworkImage = false
+              settings.userAgentString = DEFAULT_USER_AGENT
+              settings.cacheMode = WebSettings.LOAD_DEFAULT
+              settings.allowFileAccess = false
+              settings.allowContentAccess = false
+            }
+            CookieManager.getInstance().setAcceptCookie(true)
+            CookieManager.getInstance().setAcceptThirdPartyCookies(webView, true)
+
+            var resumed = false
+            fun safeResume(result: String) {
+              if (!resumed) {
+                resumed = true
+                try {
+                  webView.stopLoading()
+                } catch (_: Exception) {}
+                webView.destroy()
+                cont.resume(result)
+              }
+            }
+            fun safeFail(t: Throwable) {
+              if (!resumed) {
+                resumed = true
+                webView.destroy()
+                cont.resumeWithException(t)
+              }
+            }
+
+            cont.invokeOnCancellation {
+              if (!resumed) {
+                resumed = true
+                try {
+                  webView.destroy()
+                } catch (_: Exception) {}
+              }
+            }
+
+            webView.webViewClient = object : WebViewClient() {
+              private var ran = false
+
+              override fun onPageFinished(view: WebView, finishedUrl: String) {
+                if (ran) return
+                ran = true
+
+                // 1) Wait 1.5s for initial load
+                view.postDelayed({
+                  try {
+                    // 2) Find and click the element
+                    val escapedSelector = selector.replace("'", "\\'")
+                    val clickScript = """
+                      (function() {
+                        try {
+                          var el = document.querySelector('$escapedSelector');
+                          if (el) {
+                            el.click();
+                            return "success";
+                          }
+                          return "not_found";
+                        } catch (e) {
+                          return "error: " + e.message;
+                        }
+                      })();
+                    """.trimIndent()
+
+                    view.evaluateJavascript(clickScript) { clickResultRaw ->
+                      val clickResult = unwrapJsString(clickResultRaw)
+                      Log.d(TAG, "Click result for selector $selector: $clickResult")
+
+                      // 3) Wait 1.5s for dynamic content to load after click
+                      view.postDelayed({
+                        try {
+                          // 4) Inject Readability and parse
+                          view.evaluateJavascript(readabilityJs) { _ ->
+                            val extractor = """
+                              (function() {
+                                try {
+                                  if (typeof Readability !== 'function') {
+                                    return JSON.stringify({error: 'Readability bundle did not load'});
+                                  }
+                                  var doc = document.cloneNode(true);
+                                  var article = new Readability(doc).parse();
+                                  if (!article || !(article.textContent || '').trim()) {
+                                    return JSON.stringify({error: 'No readable article body found after click'});
+                                  }
+                                  return JSON.stringify({
+                                    title: article.title || '',
+                                    text: (article.textContent || '').trim(),
+                                    url: window.location.href,
+                                  });
+                                } catch (e) {
+                                  return JSON.stringify({error: 'Readability threw: ' + (e && e.message)});
+                                }
+                              })();
+                            """.trimIndent()
+                            view.evaluateJavascript(extractor) { raw ->
+                              safeResume(unwrapJsString(raw) ?: errorJson("Empty extractor result"))
+                            }
+                          }
+                        } catch (e: Exception) {
+                          safeFail(e)
+                        }
+                      }, 1500L)
+                    }
+                  } catch (e: Exception) {
+                    safeFail(e)
+                  }
+                }, 1500L)
+              }
+
+              override fun onReceivedError(
+                view: WebView,
+                request: WebResourceRequest,
+                error: android.webkit.WebResourceError,
+              ) {
+                if (request.isForMainFrame) {
+                  safeResume(errorJson("WebView error: ${error.description} (code ${error.errorCode})"))
+                }
+              }
+            }
+
+            webView.loadUrl(url)
+          }
+        }
+      } catch (e: TimeoutCancellationException) {
+        errorJson("Timed out interacting with $url")
+      } catch (e: Exception) {
+        Log.e(TAG, "WebView click and fetch failed", e)
+        errorJson(e.message ?: "click and fetch failed")
+      }
+    }
+
+
   private suspend fun runWithWebView(
     context: Context,
     url: String,

@@ -18,6 +18,7 @@ import com.bradflaugher.lfg.common.CallJsAgentAction
 import com.bradflaugher.lfg.common.CallJsSkillResult
 import com.bradflaugher.lfg.common.CallJsSkillResultImage
 import com.bradflaugher.lfg.common.CallJsSkillResultWebview
+import com.bradflaugher.lfg.common.ClickAndReadWebpageAgentAction
 import com.bradflaugher.lfg.common.FetchArticleAgentAction
 import com.bradflaugher.lfg.common.FetchLinksAgentAction
 import com.bradflaugher.lfg.common.LOCAL_URL_BASE
@@ -363,6 +364,46 @@ open class AgentTools() : ToolSet {
       mapOf("result" to "WebView displayed to the user.", "status" to "succeeded")
     }
   }
+
+  @Tool(
+    description =
+      "Load a webpage URL, click a link or button (via CSS selector), wait for the page to update, " +
+        "and return the updated page's main article text. Use this to click buttons/links, expand menus, " +
+        "load more content, or interact dynamically with the page.",
+  )
+  fun clickAndReadWebpage(
+    @ToolParam(description = "The full https:// URL of the webpage.") url: String,
+    @ToolParam(description = "The CSS selector of the element to click (e.g. 'button.load-more', 'a.read-more').") selector: String,
+  ): Map<String, String> {
+    return runBlocking(Dispatchers.Default) {
+      val trimmed = url.trim()
+      if (!trimmed.startsWith("http://") && !trimmed.startsWith("https://")) {
+        return@runBlocking mapOf(
+          "error" to "URL must start with http:// or https://",
+          "status" to "failed",
+        )
+      }
+      _actionChannel.send(
+        SkillProgressAgentAction(
+          label = "Clicking element and reading page",
+          inProgress = true,
+          addItemTitle = "Click & read webpage",
+          addItemDescription = "URL: $trimmed\nSelector: $selector",
+        ),
+      )
+      val action = ClickAndReadWebpageAgentAction(url = trimmed, selector = selector)
+      _actionChannel.send(action)
+      val resultJson =
+        try {
+          action.result.await()
+        } catch (e: Exception) {
+          Log.e(TAG, "clickAndReadWebpage failed", e)
+          return@runBlocking mapOf("error" to (e.message ?: "click and read failed"), "status" to "failed")
+        }
+      mapOf("article" to resultJson)
+    }
+  }
+
 
 
   /**

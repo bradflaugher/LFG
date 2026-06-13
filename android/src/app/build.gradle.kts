@@ -164,3 +164,9 @@ protobuf {
   protoc { artifact = "com.google.protobuf:protoc:4.35.1" }
   generateProtoTasks { all().forEach { it.plugins { create("java") { option("lite") } } } }
 }
+
+configurations.all {
+  resolutionStrategy {
+    force("org.jetbrains.kotlin:kotlin-metadata-jvm:2.4.0")
+  }
+}

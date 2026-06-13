@@ -34,14 +34,14 @@ Toggle **Skills** inside the chat sheet to give your local model real-world util
   * **Confrontation Rehearsal:** Practice breakups, salary negotiations, or difficult conversations with zero judgment.
   * **Chaos Engine:** Generate alibis, craft sharp comebacks, or roast your writing.
 
-👉 Check out the [Recipe Book](file:///root/LFG/docs/RECIPES.md) for real-world examples.
+👉 Check out the [Recipe Book](docs/RECIPES.md) for real-world examples.
 
 ## Skills
 
 Skills allow the LLM to execute tasks: custom personas, JS helper scripts that save data or render graphs, or native Android intents (like calendar and system toggles).
 
-* All bundled skills are located in [assets/skills](file:///root/LFG/android/src/app/src/main/assets/skills).
-* Creating your own is as simple as writing a markdown file—see the [Skills Guide](file:///root/LFG/docs/SKILLS.md).
+* All bundled skills are located in [assets/skills](android/src/app/src/main/assets/skills).
+* Creating your own is as simple as writing a markdown file—see the [Skills Guide](docs/SKILLS.md).
 * Utility and agentic skills start **off** by default. Toggle them on in the chat sheet to unlock the full experience.
 
 ## Models
@@ -65,6 +65,6 @@ Import any LiteRT-LM compatible `.litertlm` or `.task` file directly, or configu
 
 ## License
 
-GPL-3.0-or-later. [LICENSE](file:///root/LFG/LICENSE)
+GPL-3.0-or-later. [LICENSE](LICENSE)
 
 Includes code adapted from the Google AI Edge Gallery project (Apache 2.0).

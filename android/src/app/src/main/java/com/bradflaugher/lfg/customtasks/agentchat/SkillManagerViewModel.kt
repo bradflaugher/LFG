@@ -1172,9 +1172,11 @@ class SkillManagerViewModel
       // The privacy power-tools and local-data skills stay on by default.
       private val DEFAULT_DISABLED_SKILLS =
         setOf(
+          "albert-einstein",
           "alibi-generator",
           "brutal-roast",
           "budget-tracker",
+          "carl-sagan",
           "comeback-king",
           "devils-advocate",
           "explain-document",
@@ -1188,6 +1190,8 @@ class SkillManagerViewModel
           "roleplay",
           "scam-check",
           "set-reminder",
+          "socrates-mind",
+          "steve-jobs",
           "straight-answer",
           "translator",
           "unfiltered-muse",

@@ -43,6 +43,11 @@ class BundledSkillsTest {
       "brutal-roast",
       "comeback-king",
       "read-webpage",
+      // Historical digital twins
+      "albert-einstein",
+      "carl-sagan",
+      "socrates-mind",
+      "steve-jobs",
     )
 
   private val skillsRoot = File("src/main/assets/skills")

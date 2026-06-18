@@ -214,7 +214,11 @@ fun AddSkillFromFeatureListBottomSheet(
 
         // LazyColumn to display the list of featured skills.
         LazyColumn(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-          items(filteredSkills) { skill ->
+          // ⚡ Bolt Performance Optimization:
+          // Added unique `key` to `items` block using the stable `skillUrl` property.
+          // Since this list is dynamically filtered when the user types in the search box,
+          // a unique key prevents Compose from unnecessarily recomposing all items.
+          items(filteredSkills, key = { it.skillUrl }) { skill ->
             val validationError = skillValidationErrors[skill.skillUrl]
             FeaturedSkillItem(
               skill = skill,

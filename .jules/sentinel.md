@@ -1,4 +1,4 @@
-## 2026-06-10 - [Path Traversal in GalleryWebView Custom URL Interception]
-**Vulnerability:** Path traversal possible when intercepted URLs are converted to local file paths without checking if they escape the intended base directory.
-**Learning:** Custom logic intended to verify file existence before passing to `WebViewAssetLoader` inadvertently allowed checking for files outside the intended directory via `../` sequences, bypassing `WebViewAssetLoader`'s own internal safety checks.
-**Prevention:** Always verify that `file.canonicalPath` starts with the base directory's `canonicalPath` when constructing paths from untrusted input.
+## 2023-10-27 - Path Traversal Bypass in WebView Asset Loader
+**Vulnerability:** Path traversal bypass in `GalleryWebView.kt`. The path validation check used `!localFile.canonicalPath.startsWith(context.filesDir.canonicalPath)` which only validates prefixes. This would allow an attacker to bypass the directory restriction by supplying paths like `../files_backup` if the intended base directory is `files`.
+**Learning:** Checking string prefix is insufficient for validating canonical paths due to sibling directories sharing the same prefix.
+**Prevention:** Always append a trailing `File.separator` to the allowed base directory's canonical path before using `startsWith()`, or use proper standard library path resolution methods.

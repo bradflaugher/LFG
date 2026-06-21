@@ -74,7 +74,8 @@ open class BaseGalleryWebViewClient(private val context: Context) : WebViewClien
         val localFile = File(context.filesDir, path)
 
         // SECURITY: Prevent path traversal by ensuring the resolved file path is within the intended directory
-        val isPathTraversal = !localFile.canonicalPath.startsWith(context.filesDir.canonicalPath)
+        val isPathTraversal = !localFile.canonicalPath.startsWith(context.filesDir.canonicalPath + File.separator) &&
+            localFile.canonicalPath != context.filesDir.canonicalPath
 
         if (isPathTraversal || !localFile.exists() || localFile.isDirectory) {
           return WebResourceResponse("text/plain", "UTF-8", null)

@@ -2,7 +2,7 @@
  * LFG — Uncensored on-device AI agent for Android.
  * Copyright (C) 2026 Brad Flaugher
  *
- * Licensed under the GNU General Public License v3.0 or later.
+ * Licensed under the MIT License.
  * See LICENSE in the project root for terms.
  */
 package com.bradflaugher.lfg.ui.modelmanager

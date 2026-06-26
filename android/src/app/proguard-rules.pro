@@ -1,4 +1,4 @@
-# LFG — Copyright (C) 2026 Brad Flaugher. GPL-3.0-or-later.
+# LFG — Copyright (C) 2026 Brad Flaugher. MIT.
 # Release build is not minified (see build.gradle.kts), so this file is mostly
 # a no-op today. Kept as a placeholder for when isMinifyEnabled flips to true.
 

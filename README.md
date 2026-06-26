@@ -65,6 +65,6 @@ Import any LiteRT-LM compatible `.litertlm` or `.task` file directly, or configu
 
 ## License
 
-GPL-3.0-or-later. [LICENSE](LICENSE)
+MIT. [LICENSE](LICENSE)
 
 Includes code adapted from the Google AI Edge Gallery project (Apache 2.0).

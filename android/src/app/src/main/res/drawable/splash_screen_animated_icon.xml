@@ -1,11 +1,4 @@
 <!--
- LFG — Uncensored on-device AI agent for Android.
- Copyright (C) 2026 Brad Flaugher
-
- Licensed under the MIT License.
- See LICENSE in the project root for terms.
--->
-<!--
   Splash icon: bold "LFG" wordmark on transparent background, sized for the
   Android 12+ SplashScreen API (192dp inner safe-zone inside a 432dp viewport).
   Replaces the 4-shape Google-colored animated icon. Kept as a VectorDrawable so

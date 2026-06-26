@@ -1,14 +1,3 @@
-/*
- * LFG — Uncensored on-device AI agent for Android.
- * Copyright (C) 2026 Brad Flaugher
- *
- * Licensed under the MIT License.
- * See LICENSE in the project root for terms.
- *
- * The WebView dance in [ArticleFetcher] needs a real Activity to test end-to-end —
- * that's covered by the instrumented suite. These tests only exercise the pure
- * helper bits (JSON unwrap, error JSON shape).
- */
 package com.bradflaugher.lfg.customtasks.agentchat
 
 import com.google.gson.Gson

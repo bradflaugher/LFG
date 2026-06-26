@@ -65,6 +65,8 @@ Import any LiteRT-LM compatible `.litertlm` or `.task` file directly, or configu
 
 ## License
 
-MIT. [LICENSE](LICENSE)
+Apache License 2.0. See [LICENSE](LICENSE).
 
-Includes code adapted from the Google AI Edge Gallery project (Apache 2.0).
+Forked from [Google AI Edge Gallery](https://github.com/google-ai-edge/gallery)
+and substantially modified. Third-party components are listed in
+[THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).

@@ -1,7 +1,3 @@
-/*
- * LFG — Copyright (C) 2026 Brad Flaugher. MIT.
- */
-
 pluginManagement {
   repositories {
     google {

@@ -1,8 +1,3 @@
-/*
- * LFG — Copyright (C) 2026 Brad Flaugher. MIT.
- * Includes code adapted from Google AI Edge Gallery (Apache 2.0).
- */
-
 plugins {
   alias(libs.plugins.android.application) apply false
   alias(libs.plugins.kotlin.compose) apply false
